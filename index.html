@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
-<title>Reel Cutter — Split &amp; Watermark</title>
+<title>Reel Cutter — Split &amp; Watermark (No CDN)</title>
 <style>
   :root{
     --ink:#12100e;
@@ -14,10 +14,6 @@
     --mono: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
     --disp: 'Bebas Neue', 'Oswald', 'Arial Narrow', sans-serif;
     --body: 'Inter', system-ui, -apple-system, sans-serif;
-  }
-  @font-face{
-    font-family:'Bebas Neue';
-    src: local('Bebas Neue');
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
@@ -82,6 +78,15 @@
     line-height:1.5;
     color:#4a4640;
     max-width:46ch;
+  }
+  .nocdn{
+    display:inline-block;
+    margin-top:12px;
+    font-family:var(--mono);
+    font-size:11px;
+    padding:4px 10px;
+    border:1px solid var(--ink);
+    border-radius:20px;
   }
 
   main{
@@ -149,6 +154,9 @@
     margin-top:16px;
     border:1px solid var(--line);
     background:#000;
+  }
+  canvas#workCanvas{
+    display:none;
   }
 
   .row{
@@ -284,6 +292,7 @@
     background:#fff;
   }
   .part-chip .ok{color:#3a7d44;}
+  .part-chip .bad{color:#c1442d;}
 
   footer{
     max-width:720px;
@@ -304,6 +313,7 @@
     border-radius:20px;
     color:#6b665d;
     margin-right:6px;
+    margin-bottom:6px;
   }
 </style>
 </head>
@@ -319,6 +329,7 @@
   <div class="eyebrow">Runs entirely on your device</div>
   <h1>Reel <em>Cutter</em></h1>
   <p class="sub">Pick a video from your phone or laptop, slice it into 150–160 second parts, stamp each one with a Part number, and walk away with a single zip. Nothing uploads anywhere.</p>
+  <div class="nocdn">Zero external scripts · zero CDN calls · pure browser APIs</div>
 </header>
 
 <main>
@@ -331,7 +342,8 @@
       <p class="hint">or drag one in from your files</p>
       <div class="fname" id="fileName"></div>
     </div>
-    <video id="preview" controls playsinline></video>
+    <video id="preview" controls playsinline muted></video>
+    <canvas id="workCanvas"></canvas>
   </div>
 
   <div class="card" data-tag="02 — Cut settings">
@@ -360,13 +372,34 @@
       </div>
     </div>
     <div class="row">
-      <span class="badge">MP4 in → MP4 out</span>
-      <span class="badge">Zipped automatically</span>
+      <div class="field">
+        <label for="includeAudio">Include audio</label>
+        <select id="includeAudio">
+          <option value="yes">Yes</option>
+          <option value="no">No (silent, faster to verify)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="quality">Output quality</label>
+        <select id="quality">
+          <option value="2500000">Standard (2.5 Mbps)</option>
+          <option value="5000000">High (5 Mbps)</option>
+          <option value="1200000">Small file (1.2 Mbps)</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <span class="badge" id="formatBadge">Output: detecting…</span>
+      <span class="badge">Zipped with a built-in zip writer</span>
     </div>
   </div>
 
   <div class="card" data-tag="03 — Run">
-    <button class="btn" id="runBtn" disabled>Load engine &amp; choose a video first</button>
+    <button class="btn" id="runBtn" disabled>Choose a video first</button>
+    <p class="hint" style="margin-top:8px;font-size:12px;color:#8a847a;">
+      This re-plays your video in real time to capture each part, so processing takes roughly
+      as long as the video itself. Keep this tab open and active while it runs.
+    </p>
 
     <div class="progress-wrap" id="progressWrap">
       <div class="progress-label"><span id="progressStage">Working</span><span id="progressPct">0%</span></div>
@@ -383,19 +416,21 @@
 </main>
 
 <footer>
-  Powered by ffmpeg.wasm — processing happens locally in this browser tab.<br/>
-  Large videos need more memory: if it crashes on mobile, try a shorter clip or use a laptop.
+  No CDN, no external libraries, no uploads — everything above runs with the browser's own
+  Canvas, MediaRecorder and File APIs, and a small hand-written zip packer included in this file.
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script type="module">
-  import { FFmpeg } from "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js";
-  import { fetchFile, toBlobURL } from "https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/esm/index.js";
+<script>
+(function(){
+  "use strict";
 
+  // ---------- DOM ----------
   const dropZone = document.getElementById('dropZone');
   const fileInput = document.getElementById('fileInput');
   const fileNameEl = document.getElementById('fileName');
   const preview = document.getElementById('preview');
+  const canvas = document.getElementById('workCanvas');
+  const ctx = canvas.getContext('2d');
   const runBtn = document.getElementById('runBtn');
   const downloadBtn = document.getElementById('downloadBtn');
   const logEl = document.getElementById('log');
@@ -404,18 +439,16 @@
   const progressPct = document.getElementById('progressPct');
   const progressStage = document.getElementById('progressStage');
   const partsList = document.getElementById('partsList');
+  const formatBadge = document.getElementById('formatBadge');
 
   let selectedFile = null;
-  let ffmpeg = null;
-  let ffmpegLoaded = false;
-  let zipBlobUrl = null;
+  let zipObjectUrl = null;
 
   function log(msg){
     logEl.style.display = 'block';
     logEl.textContent += msg + "\n";
     logEl.scrollTop = logEl.scrollHeight;
   }
-
   function setProgress(stage, pct){
     progressWrap.style.display = 'block';
     progressStage.textContent = stage;
@@ -423,6 +456,28 @@
     progressFill.style.width = Math.min(100, Math.max(0, pct)) + '%';
   }
 
+  // ---------- Pick the best MediaRecorder mime type this browser supports ----------
+  const MIME_CANDIDATES = [
+    { mime: 'video/mp4;codecs=avc1,mp4a.40.2', ext: 'mp4' },
+    { mime: 'video/mp4', ext: 'mp4' },
+    { mime: 'video/webm;codecs=vp9,opus', ext: 'webm' },
+    { mime: 'video/webm;codecs=vp8,opus', ext: 'webm' },
+    { mime: 'video/webm', ext: 'webm' },
+  ];
+  let CHOSEN = null;
+  for (const c of MIME_CANDIDATES) {
+    if (window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(c.mime)) {
+      CHOSEN = c;
+      break;
+    }
+  }
+  if (CHOSEN) {
+    formatBadge.textContent = 'Output: .' + CHOSEN.ext + ' (' + CHOSEN.mime.split(';')[0] + ')';
+  } else {
+    formatBadge.textContent = 'Output: not supported in this browser';
+  }
+
+  // ---------- File selection ----------
   dropZone.addEventListener('click', () => fileInput.click());
   dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
   dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
@@ -440,64 +495,245 @@
     fileNameEl.textContent = `${file.name}  (${(file.size/1024/1024).toFixed(1)} MB)`;
     preview.src = URL.createObjectURL(file);
     preview.style.display = 'block';
-    runBtn.disabled = false;
-    runBtn.textContent = 'Split & watermark this video';
+    runBtn.disabled = !CHOSEN;
+    runBtn.textContent = CHOSEN ? 'Split & watermark this video' : 'Recording not supported here';
   }
 
-  async function ensureFFmpeg(){
-    if (ffmpegLoaded) return;
-    runBtn.disabled = true;
-    runBtn.textContent = 'Loading video engine…';
-    ffmpeg = new FFmpeg();
-    ffmpeg.on('log', ({ message }) => log(message));
-    ffmpeg.on('progress', ({ progress }) => {
-      // ffmpeg.wasm progress is per-command; used during transcodes below
-    });
-    const baseURL = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm';
-    await ffmpeg.load({
-      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-      wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-    });
-    ffmpegLoaded = true;
-    runBtn.disabled = false;
-    runBtn.textContent = 'Split & watermark this video';
-  }
-
-  function getVideoDuration(){
+  function waitForMetadata(){
     return new Promise((resolve) => {
-      if (preview.duration && !isNaN(preview.duration) && preview.duration !== Infinity) {
-        resolve(preview.duration);
+      if (preview.readyState >= 1 && !isNaN(preview.duration) && preview.duration !== Infinity) {
+        resolve();
       } else {
-        preview.addEventListener('loadedmetadata', () => resolve(preview.duration), { once: true });
+        preview.addEventListener('loadedmetadata', () => resolve(), { once: true });
       }
     });
   }
 
-  const positionMap = {
-    top: "x=(w-text_w)/2:y=40",
-    bottom: "x=(w-text_w)/2:y=h-text_h-40",
-    center: "x=(w-text_w)/2:y=(h-text_h)/2",
+  function seekTo(t){
+    return new Promise((resolve) => {
+      const onSeeked = () => { preview.removeEventListener('seeked', onSeeked); resolve(); };
+      preview.addEventListener('seeked', onSeeked);
+      preview.currentTime = t;
+    });
+  }
+
+  const positionFor = (pos, w, h, textW, textH, pad) => {
+    if (pos === 'bottom') return { x: (w - textW) / 2, y: h - pad - textH };
+    if (pos === 'center') return { x: (w - textW) / 2, y: (h - textH) / 2 };
+    return { x: (w - textW) / 2, y: pad }; // top
   };
 
+  // ---------- Capture a single segment [startTime, startTime+len) into a Blob ----------
+  function captureSegment({ startTime, len, watermarkText, position, includeAudio, bitrate }) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        canvas.width = preview.videoWidth;
+        canvas.height = preview.videoHeight;
+
+        await seekTo(startTime);
+
+        const canvasStream = canvas.captureStream(30);
+        let tracks = canvasStream.getVideoTracks();
+
+        if (includeAudio && typeof preview.captureStream === 'function') {
+          try {
+            const mediaStream = preview.captureStream();
+            const audioTracks = mediaStream.getAudioTracks();
+            if (audioTracks.length) tracks = tracks.concat(audioTracks);
+          } catch (e) {
+            log('Audio capture unavailable, continuing without audio: ' + e.message);
+          }
+        }
+
+        const combined = new MediaStream(tracks);
+        const recorderOpts = { mimeType: CHOSEN.mime };
+        if (bitrate) recorderOpts.videoBitsPerSecond = bitrate;
+
+        const recorder = new MediaRecorder(combined, recorderOpts);
+        const chunks = [];
+        recorder.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
+
+        let stopped = false;
+        let rafId = null;
+
+        recorder.onstop = () => {
+          if (rafId) cancelAnimationFrame(rafId);
+          preview.pause();
+          const blob = new Blob(chunks, { type: CHOSEN.mime });
+          resolve(blob);
+        };
+        recorder.onerror = (e) => {
+          if (rafId) cancelAnimationFrame(rafId);
+          reject(e.error || new Error('MediaRecorder error'));
+        };
+
+        const endTime = startTime + len;
+
+        function drawFrame(){
+          if (stopped) return;
+          ctx.drawImage(preview, 0, 0, canvas.width, canvas.height);
+
+          // Watermark
+          const fontSize = Math.max(20, Math.round(canvas.width * 0.035));
+          ctx.font = `bold ${fontSize}px sans-serif`;
+          const textW = ctx.measureText(watermarkText).width;
+          const textH = fontSize;
+          const pad = Math.round(canvas.height * 0.035);
+          const boxPad = Math.round(fontSize * 0.35);
+          const { x, y } = positionFor(position, canvas.width, canvas.height, textW, textH, pad);
+
+          ctx.fillStyle = 'rgba(0,0,0,0.5)';
+          ctx.fillRect(x - boxPad, y - boxPad, textW + boxPad * 2, textH + boxPad * 2);
+          ctx.fillStyle = '#ffffff';
+          ctx.textBaseline = 'top';
+          ctx.fillText(watermarkText, x, y);
+
+          if (preview.currentTime >= endTime - 0.05 || preview.ended) {
+            stopped = true;
+            if (recorder.state !== 'inactive') recorder.stop();
+            return;
+          }
+          rafId = requestAnimationFrame(drawFrame);
+        }
+
+        recorder.start(250);
+        await preview.play();
+        rafId = requestAnimationFrame(drawFrame);
+
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  // ---------- Minimal ZIP writer (STORE / no compression) ----------
+  const CRC_TABLE = (() => {
+    const table = new Uint32Array(256);
+    for (let n = 0; n < 256; n++) {
+      let c = n;
+      for (let k = 0; k < 8; k++) {
+        c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      }
+      table[n] = c >>> 0;
+    }
+    return table;
+  })();
+
+  function crc32(uint8arr){
+    let crc = 0xFFFFFFFF;
+    for (let i = 0; i < uint8arr.length; i++) {
+      crc = CRC_TABLE[(crc ^ uint8arr[i]) & 0xFF] ^ (crc >>> 8);
+    }
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+
+  function dosDateTime(date){
+    const time = ((date.getHours() & 0x1F) << 11) |
+                 ((date.getMinutes() & 0x3F) << 5) |
+                 ((Math.floor(date.getSeconds() / 2)) & 0x1F);
+    const day = ((Math.max(date.getFullYear(), 1980) - 1980 & 0x7F) << 9) |
+                 (((date.getMonth() + 1) & 0xF) << 5) |
+                 (date.getDate() & 0x1F);
+    return { time: time & 0xFFFF, date: day & 0xFFFF };
+  }
+
+  function u16(v){ const b = new Uint8Array(2); b[0] = v & 0xFF; b[1] = (v >>> 8) & 0xFF; return b; }
+  function u32(v){ const b = new Uint8Array(4); b[0]=v&0xFF; b[1]=(v>>>8)&0xFF; b[2]=(v>>>16)&0xFF; b[3]=(v>>>24)&0xFF; return b; }
+  function concatBytes(arrays){
+    let total = 0;
+    for (const a of arrays) total += a.length;
+    const out = new Uint8Array(total);
+    let offset = 0;
+    for (const a of arrays) { out.set(a, offset); offset += a.length; }
+    return out;
+  }
+
+  /**
+   * Build a zip file (store method, uncompressed) from a list of
+   * { name: string, data: Uint8Array } entries. Returns a Blob.
+   */
+  function buildZip(entries){
+    const encoder = new TextEncoder();
+    const localParts = [];
+    const centralParts = [];
+    let offset = 0;
+    const { time, date } = dosDateTime(new Date());
+
+    for (const entry of entries) {
+      const nameBytes = encoder.encode(entry.name);
+      const data = entry.data;
+      const crc = crc32(data);
+      const size = data.length;
+
+      const localHeader = concatBytes([
+        u32(0x04034b50),
+        u16(20),          // version needed
+        u16(0),           // flags
+        u16(0),           // compression: store
+        u16(time), u16(date),
+        u32(crc),
+        u32(size),         // compressed size == size (store)
+        u32(size),         // uncompressed size
+        u16(nameBytes.length),
+        u16(0),            // extra field length
+        nameBytes,
+      ]);
+
+      localParts.push(localHeader, data);
+
+      const centralHeader = concatBytes([
+        u32(0x02014b50),
+        u16(20), u16(20),
+        u16(0), u16(0),
+        u16(time), u16(date),
+        u32(crc),
+        u32(size), u32(size),
+        u16(nameBytes.length),
+        u16(0), u16(0),
+        u16(0), u16(0),
+        u32(0),
+        u32(offset),
+        nameBytes,
+      ]);
+      centralParts.push(centralHeader);
+
+      offset += localHeader.length + data.length;
+    }
+
+    const centralDir = concatBytes(centralParts);
+    const centralStart = offset;
+
+    const eocd = concatBytes([
+      u32(0x06054b50),
+      u16(0), u16(0),
+      u16(entries.length), u16(entries.length),
+      u32(centralDir.length),
+      u32(centralStart),
+      u16(0),
+    ]);
+
+    return new Blob([concatBytes(localParts), centralDir, eocd], { type: 'application/zip' });
+  }
+
+  // ---------- Main run ----------
   runBtn.addEventListener('click', async () => {
-    if (!selectedFile) return;
+    if (!selectedFile || !CHOSEN) return;
     downloadBtn.style.display = 'none';
     partsList.innerHTML = '';
     partsList.style.display = 'none';
     logEl.textContent = '';
+    runBtn.disabled = true;
 
     try {
-      await ensureFFmpeg();
+      await waitForMetadata();
 
-      runBtn.disabled = true;
-      setProgress('Reading video', 2);
-
-      const duration = await getVideoDuration();
+      const duration = preview.duration;
       const minLen = parseFloat(document.getElementById('minLen').value) || 150;
       const maxLen = parseFloat(document.getElementById('maxLen').value) || 160;
       const position = document.getElementById('position').value;
       const prefix = document.getElementById('prefix').value.trim() || 'Part';
-      const posExpr = positionMap[position] || positionMap.top;
+      const includeAudio = document.getElementById('includeAudio').value === 'yes';
+      const bitrate = parseInt(document.getElementById('quality').value, 10);
 
       const targetLen = (minLen + maxLen) / 2;
       let numParts = Math.max(1, Math.ceil(duration / targetLen));
@@ -508,79 +744,70 @@
       }
 
       log(`Duration: ${duration.toFixed(1)}s → ${numParts} part(s), ~${chunkLen.toFixed(1)}s each`);
+      log(`Recording as: ${CHOSEN.mime}`);
 
-      const inputName = 'input' + (selectedFile.name.match(/\.[0-9a-z]+$/i)?.[0] || '.mp4');
-      setProgress('Loading file into engine', 5);
-      await ffmpeg.writeFile(inputName, await fetchFile(selectedFile));
-
-      const zip = new JSZip();
-      const chips = [];
+      const zipEntries = [];
 
       for (let i = 0; i < numParts; i++) {
         const startTime = i * chunkLen;
         const thisLen = Math.min(chunkLen, duration - startTime);
         if (thisLen <= 0) break;
         const partNum = i + 1;
-        const outName = `part_${partNum}.mp4`;
         const watermarkText = `${prefix} ${partNum}`;
+        const outName = `part_${partNum}.${CHOSEN.ext}`;
 
         const chip = document.createElement('div');
         chip.className = 'part-chip';
-        chip.innerHTML = `<span>${watermarkText}</span><span>encoding…</span>`;
+        chip.innerHTML = `<span>${watermarkText}</span><span>recording…</span>`;
         partsList.appendChild(chip);
         partsList.style.display = 'block';
 
-        setProgress(`Encoding part ${partNum} / ${numParts}`, 5 + (i / numParts) * 90);
+        setProgress(`Recording part ${partNum} / ${numParts}`, (i / numParts) * 95);
 
-        const drawtext =
-          `drawtext=text='${watermarkText.replace(/'/g, "\\'")}':` +
-          `fontcolor=white:fontsize=48:box=1:boxcolor=black@0.5:boxborderw=10:${posExpr}`;
-
-        await ffmpeg.exec([
-          '-ss', String(startTime),
-          '-i', inputName,
-          '-t', String(thisLen),
-          '-vf', drawtext,
-          '-c:v', 'libx264',
-          '-preset', 'ultrafast',
-          '-c:a', 'aac',
-          outName
-        ]);
-
-        const data = await ffmpeg.readFile(outName);
-        zip.file(outName, data.buffer ? data.buffer : data);
-        await ffmpeg.deleteFile(outName);
-
-        chip.innerHTML = `<span>${watermarkText}</span><span class="ok">✓ done</span>`;
+        try {
+          const blob = await captureSegment({
+            startTime, len: thisLen, watermarkText, position, includeAudio, bitrate
+          });
+          const buf = new Uint8Array(await blob.arrayBuffer());
+          zipEntries.push({ name: outName, data: buf });
+          chip.innerHTML = `<span>${watermarkText}</span><span class="ok">✓ done (${(buf.length/1024/1024).toFixed(1)} MB)</span>`;
+        } catch (segErr) {
+          console.error(segErr);
+          chip.innerHTML = `<span>${watermarkText}</span><span class="bad">✗ failed</span>`;
+          log('Part ' + partNum + ' failed: ' + (segErr.message || segErr));
+        }
       }
 
-      setProgress('Zipping parts', 97);
-      const zipBlob = await zip.generateAsync({ type: 'blob' });
-      zipBlobUrl = URL.createObjectURL(zipBlob);
+      if (!zipEntries.length) throw new Error('No parts were recorded successfully.');
+
+      setProgress('Packing zip', 97);
+      const zipBlob = buildZip(zipEntries);
+      zipObjectUrl = URL.createObjectURL(zipBlob);
 
       setProgress('Done', 100);
       downloadBtn.style.display = 'block';
-      runBtn.disabled = false;
-      runBtn.textContent = 'Split & watermark this video';
-      log('All parts zipped. Ready to download.');
+      log('All parts packed into a zip. Ready to download.');
 
     } catch (err) {
       console.error(err);
-      log('ERROR: ' + err.message);
+      log('ERROR: ' + (err.message || err));
+    } finally {
       runBtn.disabled = false;
-      runBtn.textContent = 'Try again';
+      runBtn.textContent = 'Split & watermark this video';
     }
   });
 
   downloadBtn.addEventListener('click', () => {
-    if (!zipBlobUrl) return;
+    if (!zipObjectUrl) return;
     const a = document.createElement('a');
-    a.href = zipBlobUrl;
+    a.href = zipObjectUrl;
     a.download = 'video_parts.zip';
     document.body.appendChild(a);
     a.click();
     a.remove();
   });
+
+})();
 </script>
 
 </body>
