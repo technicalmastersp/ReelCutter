@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+<title>Reel Cutter — Split &amp; Watermark</title>
+<style>
+  :root{
+    --ink:#12100e;
+    --paper:#f6f3ee;
+    --reel-red:#c1442d;
+    --tape:#e8c468;
+    --line: rgba(18,16,14,0.12);
+    --mono: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+    --disp: 'Bebas Neue', 'Oswald', 'Arial Narrow', sans-serif;
+    --body: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+  @font-face{
+    font-family:'Bebas Neue';
+    src: local('Bebas Neue');
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--body);
+    min-height:100vh;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(18,16,14,0.06) 1px, transparent 0);
+    background-size: 22px 22px;
+    padding-bottom:60px;
+  }
+
+  .filmstrip{
+    display:flex;
+    width:100%;
+    height:14px;
+    background:var(--ink);
+  }
+  .filmstrip span{
+    flex:1;
+    margin:3px 2px;
+    background:var(--paper);
+  }
+
+  header{
+    padding:36px 20px 18px;
+    max-width:720px;
+    margin:0 auto;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--reel-red);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:8px;height:8px;border-radius:50%;
+    background:var(--reel-red);
+    display:inline-block;
+  }
+  h1{
+    font-family:var(--disp);
+    font-weight:400;
+    font-size:clamp(38px,9vw,64px);
+    letter-spacing:0.01em;
+    line-height:0.92;
+    margin:10px 0 6px;
+  }
+  h1 em{
+    font-style:normal;
+    color:var(--reel-red);
+  }
+  .sub{
+    font-size:15px;
+    line-height:1.5;
+    color:#4a4640;
+    max-width:46ch;
+  }
+
+  main{
+    max-width:720px;
+    margin:0 auto;
+    padding:10px 20px 40px;
+  }
+
+  .card{
+    background:#fffdf9;
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:22px;
+    margin-bottom:18px;
+    position:relative;
+  }
+  .card::before{
+    content: attr(data-tag);
+    position:absolute;
+    top:-11px;
+    left:18px;
+    background:var(--tape);
+    color:var(--ink);
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.08em;
+    padding:2px 10px;
+    text-transform:uppercase;
+    transform:rotate(-1deg);
+  }
+
+  .drop{
+    border:2px dashed var(--line);
+    border-radius:2px;
+    padding:34px 18px;
+    text-align:center;
+    cursor:pointer;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .drop:hover, .drop.dragover{
+    border-color:var(--reel-red);
+    background: rgba(193,68,45,0.04);
+  }
+  .drop input{display:none;}
+  .drop-icon{
+    font-size:30px;
+    margin-bottom:8px;
+  }
+  .drop p{margin:4px 0;}
+  .drop .fname{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--reel-red);
+    word-break:break-all;
+    margin-top:10px;
+  }
+  .drop .hint{
+    font-size:12px;
+    color:#8a847a;
+  }
+
+  video#preview{
+    width:100%;
+    display:none;
+    margin-top:16px;
+    border:1px solid var(--line);
+    background:#000;
+  }
+
+  .row{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-top:6px;
+  }
+  .field{
+    flex:1;
+    min-width:130px;
+  }
+  label{
+    display:block;
+    font-family:var(--mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:#6b665d;
+    margin-bottom:6px;
+  }
+  input[type=number], select{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:2px;
+    background:#fff;
+    font-family:var(--mono);
+    font-size:14px;
+    color:var(--ink);
+  }
+  input[type=text]{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:2px;
+    background:#fff;
+    font-family:var(--body);
+    font-size:14px;
+    color:var(--ink);
+  }
+
+  .btn{
+    appearance:none;
+    border:none;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:14px 22px;
+    border-radius:2px;
+    cursor:pointer;
+    width:100%;
+    margin-top:18px;
+    transition: background .15s ease, transform .1s ease;
+  }
+  .btn:hover:not(:disabled){background:var(--reel-red);}
+  .btn:active:not(:disabled){transform:scale(0.99);}
+  .btn:disabled{opacity:0.4;cursor:not-allowed;}
+
+  .btn-ghost{
+    background:transparent;
+    color:var(--ink);
+    border:1px solid var(--ink);
+  }
+  .btn-ghost:hover:not(:disabled){background:var(--ink);color:var(--paper);}
+
+  .log{
+    font-family:var(--mono);
+    font-size:12px;
+    line-height:1.6;
+    color:#57524a;
+    background:#fbf9f5;
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:14px;
+    max-height:180px;
+    overflow-y:auto;
+    white-space:pre-wrap;
+    display:none;
+  }
+
+  .progress-wrap{
+    margin-top:14px;
+    display:none;
+  }
+  .progress-label{
+    display:flex;
+    justify-content:space-between;
+    font-family:var(--mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:#6b665d;
+    margin-bottom:6px;
+  }
+  .progress-bar{
+    height:10px;
+    background:#eae5db;
+    border-radius:2px;
+    overflow:hidden;
+    position:relative;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background: repeating-linear-gradient(
+      45deg,
+      var(--reel-red),
+      var(--reel-red) 8px,
+      #d9694f 8px,
+      #d9694f 16px
+    );
+    transition: width .2s ease;
+  }
+
+  .parts-list{
+    margin-top:14px;
+    display:none;
+  }
+  .part-chip{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-family:var(--mono);
+    font-size:12px;
+    padding:8px 12px;
+    border:1px solid var(--line);
+    border-radius:2px;
+    margin-bottom:6px;
+    background:#fff;
+  }
+  .part-chip .ok{color:#3a7d44;}
+
+  footer{
+    max-width:720px;
+    margin:0 auto;
+    padding:0 20px;
+    font-family:var(--mono);
+    font-size:11px;
+    color:#8a847a;
+    text-align:center;
+  }
+
+  .badge{
+    display:inline-block;
+    font-family:var(--mono);
+    font-size:11px;
+    padding:2px 8px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    color:#6b665d;
+    margin-right:6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="filmstrip">
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<header>
+  <div class="eyebrow">Runs entirely on your device</div>
+  <h1>Reel <em>Cutter</em></h1>
+  <p class="sub">Pick a video from your phone or laptop, slice it into 150–160 second parts, stamp each one with a Part number, and walk away with a single zip. Nothing uploads anywhere.</p>
+</header>
+
+<main>
+
+  <div class="card" data-tag="01 — Source">
+    <div class="drop" id="dropZone">
+      <input type="file" id="fileInput" accept="video/*" />
+      <div class="drop-icon">🎞️</div>
+      <p><strong>Tap to choose a video</strong></p>
+      <p class="hint">or drag one in from your files</p>
+      <div class="fname" id="fileName"></div>
+    </div>
+    <video id="preview" controls playsinline></video>
+  </div>
+
+  <div class="card" data-tag="02 — Cut settings">
+    <div class="row">
+      <div class="field">
+        <label for="minLen">Min length (sec)</label>
+        <input type="number" id="minLen" value="150" min="5" />
+      </div>
+      <div class="field">
+        <label for="maxLen">Max length (sec)</label>
+        <input type="number" id="maxLen" value="160" min="5" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label for="position">Watermark position</label>
+        <select id="position">
+          <option value="top">Top</option>
+          <option value="bottom">Bottom</option>
+          <option value="center">Center</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="prefix">Watermark text prefix</label>
+        <input type="text" id="prefix" value="Part" />
+      </div>
+    </div>
+    <div class="row">
+      <span class="badge">MP4 in → MP4 out</span>
+      <span class="badge">Zipped automatically</span>
+    </div>
+  </div>
+
+  <div class="card" data-tag="03 — Run">
+    <button class="btn" id="runBtn" disabled>Load engine &amp; choose a video first</button>
+
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-label"><span id="progressStage">Working</span><span id="progressPct">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <div class="parts-list" id="partsList"></div>
+
+    <button class="btn btn-ghost" id="downloadBtn" style="display:none;">Download zip</button>
+
+    <div class="log" id="log"></div>
+  </div>
+
+</main>
+
+<footer>
+  Powered by ffmpeg.wasm — processing happens locally in this browser tab.<br/>
+  Large videos need more memory: if it crashes on mobile, try a shorter clip or use a laptop.
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script type="module">
+  import { FFmpeg } from "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js";
+  import { fetchFile, toBlobURL } from "https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/esm/index.js";
+
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const fileNameEl = document.getElementById('fileName');
+  const preview = document.getElementById('preview');
+  const runBtn = document.getElementById('runBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const logEl = document.getElementById('log');
+  const progressWrap = document.getElementById('progressWrap');
+  const progressFill = document.getElementById('progressFill');
+  const progressPct = document.getElementById('progressPct');
+  const progressStage = document.getElementById('progressStage');
+  const partsList = document.getElementById('partsList');
+
+  let selectedFile = null;
+  let ffmpeg = null;
+  let ffmpegLoaded = false;
+  let zipBlobUrl = null;
+
+  function log(msg){
+    logEl.style.display = 'block';
+    logEl.textContent += msg + "\n";
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  function setProgress(stage, pct){
+    progressWrap.style.display = 'block';
+    progressStage.textContent = stage;
+    progressPct.textContent = Math.round(pct) + '%';
+    progressFill.style.width = Math.min(100, Math.max(0, pct)) + '%';
+  }
+
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length) handleFile(e.target.files[0]);
+  });
+
+  function handleFile(file){
+    selectedFile = file;
+    fileNameEl.textContent = `${file.name}  (${(file.size/1024/1024).toFixed(1)} MB)`;
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = 'block';
+    runBtn.disabled = false;
+    runBtn.textContent = 'Split & watermark this video';
+  }
+
+  async function ensureFFmpeg(){
+    if (ffmpegLoaded) return;
+    runBtn.disabled = true;
+    runBtn.textContent = 'Loading video engine…';
+    ffmpeg = new FFmpeg();
+    ffmpeg.on('log', ({ message }) => log(message));
+    ffmpeg.on('progress', ({ progress }) => {
+      // ffmpeg.wasm progress is per-command; used during transcodes below
+    });
+    const baseURL = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm';
+    await ffmpeg.load({
+      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
+      wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+    });
+    ffmpegLoaded = true;
+    runBtn.disabled = false;
+    runBtn.textContent = 'Split & watermark this video';
+  }
+
+  function getVideoDuration(){
+    return new Promise((resolve) => {
+      if (preview.duration && !isNaN(preview.duration) && preview.duration !== Infinity) {
+        resolve(preview.duration);
+      } else {
+        preview.addEventListener('loadedmetadata', () => resolve(preview.duration), { once: true });
+      }
+    });
+  }
+
+  const positionMap = {
+    top: "x=(w-text_w)/2:y=40",
+    bottom: "x=(w-text_w)/2:y=h-text_h-40",
+    center: "x=(w-text_w)/2:y=(h-text_h)/2",
+  };
+
+  runBtn.addEventListener('click', async () => {
+    if (!selectedFile) return;
+    downloadBtn.style.display = 'none';
+    partsList.innerHTML = '';
+    partsList.style.display = 'none';
+    logEl.textContent = '';
+
+    try {
+      await ensureFFmpeg();
+
+      runBtn.disabled = true;
+      setProgress('Reading video', 2);
+
+      const duration = await getVideoDuration();
+      const minLen = parseFloat(document.getElementById('minLen').value) || 150;
+      const maxLen = parseFloat(document.getElementById('maxLen').value) || 160;
+      const position = document.getElementById('position').value;
+      const prefix = document.getElementById('prefix').value.trim() || 'Part';
+      const posExpr = positionMap[position] || positionMap.top;
+
+      const targetLen = (minLen + maxLen) / 2;
+      let numParts = Math.max(1, Math.ceil(duration / targetLen));
+      let chunkLen = duration / numParts;
+      if (chunkLen < minLen && duration > minLen) {
+        chunkLen = maxLen;
+        numParts = Math.ceil(duration / chunkLen);
+      }
+
+      log(`Duration: ${duration.toFixed(1)}s → ${numParts} part(s), ~${chunkLen.toFixed(1)}s each`);
+
+      const inputName = 'input' + (selectedFile.name.match(/\.[0-9a-z]+$/i)?.[0] || '.mp4');
+      setProgress('Loading file into engine', 5);
+      await ffmpeg.writeFile(inputName, await fetchFile(selectedFile));
+
+      const zip = new JSZip();
+      const chips = [];
+
+      for (let i = 0; i < numParts; i++) {
+        const startTime = i * chunkLen;
+        const thisLen = Math.min(chunkLen, duration - startTime);
+        if (thisLen <= 0) break;
+        const partNum = i + 1;
+        const outName = `part_${partNum}.mp4`;
+        const watermarkText = `${prefix} ${partNum}`;
+
+        const chip = document.createElement('div');
+        chip.className = 'part-chip';
+        chip.innerHTML = `<span>${watermarkText}</span><span>encoding…</span>`;
+        partsList.appendChild(chip);
+        partsList.style.display = 'block';
+
+        setProgress(`Encoding part ${partNum} / ${numParts}`, 5 + (i / numParts) * 90);
+
+        const drawtext =
+          `drawtext=text='${watermarkText.replace(/'/g, "\\'")}':` +
+          `fontcolor=white:fontsize=48:box=1:boxcolor=black@0.5:boxborderw=10:${posExpr}`;
+
+        await ffmpeg.exec([
+          '-ss', String(startTime),
+          '-i', inputName,
+          '-t', String(thisLen),
+          '-vf', drawtext,
+          '-c:v', 'libx264',
+          '-preset', 'ultrafast',
+          '-c:a', 'aac',
+          outName
+        ]);
+
+        const data = await ffmpeg.readFile(outName);
+        zip.file(outName, data.buffer ? data.buffer : data);
+        await ffmpeg.deleteFile(outName);
+
+        chip.innerHTML = `<span>${watermarkText}</span><span class="ok">✓ done</span>`;
+      }
+
+      setProgress('Zipping parts', 97);
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      zipBlobUrl = URL.createObjectURL(zipBlob);
+
+      setProgress('Done', 100);
+      downloadBtn.style.display = 'block';
+      runBtn.disabled = false;
+      runBtn.textContent = 'Split & watermark this video';
+      log('All parts zipped. Ready to download.');
+
+    } catch (err) {
+      console.error(err);
+      log('ERROR: ' + err.message);
+      runBtn.disabled = false;
+      runBtn.textContent = 'Try again';
+    }
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    if (!zipBlobUrl) return;
+    const a = document.createElement('a');
+    a.href = zipBlobUrl;
+    a.download = 'video_parts.zip';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
+</script>
+
+</body>
+</html>
