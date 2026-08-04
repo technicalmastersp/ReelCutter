@@ -3,13 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
-<title>Reel Cutter — Split &amp; Watermark (No CDN)</title>
+<title>Reel Cutter — Fast Lossless Split</title>
 <style>
   :root{
-    --ink:#12100e;
-    --paper:#f6f3ee;
-    --reel-red:#c1442d;
-    --tape:#e8c468;
+    --ink:#12100e; --paper:#f6f3ee; --reel-red:#c1442d; --tape:#e8c468;
     --line: rgba(18,16,14,0.12);
     --mono: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
     --disp: 'Bebas Neue', 'Oswald', 'Arial Narrow', sans-serif;
@@ -18,302 +15,128 @@
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background:var(--paper);
-    color:var(--ink);
-    font-family:var(--body);
-    min-height:100vh;
-    background-image:
-      radial-gradient(circle at 1px 1px, rgba(18,16,14,0.06) 1px, transparent 0);
-    background-size: 22px 22px;
-    padding-bottom:60px;
+    background:var(--paper); color:var(--ink); font-family:var(--body); min-height:100vh;
+    background-image: radial-gradient(circle at 1px 1px, rgba(18,16,14,0.06) 1px, transparent 0);
+    background-size: 22px 22px; padding-bottom:60px;
   }
+  .filmstrip{ display:flex; width:100%; height:14px; background:var(--ink); }
+  .filmstrip span{ flex:1; margin:3px 2px; background:var(--paper); }
 
-  .filmstrip{
-    display:flex;
-    width:100%;
-    height:14px;
-    background:var(--ink);
-  }
-  .filmstrip span{
-    flex:1;
-    margin:3px 2px;
-    background:var(--paper);
-  }
-
-  header{
-    padding:36px 20px 18px;
-    max-width:720px;
-    margin:0 auto;
-  }
+  header{ padding:36px 20px 18px; max-width:760px; margin:0 auto; }
   .eyebrow{
-    font-family:var(--mono);
-    font-size:12px;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    color:var(--reel-red);
-    display:flex;
-    align-items:center;
-    gap:8px;
+    font-family:var(--mono); font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--reel-red); display:flex; align-items:center; gap:8px;
   }
-  .eyebrow::before{
-    content:"";
-    width:8px;height:8px;border-radius:50%;
-    background:var(--reel-red);
-    display:inline-block;
-  }
+  .eyebrow::before{ content:""; width:8px;height:8px;border-radius:50%; background:var(--reel-red); display:inline-block; }
   h1{
-    font-family:var(--disp);
-    font-weight:400;
-    font-size:clamp(38px,9vw,64px);
-    letter-spacing:0.01em;
-    line-height:0.92;
-    margin:10px 0 6px;
+    font-family:var(--disp); font-weight:400; font-size:clamp(38px,9vw,64px);
+    letter-spacing:0.01em; line-height:0.92; margin:10px 0 6px;
   }
-  h1 em{
-    font-style:normal;
-    color:var(--reel-red);
-  }
-  .sub{
-    font-size:15px;
-    line-height:1.5;
-    color:#4a4640;
-    max-width:46ch;
-  }
+  h1 em{ font-style:normal; color:var(--reel-red); }
+  .sub{ font-size:15px; line-height:1.5; color:#4a4640; max-width:52ch; }
+  .badge-row{ margin-top:12px; }
   .nocdn{
-    display:inline-block;
-    margin-top:12px;
-    font-family:var(--mono);
-    font-size:11px;
-    padding:4px 10px;
-    border:1px solid var(--ink);
-    border-radius:20px;
+    display:inline-block; font-family:var(--mono); font-size:11px; padding:4px 10px;
+    border:1px solid var(--ink); border-radius:20px; margin-right:8px; margin-bottom:6px;
   }
 
-  main{
-    max-width:720px;
-    margin:0 auto;
-    padding:10px 20px 40px;
-  }
+  main{ max-width:760px; margin:0 auto; padding:10px 20px 40px; }
 
   .card{
-    background:#fffdf9;
-    border:1px solid var(--line);
-    border-radius:2px;
-    padding:22px;
-    margin-bottom:18px;
-    position:relative;
+    background:#fffdf9; border:1px solid var(--line); border-radius:2px;
+    padding:22px; margin-bottom:18px; position:relative;
   }
   .card::before{
-    content: attr(data-tag);
-    position:absolute;
-    top:-11px;
-    left:18px;
-    background:var(--tape);
-    color:var(--ink);
-    font-family:var(--mono);
-    font-size:11px;
-    letter-spacing:0.08em;
-    padding:2px 10px;
-    text-transform:uppercase;
-    transform:rotate(-1deg);
+    content: attr(data-tag); position:absolute; top:-11px; left:18px; background:var(--tape);
+    color:var(--ink); font-family:var(--mono); font-size:11px; letter-spacing:0.08em;
+    padding:2px 10px; text-transform:uppercase; transform:rotate(-1deg);
   }
 
   .drop{
-    border:2px dashed var(--line);
-    border-radius:2px;
-    padding:34px 18px;
-    text-align:center;
-    cursor:pointer;
-    transition: border-color .15s ease, background .15s ease;
+    border:2px dashed var(--line); border-radius:2px; padding:34px 18px; text-align:center;
+    cursor:pointer; transition: border-color .15s ease, background .15s ease;
   }
-  .drop:hover, .drop.dragover{
-    border-color:var(--reel-red);
-    background: rgba(193,68,45,0.04);
-  }
+  .drop:hover, .drop.dragover{ border-color:var(--reel-red); background: rgba(193,68,45,0.04); }
   .drop input{display:none;}
-  .drop-icon{
-    font-size:30px;
-    margin-bottom:8px;
-  }
+  .drop-icon{ font-size:30px; margin-bottom:8px; }
   .drop p{margin:4px 0;}
-  .drop .fname{
-    font-family:var(--mono);
-    font-size:13px;
-    color:var(--reel-red);
-    word-break:break-all;
-    margin-top:10px;
-  }
-  .drop .hint{
-    font-size:12px;
-    color:#8a847a;
-  }
+  .drop .fname{ font-family:var(--mono); font-size:13px; color:var(--reel-red); word-break:break-all; margin-top:10px; }
+  .drop .hint{ font-size:12px; color:#8a847a; }
 
-  video#preview{
-    width:100%;
-    display:none;
-    margin-top:16px;
-    border:1px solid var(--line);
-    background:#000;
-  }
-  canvas#workCanvas{
-    display:none;
-  }
+  video#preview{ width:100%; display:none; margin-top:16px; border:1px solid var(--line); background:#000; }
 
-  .row{
-    display:flex;
-    gap:16px;
-    flex-wrap:wrap;
-    margin-top:6px;
-  }
-  .field{
-    flex:1;
-    min-width:130px;
-  }
+  .row{ display:flex; gap:16px; flex-wrap:wrap; margin-top:6px; }
+  .field{ flex:1; min-width:130px; }
   label{
-    display:block;
-    font-family:var(--mono);
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:0.08em;
-    color:#6b665d;
-    margin-bottom:6px;
+    display:block; font-family:var(--mono); font-size:11px; text-transform:uppercase;
+    letter-spacing:0.08em; color:#6b665d; margin-bottom:6px;
   }
   input[type=number], select{
-    width:100%;
-    padding:10px 12px;
-    border:1px solid var(--line);
-    border-radius:2px;
-    background:#fff;
-    font-family:var(--mono);
-    font-size:14px;
-    color:var(--ink);
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:2px;
+    background:#fff; font-family:var(--mono); font-size:14px; color:var(--ink);
   }
   input[type=text]{
-    width:100%;
-    padding:10px 12px;
-    border:1px solid var(--line);
-    border-radius:2px;
-    background:#fff;
-    font-family:var(--body);
-    font-size:14px;
-    color:var(--ink);
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:2px;
+    background:#fff; font-family:var(--body); font-size:14px; color:var(--ink);
   }
 
   .btn{
-    appearance:none;
-    border:none;
-    background:var(--ink);
-    color:var(--paper);
-    font-family:var(--mono);
-    font-size:13px;
-    letter-spacing:0.06em;
-    text-transform:uppercase;
-    padding:14px 22px;
-    border-radius:2px;
-    cursor:pointer;
-    width:100%;
-    margin-top:18px;
+    appearance:none; border:none; background:var(--ink); color:var(--paper); font-family:var(--mono);
+    font-size:13px; letter-spacing:0.06em; text-transform:uppercase; padding:14px 22px;
+    border-radius:2px; cursor:pointer; width:100%; margin-top:18px;
     transition: background .15s ease, transform .1s ease;
   }
   .btn:hover:not(:disabled){background:var(--reel-red);}
   .btn:active:not(:disabled){transform:scale(0.99);}
   .btn:disabled{opacity:0.4;cursor:not-allowed;}
-
-  .btn-ghost{
-    background:transparent;
-    color:var(--ink);
-    border:1px solid var(--ink);
-  }
+  .btn-ghost{ background:transparent; color:var(--ink); border:1px solid var(--ink); }
   .btn-ghost:hover:not(:disabled){background:var(--ink);color:var(--paper);}
 
   .log{
-    font-family:var(--mono);
-    font-size:12px;
-    line-height:1.6;
-    color:#57524a;
-    background:#fbf9f5;
-    border:1px solid var(--line);
-    border-radius:2px;
-    padding:14px;
-    max-height:180px;
-    overflow-y:auto;
-    white-space:pre-wrap;
-    display:none;
+    font-family:var(--mono); font-size:12px; line-height:1.6; color:#57524a; background:#fbf9f5;
+    border:1px solid var(--line); border-radius:2px; padding:14px; max-height:200px;
+    overflow-y:auto; white-space:pre-wrap; display:none;
   }
 
-  .progress-wrap{
-    margin-top:14px;
-    display:none;
+  .timer-row{
+    display:flex; gap:12px; margin-top:14px; flex-wrap:wrap; display:none;
   }
+  .timer-box{
+    flex:1; min-width:120px; border:1px solid var(--line); border-radius:2px;
+    padding:10px 14px; background:#fff;
+  }
+  .timer-box .tlabel{
+    font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.08em; color:#8a847a;
+  }
+  .timer-box .tvalue{
+    font-family:var(--mono); font-size:20px; color:var(--ink); margin-top:2px;
+  }
+
+  .progress-wrap{ margin-top:14px; display:none; }
   .progress-label{
-    display:flex;
-    justify-content:space-between;
-    font-family:var(--mono);
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:0.06em;
-    color:#6b665d;
-    margin-bottom:6px;
+    display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px;
+    text-transform:uppercase; letter-spacing:0.06em; color:#6b665d; margin-bottom:6px;
   }
-  .progress-bar{
-    height:10px;
-    background:#eae5db;
-    border-radius:2px;
-    overflow:hidden;
-    position:relative;
-  }
+  .progress-bar{ height:10px; background:#eae5db; border-radius:2px; overflow:hidden; position:relative; }
   .progress-fill{
-    height:100%;
-    width:0%;
-    background: repeating-linear-gradient(
-      45deg,
-      var(--reel-red),
-      var(--reel-red) 8px,
-      #d9694f 8px,
-      #d9694f 16px
-    );
+    height:100%; width:0%;
+    background: repeating-linear-gradient(45deg, var(--reel-red), var(--reel-red) 8px, #d9694f 8px, #d9694f 16px);
     transition: width .2s ease;
   }
 
-  .parts-list{
-    margin-top:14px;
-    display:none;
-  }
+  .parts-list{ margin-top:14px; display:none; }
   .part-chip{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    font-family:var(--mono);
-    font-size:12px;
-    padding:8px 12px;
-    border:1px solid var(--line);
-    border-radius:2px;
-    margin-bottom:6px;
-    background:#fff;
+    display:flex; align-items:center; justify-content:space-between; font-family:var(--mono);
+    font-size:12px; padding:8px 12px; border:1px solid var(--line); border-radius:2px;
+    margin-bottom:6px; background:#fff;
   }
   .part-chip .ok{color:#3a7d44;}
   .part-chip .bad{color:#c1442d;}
+  .part-chip .busy{color:#a8843a;}
 
   footer{
-    max-width:720px;
-    margin:0 auto;
-    padding:0 20px;
-    font-family:var(--mono);
-    font-size:11px;
-    color:#8a847a;
-    text-align:center;
-  }
-
-  .badge{
-    display:inline-block;
-    font-family:var(--mono);
-    font-size:11px;
-    padding:2px 8px;
-    border:1px solid var(--line);
-    border-radius:20px;
-    color:#6b665d;
-    margin-right:6px;
-    margin-bottom:6px;
+    max-width:760px; margin:0 auto; padding:0 20px; font-family:var(--mono);
+    font-size:11px; color:#8a847a; text-align:center;
   }
 </style>
 </head>
@@ -328,22 +151,25 @@
 <header>
   <div class="eyebrow">Runs entirely on your device</div>
   <h1>Reel <em>Cutter</em></h1>
-  <p class="sub">Pick a video from your phone or laptop, slice it into 150–160 second parts, stamp each one with a Part number, and walk away with a single zip. Nothing uploads anywhere.</p>
-  <div class="nocdn">Zero external scripts · zero CDN calls · pure browser APIs</div>
+  <p class="sub">Splits a video into 150–160 second parts by copying its existing compressed frames straight into new files — no re-encoding, no playback, no quality loss. Parts are labeled Part 1, Part 2, etc. by filename.</p>
+  <div class="badge-row">
+    <div class="nocdn">Zero external scripts</div>
+    <div class="nocdn">No re-encode — byte-copy split</div>
+    <div class="nocdn">Original quality preserved</div>
+  </div>
 </header>
 
 <main>
 
   <div class="card" data-tag="01 — Source">
     <div class="drop" id="dropZone">
-      <input type="file" id="fileInput" accept="video/*" />
+      <input type="file" id="fileInput" accept="video/mp4,video/quicktime,.mp4,.mov,.m4v" />
       <div class="drop-icon">🎞️</div>
       <p><strong>Tap to choose a video</strong></p>
-      <p class="hint">or drag one in from your files</p>
+      <p class="hint">MP4 / MOV works best — this is a stream-copy split, not a re-encode</p>
       <div class="fname" id="fileName"></div>
     </div>
     <video id="preview" controls playsinline muted></video>
-    <canvas id="workCanvas"></canvas>
   </div>
 
   <div class="card" data-tag="02 — Cut settings">
@@ -359,47 +185,38 @@
     </div>
     <div class="row">
       <div class="field">
-        <label for="position">Watermark position</label>
-        <select id="position">
-          <option value="top">Top</option>
-          <option value="bottom">Bottom</option>
-          <option value="center">Center</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="prefix">Watermark text prefix</label>
+        <label for="prefix">Part label prefix</label>
         <input type="text" id="prefix" value="Part" />
       </div>
-    </div>
-    <div class="row">
       <div class="field">
         <label for="includeAudio">Include audio</label>
         <select id="includeAudio">
           <option value="yes">Yes</option>
-          <option value="no">No (silent, faster to verify)</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="quality">Output quality</label>
-        <select id="quality">
-          <option value="2500000">Standard (2.5 Mbps)</option>
-          <option value="5000000">High (5 Mbps)</option>
-          <option value="1200000">Small file (1.2 Mbps)</option>
+          <option value="no">No (video only)</option>
         </select>
       </div>
     </div>
-    <div class="row">
-      <span class="badge" id="formatBadge">Output: detecting…</span>
-      <span class="badge">Zipped with a built-in zip writer</span>
-    </div>
+    <p class="hint" style="font-size:12px;color:#8a847a;margin-top:10px;">
+      Cuts snap to the nearest existing keyframe so every part plays cleanly from the start —
+      actual part length may differ from the target by up to a couple of seconds. Since nothing
+      is re-encoded, there's no visual watermark burned onto the frame; the label is the filename
+      (e.g. <code>part_1_Part-1.mp4</code>).
+    </p>
   </div>
 
   <div class="card" data-tag="03 — Run">
     <button class="btn" id="runBtn" disabled>Choose a video first</button>
-    <p class="hint" style="margin-top:8px;font-size:12px;color:#8a847a;">
-      This re-plays your video in real time to capture each part, so processing takes roughly
-      as long as the video itself. Keep this tab open and active while it runs.
-    </p>
+
+    <div class="timer-row" id="timerRow">
+      <div class="timer-box">
+        <div class="tlabel">Elapsed</div>
+        <div class="tvalue" id="elapsedVal">0:00</div>
+      </div>
+      <div class="timer-box">
+        <div class="tlabel">Est. remaining</div>
+        <div class="tvalue" id="etaVal">—</div>
+      </div>
+    </div>
 
     <div class="progress-wrap" id="progressWrap">
       <div class="progress-label"><span id="progressStage">Working</span><span id="progressPct">0%</span></div>
@@ -416,33 +233,35 @@
 </main>
 
 <footer>
-  No CDN, no external libraries, no uploads — everything above runs with the browser's own
-  Canvas, MediaRecorder and File APIs, and a small hand-written zip packer included in this file.
+  No CDN, no external libraries, no uploads, no re-recording — a hand-written MP4 box parser
+  copies existing compressed samples into new files, then a hand-written zip packer bundles them.
 </footer>
 
 <script>
 (function(){
   "use strict";
 
-  // ---------- DOM ----------
+  // ================= DOM =================
   const dropZone = document.getElementById('dropZone');
   const fileInput = document.getElementById('fileInput');
   const fileNameEl = document.getElementById('fileName');
   const preview = document.getElementById('preview');
-  const canvas = document.getElementById('workCanvas');
-  const ctx = canvas.getContext('2d');
   const runBtn = document.getElementById('runBtn');
   const downloadBtn = document.getElementById('downloadBtn');
   const logEl = document.getElementById('log');
+  const timerRow = document.getElementById('timerRow');
+  const elapsedVal = document.getElementById('elapsedVal');
+  const etaVal = document.getElementById('etaVal');
   const progressWrap = document.getElementById('progressWrap');
   const progressFill = document.getElementById('progressFill');
   const progressPct = document.getElementById('progressPct');
   const progressStage = document.getElementById('progressStage');
   const partsList = document.getElementById('partsList');
-  const formatBadge = document.getElementById('formatBadge');
 
   let selectedFile = null;
   let zipObjectUrl = null;
+  let timerInterval = null;
+  let runStartTime = 0;
 
   function log(msg){
     logEl.style.display = 'block';
@@ -455,29 +274,36 @@
     progressPct.textContent = Math.round(pct) + '%';
     progressFill.style.width = Math.min(100, Math.max(0, pct)) + '%';
   }
-
-  // ---------- Pick the best MediaRecorder mime type this browser supports ----------
-  const MIME_CANDIDATES = [
-    { mime: 'video/mp4;codecs=avc1,mp4a.40.2', ext: 'mp4' },
-    { mime: 'video/mp4', ext: 'mp4' },
-    { mime: 'video/webm;codecs=vp9,opus', ext: 'webm' },
-    { mime: 'video/webm;codecs=vp8,opus', ext: 'webm' },
-    { mime: 'video/webm', ext: 'webm' },
-  ];
-  let CHOSEN = null;
-  for (const c of MIME_CANDIDATES) {
-    if (window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(c.mime)) {
-      CHOSEN = c;
-      break;
+  function fmtTime(sec){
+    if (!isFinite(sec) || sec < 0) return '—';
+    const m = Math.floor(sec/60), s = Math.floor(sec%60);
+    return m + ':' + String(s).padStart(2,'0');
+  }
+  function startTimer(){
+    runStartTime = performance.now();
+    timerRow.style.display = 'flex';
+    etaVal.textContent = 'estimating…';
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      const elapsed = (performance.now() - runStartTime) / 1000;
+      elapsedVal.textContent = fmtTime(elapsed);
+    }, 250);
+  }
+  function updateEta(fractionDone){
+    const elapsed = (performance.now() - runStartTime) / 1000;
+    if (fractionDone > 0.02) {
+      const total = elapsed / fractionDone;
+      etaVal.textContent = fmtTime(total - elapsed);
     }
   }
-  if (CHOSEN) {
-    formatBadge.textContent = 'Output: .' + CHOSEN.ext + ' (' + CHOSEN.mime.split(';')[0] + ')';
-  } else {
-    formatBadge.textContent = 'Output: not supported in this browser';
+  function stopTimer(){
+    if (timerInterval) clearInterval(timerInterval);
+    const elapsed = (performance.now() - runStartTime) / 1000;
+    elapsedVal.textContent = fmtTime(elapsed);
+    etaVal.textContent = 'done';
   }
 
-  // ---------- File selection ----------
+  // ================= File selection =================
   dropZone.addEventListener('click', () => fileInput.click());
   dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
   dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
@@ -495,305 +321,586 @@
     fileNameEl.textContent = `${file.name}  (${(file.size/1024/1024).toFixed(1)} MB)`;
     preview.src = URL.createObjectURL(file);
     preview.style.display = 'block';
-    runBtn.disabled = !CHOSEN;
-    runBtn.textContent = CHOSEN ? 'Split & watermark this video' : 'Recording not supported here';
+    runBtn.disabled = false;
+    runBtn.textContent = 'Split this video (fast, lossless)';
   }
 
-  function waitForMetadata(){
-    return new Promise((resolve) => {
-      if (preview.readyState >= 1 && !isNaN(preview.duration) && preview.duration !== Infinity) {
-        resolve();
-      } else {
-        preview.addEventListener('loadedmetadata', () => resolve(), { once: true });
+  // ================= Byte helpers =================
+  function bu16(v){ const b=new Uint8Array(2); b[0]=(v>>>8)&0xFF; b[1]=v&0xFF; return b; }
+  function bu32(v){ const b=new Uint8Array(4); b[0]=(v>>>24)&0xFF; b[1]=(v>>>16)&0xFF; b[2]=(v>>>8)&0xFF; b[3]=v&0xFF; return b; }
+  function strBytes(s){ const b=new Uint8Array(s.length); for(let i=0;i<s.length;i++) b[i]=s.charCodeAt(i); return b; }
+  function concatBytes(arrays){
+    let total = 0;
+    for (const a of arrays) if (a) total += a.length;
+    const out = new Uint8Array(total);
+    let offset = 0;
+    for (const a of arrays) { if (a) { out.set(a, offset); offset += a.length; } }
+    return out;
+  }
+  function mp4Box(type, parts){
+    const body = concatBytes(parts);
+    return concatBytes([bu32(8 + body.length), strBytes(type), body]);
+  }
+
+  async function readFileRange(file, start, end){
+    const buf = await file.slice(start, end).arrayBuffer();
+    return new Uint8Array(buf);
+  }
+
+  // ================= MP4 box scanning/parsing =================
+  async function scanTopBoxes(file){
+    const boxes = [];
+    let offset = 0;
+    while (offset < file.size) {
+      const head = await readFileRange(file, offset, Math.min(offset + 16, file.size));
+      if (head.length < 8) break;
+      const dv = new DataView(head.buffer);
+      let size = dv.getUint32(0);
+      const type = String.fromCharCode(head[4], head[5], head[6], head[7]);
+      let headerSize = 8;
+      if (size === 1) {
+        const hi = dv.getUint32(8), lo = dv.getUint32(12);
+        size = hi * 4294967296 + lo;
+        headerSize = 16;
+      } else if (size === 0) {
+        size = file.size - offset;
       }
-    });
+      if (size < headerSize) break;
+      boxes.push({ type, start: offset, headerSize, bodyStart: offset + headerSize, end: offset + size });
+      offset += size;
+    }
+    return boxes;
   }
 
-  function seekTo(t){
-    return new Promise((resolve) => {
-      const onSeeked = () => { preview.removeEventListener('seeked', onSeeked); resolve(); };
-      preview.addEventListener('seeked', onSeeked);
-      preview.currentTime = t;
-    });
+  function parseBoxList(bytes, start, end){
+    const dv = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    const boxes = [];
+    let offset = start;
+    while (offset + 8 <= end) {
+      let size = dv.getUint32(offset);
+      const type = String.fromCharCode(bytes[offset+4], bytes[offset+5], bytes[offset+6], bytes[offset+7]);
+      let headerSize = 8;
+      if (size === 1) {
+        const hi = dv.getUint32(offset+8), lo = dv.getUint32(offset+12);
+        size = hi * 4294967296 + lo;
+        headerSize = 16;
+      } else if (size === 0) {
+        size = end - offset;
+      }
+      if (size < headerSize) break;
+      boxes.push({ type, start: offset, headerSize, bodyStart: offset + headerSize, end: offset + size });
+      offset += size;
+    }
+    return boxes;
   }
+  function findBox(boxes, type){ return boxes.find(b => b.type === type); }
 
-  const positionFor = (pos, w, h, textW, textH, pad) => {
-    if (pos === 'bottom') return { x: (w - textW) / 2, y: h - pad - textH };
-    if (pos === 'center') return { x: (w - textW) / 2, y: (h - textH) / 2 };
-    return { x: (w - textW) / 2, y: pad }; // top
-  };
+  async function parseMp4(file){
+    const top = await scanTopBoxes(file);
+    const ftypBox = findBox(top, 'ftyp');
+    const moovBox = findBox(top, 'moov');
+    if (!moovBox) throw new Error('No "moov" box found — file may be corrupted, fragmented, or not a standard MP4/MOV.');
 
-  // ---------- Capture a single segment [startTime, startTime+len) into a Blob ----------
-  function captureSegment({ startTime, len, watermarkText, position, includeAudio, bitrate }) {
-    return new Promise(async (resolve, reject) => {
+    const ftypBytes = ftypBox
+      ? await readFileRange(file, ftypBox.start, ftypBox.end)
+      : mp4Box('ftyp', [strBytes('isom'), bu32(0x200), strBytes('isomiso2avc1mp41')]);
+
+    const moovBytes = await readFileRange(file, moovBox.bodyStart, moovBox.end);
+    const moovBoxes = parseBoxList(moovBytes, 0, moovBytes.length);
+    const dv = new DataView(moovBytes.buffer, moovBytes.byteOffset, moovBytes.byteLength);
+
+    if (findBox(moovBoxes, 'mvex')) {
+      throw new Error('This is a fragmented MP4 (streaming-style) — fast lossless split needs a standard, non-fragmented MP4/MOV.');
+    }
+
+    const mvhdBox = findBox(moovBoxes, 'mvhd');
+    if (!mvhdBox) throw new Error('No "mvhd" box found.');
+    if (moovBytes[mvhdBox.bodyStart] !== 0) throw new Error('This file uses a 64-bit MP4 header variant not supported here.');
+    const movieTimescale = dv.getUint32(mvhdBox.bodyStart + 12);
+    const mvhdBytes = moovBytes.slice(mvhdBox.start, mvhdBox.end);
+
+    const trakBoxes = moovBoxes.filter(b => b.type === 'trak');
+    const tracks = [];
+
+    for (const trak of trakBoxes) {
       try {
-        canvas.width = preview.videoWidth;
-        canvas.height = preview.videoHeight;
+        const trakInner = parseBoxList(moovBytes, trak.bodyStart, trak.end);
+        const tkhdBox = findBox(trakInner, 'tkhd');
+        const mdiaBox = findBox(trakInner, 'mdia');
+        if (!tkhdBox || !mdiaBox) continue;
+        if (moovBytes[tkhdBox.bodyStart] !== 0) continue;
 
-        await seekTo(startTime);
+        const mdiaInner = parseBoxList(moovBytes, mdiaBox.bodyStart, mdiaBox.end);
+        const mdhdBox = findBox(mdiaInner, 'mdhd');
+        const hdlrBox = findBox(mdiaInner, 'hdlr');
+        if (!mdhdBox || !hdlrBox) continue;
+        if (moovBytes[mdhdBox.bodyStart] !== 0) continue;
 
-        const canvasStream = canvas.captureStream(30);
-        let tracks = canvasStream.getVideoTracks();
+        const timescale = dv.getUint32(mdhdBox.bodyStart + 12);
+        const handlerType = String.fromCharCode(
+          moovBytes[hdlrBox.bodyStart+8], moovBytes[hdlrBox.bodyStart+9],
+          moovBytes[hdlrBox.bodyStart+10], moovBytes[hdlrBox.bodyStart+11]
+        );
+        if (handlerType !== 'vide' && handlerType !== 'soun') continue;
 
-        if (includeAudio && typeof preview.captureStream === 'function') {
-          try {
-            const mediaStream = preview.captureStream();
-            const audioTracks = mediaStream.getAudioTracks();
-            if (audioTracks.length) tracks = tracks.concat(audioTracks);
-          } catch (e) {
-            log('Audio capture unavailable, continuing without audio: ' + e.message);
+        const minfBox = findBox(mdiaInner, 'minf');
+        if (!minfBox) continue;
+        const minfInner = parseBoxList(moovBytes, minfBox.bodyStart, minfBox.end);
+        const stblBox = findBox(minfInner, 'stbl');
+        if (!stblBox) continue;
+        const stblInner = parseBoxList(moovBytes, stblBox.bodyStart, stblBox.end);
+
+        const stsdBox = findBox(stblInner, 'stsd');
+        const sttsBox = findBox(stblInner, 'stts');
+        const cttsBox = findBox(stblInner, 'ctts');
+        const stscBox = findBox(stblInner, 'stsc');
+        const stszBox = findBox(stblInner, 'stsz');
+        const stcoBox = findBox(stblInner, 'stco') || findBox(stblInner, 'co64');
+        const stssBox = findBox(stblInner, 'stss');
+        if (!stsdBox || !sttsBox || !stscBox || !stszBox || !stcoBox) continue;
+
+        // stts
+        let off = sttsBox.bodyStart + 4;
+        const sttsCount = dv.getUint32(off); off += 4;
+        const sttsEntries = [];
+        for (let i = 0; i < sttsCount; i++) {
+          const cnt = dv.getUint32(off); off += 4;
+          const delta = dv.getUint32(off); off += 4;
+          sttsEntries.push([cnt, delta]);
+        }
+
+        // ctts (optional)
+        let cttsEntries = null;
+        if (cttsBox) {
+          let co = cttsBox.bodyStart + 4;
+          const cCount = dv.getUint32(co); co += 4;
+          cttsEntries = [];
+          for (let i = 0; i < cCount; i++) {
+            const cnt = dv.getUint32(co); co += 4;
+            const val = dv.getInt32(co); co += 4;
+            cttsEntries.push([cnt, val]);
           }
         }
 
-        const combined = new MediaStream(tracks);
-        const recorderOpts = { mimeType: CHOSEN.mime };
-        if (bitrate) recorderOpts.videoBitsPerSecond = bitrate;
-
-        const recorder = new MediaRecorder(combined, recorderOpts);
-        const chunks = [];
-        recorder.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
-
-        let stopped = false;
-        let rafId = null;
-
-        recorder.onstop = () => {
-          if (rafId) cancelAnimationFrame(rafId);
-          preview.pause();
-          const blob = new Blob(chunks, { type: CHOSEN.mime });
-          resolve(blob);
-        };
-        recorder.onerror = (e) => {
-          if (rafId) cancelAnimationFrame(rafId);
-          reject(e.error || new Error('MediaRecorder error'));
-        };
-
-        const endTime = startTime + len;
-
-        function drawFrame(){
-          if (stopped) return;
-          ctx.drawImage(preview, 0, 0, canvas.width, canvas.height);
-
-          // Watermark
-          const fontSize = Math.max(20, Math.round(canvas.width * 0.035));
-          ctx.font = `bold ${fontSize}px sans-serif`;
-          const textW = ctx.measureText(watermarkText).width;
-          const textH = fontSize;
-          const pad = Math.round(canvas.height * 0.035);
-          const boxPad = Math.round(fontSize * 0.35);
-          const { x, y } = positionFor(position, canvas.width, canvas.height, textW, textH, pad);
-
-          ctx.fillStyle = 'rgba(0,0,0,0.5)';
-          ctx.fillRect(x - boxPad, y - boxPad, textW + boxPad * 2, textH + boxPad * 2);
-          ctx.fillStyle = '#ffffff';
-          ctx.textBaseline = 'top';
-          ctx.fillText(watermarkText, x, y);
-
-          if (preview.currentTime >= endTime - 0.05 || preview.ended) {
-            stopped = true;
-            if (recorder.state !== 'inactive') recorder.stop();
-            return;
-          }
-          rafId = requestAnimationFrame(drawFrame);
+        // stsc
+        let so = stscBox.bodyStart + 4;
+        const stscCount = dv.getUint32(so); so += 4;
+        const stscEntries = [];
+        for (let i = 0; i < stscCount; i++) {
+          const firstChunk = dv.getUint32(so); so += 4;
+          const spc = dv.getUint32(so); so += 4;
+          const sdi = dv.getUint32(so); so += 4;
+          stscEntries.push({ firstChunk, samplesPerChunk: spc, sdi });
         }
 
-        recorder.start(250);
-        await preview.play();
-        rafId = requestAnimationFrame(drawFrame);
+        // stsz
+        let zo = stszBox.bodyStart + 4;
+        const uniformSize = dv.getUint32(zo); zo += 4;
+        const sampleCount = dv.getUint32(zo); zo += 4;
+        const sizes = new Array(sampleCount);
+        if (uniformSize === 0) {
+          for (let i = 0; i < sampleCount; i++) { sizes[i] = dv.getUint32(zo); zo += 4; }
+        } else {
+          for (let i = 0; i < sampleCount; i++) sizes[i] = uniformSize;
+        }
 
-      } catch (err) {
-        reject(err);
+        // stco / co64
+        const is64 = stcoBox.type === 'co64';
+        let co_ = stcoBox.bodyStart + 4;
+        const chunkCount = dv.getUint32(co_); co_ += 4;
+        const chunkOffsets = new Array(chunkCount);
+        for (let i = 0; i < chunkCount; i++) {
+          if (is64) {
+            const hi = dv.getUint32(co_), lo = dv.getUint32(co_+4); co_ += 8;
+            chunkOffsets[i] = hi * 4294967296 + lo;
+          } else {
+            chunkOffsets[i] = dv.getUint32(co_); co_ += 4;
+          }
+        }
+
+        // stss (optional)
+        let syncSet = null;
+        if (stssBox) {
+          let sso = stssBox.bodyStart + 4;
+          const sc = dv.getUint32(sso); sso += 4;
+          syncSet = new Set();
+          for (let i = 0; i < sc; i++) { syncSet.add(dv.getUint32(sso)); sso += 4; }
+        }
+
+        function samplesPerChunkFor(chunkIndex1based){
+          let result = stscEntries.length ? stscEntries[0].samplesPerChunk : 1;
+          for (const e of stscEntries) {
+            if (e.firstChunk <= chunkIndex1based) result = e.samplesPerChunk; else break;
+          }
+          return result;
+        }
+
+        const samples = new Array(sampleCount);
+        let sIdx = 0;
+        for (let c = 1; c <= chunkCount && sIdx < sampleCount; c++) {
+          const spc = samplesPerChunkFor(c);
+          let runOff = chunkOffsets[c-1];
+          for (let s = 0; s < spc && sIdx < sampleCount; s++) {
+            samples[sIdx] = { offset: runOff, size: sizes[sIdx] };
+            runOff += sizes[sIdx];
+            sIdx++;
+          }
+        }
+        {
+          let idx = 0, dts = 0;
+          for (const [cnt, delta] of sttsEntries) {
+            for (let i = 0; i < cnt && idx < sampleCount; i++) {
+              samples[idx].dts = dts;
+              samples[idx].duration = delta;
+              dts += delta;
+              idx++;
+            }
+          }
+        }
+        if (cttsEntries) {
+          let idx = 0;
+          for (const [cnt, val] of cttsEntries) {
+            for (let i = 0; i < cnt && idx < sampleCount; i++) { samples[idx].cts = val; idx++; }
+          }
+        } else {
+          for (let i = 0; i < sampleCount; i++) samples[i].cts = 0;
+        }
+        for (let i = 0; i < sampleCount; i++) samples[i].isSync = syncSet ? syncSet.has(i+1) : true;
+
+        if (!samples.length || samples[0].duration === undefined) continue;
+
+        const vmhdBox = findBox(minfInner, 'vmhd') || findBox(minfInner, 'smhd');
+        const dinfBox = findBox(minfInner, 'dinf');
+
+        tracks.push({
+          type: handlerType,
+          timescale,
+          samples,
+          hasCtts: !!cttsBox,
+          stsdBytes: moovBytes.slice(stsdBox.start, stsdBox.end),
+          tkhdBytes: moovBytes.slice(tkhdBox.start, tkhdBox.end),
+          mdhdBytes: moovBytes.slice(mdhdBox.start, mdhdBox.end),
+          hdlrBytes: moovBytes.slice(hdlrBox.start, hdlrBox.end),
+          mediaHeaderBytes: vmhdBox ? moovBytes.slice(vmhdBox.start, vmhdBox.end) : new Uint8Array(0),
+          dinfBytes: dinfBox ? moovBytes.slice(dinfBox.start, dinfBox.end) : new Uint8Array(0),
+        });
+      } catch (trakErr) {
+        // skip this track, keep going
       }
-    });
+    }
+
+    if (!tracks.some(t => t.type === 'vide')) {
+      throw new Error('Could not find a usable video track in this file.');
+    }
+
+    return { ftypBytes, movieTimescale, mvhdBytes, tracks };
   }
 
-  // ---------- Minimal ZIP writer (STORE / no compression) ----------
+  // ================= Segment planning =================
+  function planSegments(totalDuration, minLen, maxLen){
+    const targetLen = (minLen + maxLen) / 2;
+    let numParts = Math.max(1, Math.ceil(totalDuration / targetLen));
+    let chunkLen = totalDuration / numParts;
+    if (chunkLen < minLen && totalDuration > minLen) {
+      chunkLen = maxLen;
+      numParts = Math.ceil(totalDuration / chunkLen);
+    }
+    const segments = [];
+    for (let i = 0; i < numParts; i++) {
+      segments.push({ rawStart: i * chunkLen, rawEnd: Math.min(totalDuration, (i+1) * chunkLen) });
+    }
+    return segments;
+  }
+
+  function findSampleIndexAtOrBeforeSync(samples, timescale, targetSec){
+    let idx = 0;
+    for (let i = 0; i < samples.length; i++) {
+      const t = samples[i].dts / timescale;
+      if (t <= targetSec && samples[i].isSync) idx = i;
+      if (t > targetSec) break;
+    }
+    return idx;
+  }
+  function findSampleIndexAtOrAfter(samples, timescale, targetSec){
+    for (let i = 0; i < samples.length; i++) {
+      if (samples[i].dts / timescale >= targetSec) return i;
+    }
+    return samples.length;
+  }
+
+  // ================= Segment building =================
+  function buildStblForRange(track, startIdx, endIdx, offsets){
+    const n = endIdx - startIdx;
+
+    const sttsEntries = [];
+    for (let i = startIdx; i < endIdx; i++) sttsEntries.push(bu32(1), bu32(track.samples[i].duration));
+    const sttsBoxBytes = mp4Box('stts', [bu32(0), bu32(n), ...sttsEntries]);
+
+    let cttsBoxBytes = new Uint8Array(0);
+    if (track.hasCtts) {
+      const cttsEntries = [];
+      for (let i = startIdx; i < endIdx; i++) cttsEntries.push(bu32(1), bu32(track.samples[i].cts >>> 0));
+      cttsBoxBytes = mp4Box('ctts', [bu32(0), bu32(n), ...cttsEntries]);
+    }
+
+    const stszEntries = [];
+    for (let i = startIdx; i < endIdx; i++) stszEntries.push(bu32(track.samples[i].size));
+    const stszBoxBytes = mp4Box('stsz', [bu32(0), bu32(0), bu32(n), ...stszEntries]);
+
+    const stcoEntries = [];
+    for (let i = 0; i < n; i++) stcoEntries.push(bu32(offsets[i]));
+    const stcoBoxBytes = mp4Box('stco', [bu32(0), bu32(n), ...stcoEntries]);
+
+    const stscBoxBytes = mp4Box('stsc', [bu32(0), bu32(1), bu32(1), bu32(1), bu32(1)]);
+
+    const syncIdx = [];
+    for (let i = startIdx; i < endIdx; i++) if (track.samples[i].isSync) syncIdx.push(i - startIdx + 1);
+    let stssBoxBytes = new Uint8Array(0);
+    if (syncIdx.length < n) {
+      stssBoxBytes = mp4Box('stss', [bu32(0), bu32(syncIdx.length), ...syncIdx.map(bu32)]);
+    }
+
+    return mp4Box('stbl', [track.stsdBytes, sttsBoxBytes, cttsBoxBytes, stscBoxBytes, stszBoxBytes, stcoBoxBytes, stssBoxBytes]);
+  }
+
+  function patchedCopy(bytes, absOffset, value){
+    const out = bytes.slice();
+    const dv = new DataView(out.buffer, out.byteOffset, out.byteLength);
+    dv.setUint32(absOffset, value >>> 0);
+    return out;
+  }
+
+  function buildTrak(track, startIdx, endIdx, offsets, movieTimescale){
+    const durTrackTs = (track.samples[endIdx-1].dts + track.samples[endIdx-1].duration) - track.samples[startIdx].dts;
+    const durSec = durTrackTs / track.timescale;
+    const durMovieTs = Math.round(durSec * movieTimescale);
+
+    const tkhdPatched = patchedCopy(track.tkhdBytes, 8 + 20, durMovieTs);
+    const mdhdPatched = patchedCopy(track.mdhdBytes, 8 + 16, durTrackTs);
+
+    const stbl = buildStblForRange(track, startIdx, endIdx, offsets);
+    const minf = mp4Box('minf', [track.mediaHeaderBytes, track.dinfBytes, stbl]);
+    const mdia = mp4Box('mdia', [mdhdPatched, track.hdlrBytes, minf]);
+    return mp4Box('trak', [tkhdPatched, mdia]);
+  }
+
+  function collectSampleParts(file, samples, startIdx, endIdx){
+    const parts = [];
+    let runStart = null, runEnd = null;
+    for (let i = startIdx; i < endIdx; i++) {
+      const s = samples[i];
+      if (runStart === null) { runStart = s.offset; runEnd = s.offset + s.size; }
+      else if (s.offset === runEnd) { runEnd = s.offset + s.size; }
+      else { parts.push(file.slice(runStart, runEnd)); runStart = s.offset; runEnd = s.offset + s.size; }
+    }
+    if (runStart !== null) parts.push(file.slice(runStart, runEnd));
+    return parts;
+  }
+
+  function buildSegmentBlob({ file, ftypBytes, movieTimescale, mvhdBytes, videoTrack, vs, ve, audioTrack, as, ae }){
+    const videoCount = ve - vs;
+    const audioCount = audioTrack ? (ae - as) : 0;
+
+    const dummyV = new Array(videoCount).fill(0);
+    const dummyA = new Array(audioCount).fill(0);
+    const videoTrak0 = buildTrak(videoTrack, vs, ve, dummyV, movieTimescale);
+    const audioTrak0 = audioTrack ? buildTrak(audioTrack, as, ae, dummyA, movieTimescale) : null;
+
+    const videoDurSec = (videoTrack.samples[ve-1].dts + videoTrack.samples[ve-1].duration - videoTrack.samples[vs].dts) / videoTrack.timescale;
+    const audioDurSec = audioTrack ? (audioTrack.samples[ae-1].dts + audioTrack.samples[ae-1].duration - audioTrack.samples[as].dts) / audioTrack.timescale : 0;
+    const overallDurMovieTs = Math.round(Math.max(videoDurSec, audioDurSec) * movieTimescale);
+
+    const mvhdPatched0 = patchedCopy(mvhdBytes, 8 + 16, overallDurMovieTs);
+    const moovParts0 = [mvhdPatched0, videoTrak0];
+    if (audioTrak0) moovParts0.push(audioTrak0);
+    const moov0 = mp4Box('moov', moovParts0);
+
+    const mdatStart = ftypBytes.length + moov0.length + 8;
+
+    const videoOffsets = [];
+    { let acc = mdatStart; for (let i = vs; i < ve; i++) { videoOffsets.push(acc); acc += videoTrack.samples[i].size; } }
+    const videoBytesTotal = videoOffsets.length ? (videoOffsets[videoOffsets.length-1] + videoTrack.samples[ve-1].size - mdatStart) : 0;
+
+    let audioOffsets = [];
+    let audioBytesTotal = 0;
+    if (audioTrack) {
+      let acc = mdatStart + videoBytesTotal;
+      for (let i = as; i < ae; i++) { audioOffsets.push(acc); acc += audioTrack.samples[i].size; }
+      audioBytesTotal = audioOffsets.length ? (audioOffsets[audioOffsets.length-1] + audioTrack.samples[ae-1].size - (mdatStart + videoBytesTotal)) : 0;
+    }
+
+    const videoTrak = buildTrak(videoTrack, vs, ve, videoOffsets, movieTimescale);
+    const audioTrak = audioTrack ? buildTrak(audioTrack, as, ae, audioOffsets, movieTimescale) : null;
+    const mvhdPatched = patchedCopy(mvhdBytes, 8 + 16, overallDurMovieTs);
+    const moovParts = [mvhdPatched, videoTrak];
+    if (audioTrak) moovParts.push(audioTrak);
+    const moov = mp4Box('moov', moovParts);
+
+    const mdatBodyLength = videoBytesTotal + audioBytesTotal;
+    const mdatHeader = concatBytes([bu32(8 + mdatBodyLength), strBytes('mdat')]);
+
+    const videoParts = collectSampleParts(file, videoTrack.samples, vs, ve);
+    const audioParts = audioTrack ? collectSampleParts(file, audioTrack.samples, as, ae) : [];
+
+    return new Blob([ftypBytes, moov, mdatHeader, ...videoParts, ...audioParts], { type: 'video/mp4' });
+  }
+
+  // ================= ZIP writer (STORE, no compression) =================
   const CRC_TABLE = (() => {
     const table = new Uint32Array(256);
     for (let n = 0; n < 256; n++) {
       let c = n;
-      for (let k = 0; k < 8; k++) {
-        c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
-      }
+      for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
       table[n] = c >>> 0;
     }
     return table;
   })();
-
-  function crc32(uint8arr){
+  function crc32(bytes){
     let crc = 0xFFFFFFFF;
-    for (let i = 0; i < uint8arr.length; i++) {
-      crc = CRC_TABLE[(crc ^ uint8arr[i]) & 0xFF] ^ (crc >>> 8);
-    }
+    for (let i = 0; i < bytes.length; i++) crc = CRC_TABLE[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
     return (crc ^ 0xFFFFFFFF) >>> 0;
   }
-
+  function le16(v){ const b=new Uint8Array(2); b[0]=v&0xFF; b[1]=(v>>>8)&0xFF; return b; }
+  function le32(v){ const b=new Uint8Array(4); b[0]=v&0xFF; b[1]=(v>>>8)&0xFF; b[2]=(v>>>16)&0xFF; b[3]=(v>>>24)&0xFF; return b; }
   function dosDateTime(date){
-    const time = ((date.getHours() & 0x1F) << 11) |
-                 ((date.getMinutes() & 0x3F) << 5) |
-                 ((Math.floor(date.getSeconds() / 2)) & 0x1F);
-    const day = ((Math.max(date.getFullYear(), 1980) - 1980 & 0x7F) << 9) |
-                 (((date.getMonth() + 1) & 0xF) << 5) |
-                 (date.getDate() & 0x1F);
+    const time = ((date.getHours()&0x1F)<<11) | ((date.getMinutes()&0x3F)<<5) | ((Math.floor(date.getSeconds()/2))&0x1F);
+    const day = (((Math.max(date.getFullYear(),1980)-1980)&0x7F)<<9) | (((date.getMonth()+1)&0xF)<<5) | (date.getDate()&0x1F);
     return { time: time & 0xFFFF, date: day & 0xFFFF };
   }
-
-  function u16(v){ const b = new Uint8Array(2); b[0] = v & 0xFF; b[1] = (v >>> 8) & 0xFF; return b; }
-  function u32(v){ const b = new Uint8Array(4); b[0]=v&0xFF; b[1]=(v>>>8)&0xFF; b[2]=(v>>>16)&0xFF; b[3]=(v>>>24)&0xFF; return b; }
-  function concatBytes(arrays){
-    let total = 0;
-    for (const a of arrays) total += a.length;
-    const out = new Uint8Array(total);
-    let offset = 0;
-    for (const a of arrays) { out.set(a, offset); offset += a.length; }
-    return out;
-  }
-
-  /**
-   * Build a zip file (store method, uncompressed) from a list of
-   * { name: string, data: Uint8Array } entries. Returns a Blob.
-   */
   function buildZip(entries){
     const encoder = new TextEncoder();
-    const localParts = [];
-    const centralParts = [];
+    const localParts = [], centralParts = [];
     let offset = 0;
     const { time, date } = dosDateTime(new Date());
-
     for (const entry of entries) {
       const nameBytes = encoder.encode(entry.name);
       const data = entry.data;
       const crc = crc32(data);
       const size = data.length;
-
       const localHeader = concatBytes([
-        u32(0x04034b50),
-        u16(20),          // version needed
-        u16(0),           // flags
-        u16(0),           // compression: store
-        u16(time), u16(date),
-        u32(crc),
-        u32(size),         // compressed size == size (store)
-        u32(size),         // uncompressed size
-        u16(nameBytes.length),
-        u16(0),            // extra field length
-        nameBytes,
+        le32(0x04034b50), le16(20), le16(0), le16(0), le16(time), le16(date),
+        le32(crc), le32(size), le32(size), le16(nameBytes.length), le16(0), nameBytes,
       ]);
-
       localParts.push(localHeader, data);
-
       const centralHeader = concatBytes([
-        u32(0x02014b50),
-        u16(20), u16(20),
-        u16(0), u16(0),
-        u16(time), u16(date),
-        u32(crc),
-        u32(size), u32(size),
-        u16(nameBytes.length),
-        u16(0), u16(0),
-        u16(0), u16(0),
-        u32(0),
-        u32(offset),
-        nameBytes,
+        le32(0x02014b50), le16(20), le16(20), le16(0), le16(0), le16(time), le16(date),
+        le32(crc), le32(size), le32(size), le16(nameBytes.length), le16(0), le16(0),
+        le16(0), le16(0), le32(0), le32(offset), nameBytes,
       ]);
       centralParts.push(centralHeader);
-
       offset += localHeader.length + data.length;
     }
-
     const centralDir = concatBytes(centralParts);
     const centralStart = offset;
-
     const eocd = concatBytes([
-      u32(0x06054b50),
-      u16(0), u16(0),
-      u16(entries.length), u16(entries.length),
-      u32(centralDir.length),
-      u32(centralStart),
-      u16(0),
+      le32(0x06054b50), le16(0), le16(0), le16(entries.length), le16(entries.length),
+      le32(centralDir.length), le32(centralStart), le16(0),
     ]);
-
     return new Blob([concatBytes(localParts), centralDir, eocd], { type: 'application/zip' });
   }
 
-  // ---------- Main run ----------
+  // ================= Main run =================
   runBtn.addEventListener('click', async () => {
-    if (!selectedFile || !CHOSEN) return;
+    if (!selectedFile) return;
     downloadBtn.style.display = 'none';
     partsList.innerHTML = '';
     partsList.style.display = 'none';
     logEl.textContent = '';
     runBtn.disabled = true;
+    startTimer();
 
     try {
-      await waitForMetadata();
+      setProgress('Reading file structure', 3);
+      const parsed = await parseMp4(selectedFile);
+      const videoTrack = parsed.tracks.find(t => t.type === 'vide');
+      let audioTrack = parsed.tracks.find(t => t.type === 'soun');
+      const includeAudio = document.getElementById('includeAudio').value === 'yes';
+      if (!includeAudio) audioTrack = null;
 
-      const duration = preview.duration;
+      const lastV = videoTrack.samples[videoTrack.samples.length - 1];
+      const totalDuration = (lastV.dts + lastV.duration) / videoTrack.timescale;
+
       const minLen = parseFloat(document.getElementById('minLen').value) || 150;
       const maxLen = parseFloat(document.getElementById('maxLen').value) || 160;
-      const position = document.getElementById('position').value;
       const prefix = document.getElementById('prefix').value.trim() || 'Part';
-      const includeAudio = document.getElementById('includeAudio').value === 'yes';
-      const bitrate = parseInt(document.getElementById('quality').value, 10);
 
-      const targetLen = (minLen + maxLen) / 2;
-      let numParts = Math.max(1, Math.ceil(duration / targetLen));
-      let chunkLen = duration / numParts;
-      if (chunkLen < minLen && duration > minLen) {
-        chunkLen = maxLen;
-        numParts = Math.ceil(duration / chunkLen);
-      }
+      const rawSegments = planSegments(totalDuration, minLen, maxLen);
+      log(`Duration: ${totalDuration.toFixed(1)}s → ${rawSegments.length} part(s) planned`);
 
-      log(`Duration: ${duration.toFixed(1)}s → ${numParts} part(s), ~${chunkLen.toFixed(1)}s each`);
-      log(`Recording as: ${CHOSEN.mime}`);
+      const videoStarts = rawSegments.map((seg, i) => {
+        if (i === 0) return 0;
+        return findSampleIndexAtOrBeforeSync(videoTrack.samples, videoTrack.timescale, seg.rawStart);
+      });
+      const videoRanges = videoStarts.map((startIdx, i) => {
+        const endIdx = (i+1 < videoStarts.length) ? videoStarts[i+1] : videoTrack.samples.length;
+        return [startIdx, endIdx];
+      });
 
-      const zipEntries = [];
+      const audioRanges = videoRanges.map(([vs, ve]) => {
+        if (!audioTrack) return null;
+        const startSec = videoTrack.samples[vs].dts / videoTrack.timescale;
+        const endSec = ve < videoTrack.samples.length
+          ? videoTrack.samples[ve].dts / videoTrack.timescale
+          : totalDuration + 1;
+        const as = findSampleIndexAtOrAfter(audioTrack.samples, audioTrack.timescale, startSec);
+        const ae = findSampleIndexAtOrAfter(audioTrack.samples, audioTrack.timescale, endSec);
+        return [as, Math.max(ae, as + 1 > audioTrack.samples.length ? audioTrack.samples.length : ae)];
+      });
 
-      for (let i = 0; i < numParts; i++) {
-        const startTime = i * chunkLen;
-        const thisLen = Math.min(chunkLen, duration - startTime);
-        if (thisLen <= 0) break;
-        const partNum = i + 1;
-        const watermarkText = `${prefix} ${partNum}`;
-        const outName = `part_${partNum}.${CHOSEN.ext}`;
-
+      partsList.style.display = 'block';
+      const chips = videoRanges.map((_, i) => {
         const chip = document.createElement('div');
         chip.className = 'part-chip';
-        chip.innerHTML = `<span>${watermarkText}</span><span>recording…</span>`;
+        chip.innerHTML = `<span>${prefix} ${i+1}</span><span class="busy">preparing…</span>`;
         partsList.appendChild(chip);
-        partsList.style.display = 'block';
+        return chip;
+      });
 
-        setProgress(`Recording part ${partNum} / ${numParts}`, (i / numParts) * 95);
+      setProgress('Building parts', 10);
+      const zipEntries = [];
+      let done = 0;
 
+      for (let i = 0; i < videoRanges.length; i++) {
+        const [vs, ve] = videoRanges[i];
+        const ar = audioRanges[i];
         try {
-          const blob = await captureSegment({
-            startTime, len: thisLen, watermarkText, position, includeAudio, bitrate
+          const blob = buildSegmentBlob({
+            file: selectedFile, ftypBytes: parsed.ftypBytes, movieTimescale: parsed.movieTimescale,
+            mvhdBytes: parsed.mvhdBytes, videoTrack, vs, ve,
+            audioTrack: ar ? audioTrack : null, as: ar ? ar[0] : 0, ae: ar ? ar[1] : 0,
           });
           const buf = new Uint8Array(await blob.arrayBuffer());
-          zipEntries.push({ name: outName, data: buf });
-          chip.innerHTML = `<span>${watermarkText}</span><span class="ok">✓ done (${(buf.length/1024/1024).toFixed(1)} MB)</span>`;
+          const name = `part_${i+1}_${prefix.replace(/[^a-z0-9]+/gi,'-')}-${i+1}.mp4`;
+          zipEntries.push({ name, data: buf });
+          chips[i].innerHTML = `<span>${prefix} ${i+1}</span><span class="ok">✓ done (${(buf.length/1024/1024).toFixed(1)} MB)</span>`;
         } catch (segErr) {
-          console.error(segErr);
-          chip.innerHTML = `<span>${watermarkText}</span><span class="bad">✗ failed</span>`;
-          log('Part ' + partNum + ' failed: ' + (segErr.message || segErr));
+          chips[i].innerHTML = `<span>${prefix} ${i+1}</span><span class="bad">✗ failed</span>`;
+          log(`Part ${i+1} failed: ` + (segErr.message || segErr));
         }
+        done++;
+        const frac = done / videoRanges.length;
+        setProgress(`Building parts (${done}/${videoRanges.length})`, 10 + frac * 80);
+        updateEta(0.1 + frac * 0.8);
       }
 
-      if (!zipEntries.length) throw new Error('No parts were recorded successfully.');
+      if (!zipEntries.length) throw new Error('No parts were built successfully.');
 
-      setProgress('Packing zip', 97);
+      setProgress('Packing zip', 95);
       const zipBlob = buildZip(zipEntries);
       zipObjectUrl = URL.createObjectURL(zipBlob);
 
       setProgress('Done', 100);
       downloadBtn.style.display = 'block';
-      log('All parts packed into a zip. Ready to download.');
+      log(`Packed ${zipEntries.length}/${videoRanges.length} parts into a zip. Ready to download.`);
 
     } catch (err) {
       console.error(err);
       log('ERROR: ' + (err.message || err));
+      log('If this keeps happening, the file may be a fragmented MP4 or an unsupported variant — try re-saving/exporting it as a standard MP4 first.');
     } finally {
+      stopTimer();
       runBtn.disabled = false;
-      runBtn.textContent = 'Split & watermark this video';
+      runBtn.textContent = 'Split this video (fast, lossless)';
     }
   });
 
