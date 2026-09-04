@@ -38,15 +38,17 @@ blog/
 
 `index.html` keeps its original inline `<style>` and `<script>` untouched — the split/zip logic hasn't changed. `assets/site.css` only adds new, non-conflicting styles for the nav, footer, ad slots, and the content pages.
 
-## Before you deploy: two placeholders to replace
+## Deployment
 
-**1. Domain.** Every page uses `https://reelcutter.app` for canonical URLs, Open Graph tags, the sitemap, and structured data. Once you know your real domain, replace it everywhere:
+This site is live at **https://reel-cutter-swart.vercel.app/**. All canonical URLs, Open Graph tags, JSON-LD, `sitemap.xml`, and `robots.txt` already point at this address.
+
+If you ever move to a custom domain later, update every reference in one pass:
 
 ```bash
-grep -rl "reelcutter.app" . | xargs sed -i 's/reelcutter\.app/yourdomain.com/g'
+grep -rl "reel-cutter-swart.vercel.app" . | xargs sed -i 's#reel-cutter-swart\.vercel\.app#yourdomain.com#g'
 ```
 
-**2. AdSense publisher ID.** Every page has `ca-pub-XXXXXXXXXXXXXXXX` (in the AdSense script tag, a meta tag, and each ad slot's `data-ad-client`), and `ads.txt` has `pub-0000000000000000`. Replace both with your real AdSense publisher ID:
+**AdSense publisher ID** still needs to be set. Every page has `ca-pub-XXXXXXXXXXXXXXXX` (in the AdSense script tag, a meta tag, and each ad slot's `data-ad-client`), and `ads.txt` has `pub-0000000000000000`. Replace both with your real AdSense publisher ID:
 
 ```bash
 grep -rl "ca-pub-XXXXXXXXXXXXXXXX" . | xargs sed -i 's/ca-pub-XXXXXXXXXXXXXXXX/ca-pub-YOURREALID/g'
@@ -55,23 +57,13 @@ sed -i 's/pub-0000000000000000/pub-YOURREALID/' ads.txt
 
 Then set your real `data-ad-slot` values per placement in AdSense (currently `0000000001`–`0000000006` as placeholders across the pages).
 
-## Deploy it
+**Contact info.** The Contact, Privacy, and Terms pages currently have no working email address — Contact shows a "form coming soon" note, and Privacy/Terms link back to the Contact page instead of a mailto link. Add a real inbox (or a form service like Formspree/Google Forms) whenever you're ready, then update those three pages.
 
-Any static host works — the site has no build step and no server-side code.
+## Re-deploying
 
-**Option 1 — GitHub Pages**
-1. Push the whole folder to a GitHub repo.
-2. Go to **Settings → Pages**, set the source branch, save.
-3. Your site is live at `https://<username>.github.io/<repo>/`.
+The site is already deployed on Vercel at https://reel-cutter-swart.vercel.app/. To push updates, redeploy the same project (via the Vercel dashboard's drag-and-drop, or by connecting the repo and pushing to the tracked branch, if you set it up that way).
 
-**Option 2 — Netlify / Vercel drag-and-drop**
-1. Go to [netlify.com/drop](https://app.netlify.com/drop) (or Vercel's dashboard).
-2. Drag the whole project folder in.
-3. You get an instant public URL.
-
-Any static host works — Cloudflare Pages, Firebase Hosting, S3 + CloudFront, etc.
-
-> Note: `index.html` alone can still be opened directly via `file://` for local testing of the split tool, but the nav links and other pages assume it's served over `http(s)` from the project root.
+> Note: `index.html` alone can still be opened directly via `file://` for local testing of the split tool, but the nav links and other pages assume the site is served over `http(s)` from the project root, as it is on Vercel.
 
 ## Using the tool
 
