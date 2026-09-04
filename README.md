@@ -1,64 +1,106 @@
-# Reel Cutter — Split & Watermark
+# Reel Cutter — Split Long Videos Into Reels, TikToks & Shorts
 
-A single-file, browser-based tool that splits a video into timed parts (default 150–160 seconds each) and stamps each part with a "Part N" watermark — then bundles everything into one downloadable zip.
+A free, browser-based tool that splits a video into timed parts (default 150–160 seconds each) and labels each part by filename — then bundles everything into one downloadable zip.
 
 Everything runs **locally in the browser tab**, on desktop or mobile. No server, no upload, no backend to deploy.
 
 ## How it works
 
-- **[ffmpeg.wasm](https://github.com/ffmpegwasm/ffmpeg.wasm)** (loaded from CDN) runs real ffmpeg — trimming and adding a text overlay — entirely inside the browser using WebAssembly.
-- **[JSZip](https://stuk.github.io/jszip/)** (loaded from CDN) bundles all the finished parts into a single `video_parts.zip`.
-- The file picker uses `<input type="file" accept="video/*">`, which on phones opens the native "choose video" sheet.
+- A hand-written **MP4 box parser** (in `index.html`) reads the container structure directly and locates the video's existing keyframes.
+- For each part, it **copies the existing compressed audio/video samples** into a new MP4 — no decoding, no re-encoding, so there's zero quality loss and no CDN dependency.
+- Cuts snap to the nearest keyframe at or before the target time, so every part plays back cleanly from frame one. Actual part length can be off by up to a couple of seconds as a result.
+- A hand-written **zip writer** (also in `index.html`) bundles all finished parts into `video_parts.zip`.
+- The file picker uses `<input type="file" accept="...">`, which on phones opens the native "choose video" sheet.
 
-No video data ever leaves the device — there's nothing to configure on a server, and no API keys are needed.
+No video data ever leaves the device — there's nothing to configure on a server, and no API keys, ffmpeg.wasm, or third-party libraries are needed.
 
-## Files
+## Site structure
 
 ```
-index.html   ← the entire app (HTML + CSS + JS in one file)
+index.html                                   ← the split tool (HTML + CSS + JS in one file)
+about.html                                   ← what Reel Cutter does and why it's in-browser
+contact.html                                 ← support / feedback / business contact
+privacy-policy.html                          ← privacy policy, incl. AdSense/cookie disclosure
+terms-of-service.html                        ← terms of service
+sitemap.xml                                  ← XML sitemap for search engines
+robots.txt                                   ← crawl rules + sitemap reference
+ads.txt                                      ← AdSense publisher verification (needs your pub ID)
+google43a8446c4c368aab.html                  ← existing Google Search Console verification file
+assets/
+  site.css                                   ← shared nav, footer, ad slots, content-page styles
+  site.js                                    ← mobile nav toggle + active-link highlighting
+blog/
+  index.html                                 ← tutorials hub
+  split-video-for-instagram-reels.html       ← step-by-step splitting tutorial
+  mp4-keyframes-explained.html               ← why cuts snap to keyframes
+  best-clip-length-for-social-media.html     ← 2026 length limits/sweet spots by platform
 ```
+
+`index.html` keeps its original inline `<style>` and `<script>` untouched — the split/zip logic hasn't changed. `assets/site.css` only adds new, non-conflicting styles for the nav, footer, ad slots, and the content pages.
+
+## Before you deploy: two placeholders to replace
+
+**1. Domain.** Every page uses `https://reelcutter.app` for canonical URLs, Open Graph tags, the sitemap, and structured data. Once you know your real domain, replace it everywhere:
+
+```bash
+grep -rl "reelcutter.app" . | xargs sed -i 's/reelcutter\.app/yourdomain.com/g'
+```
+
+**2. AdSense publisher ID.** Every page has `ca-pub-XXXXXXXXXXXXXXXX` (in the AdSense script tag, a meta tag, and each ad slot's `data-ad-client`), and `ads.txt` has `pub-0000000000000000`. Replace both with your real AdSense publisher ID:
+
+```bash
+grep -rl "ca-pub-XXXXXXXXXXXXXXXX" . | xargs sed -i 's/ca-pub-XXXXXXXXXXXXXXXX/ca-pub-YOURREALID/g'
+sed -i 's/pub-0000000000000000/pub-YOURREALID/' ads.txt
+```
+
+Then set your real `data-ad-slot` values per placement in AdSense (currently `0000000001`–`0000000006` as placeholders across the pages).
 
 ## Deploy it
 
-Pick whichever is easiest:
+Any static host works — the site has no build step and no server-side code.
 
-**Option 1 — Open it directly**
-Just double-click `index.html`. It runs from `file://` in most browsers (Chrome/Edge/Firefox). Safari can be stricter about local file access, so if it doesn't load, use Option 2 or 3.
-
-**Option 2 — GitHub Pages**
-1. Push `index.html` to a GitHub repo.
+**Option 1 — GitHub Pages**
+1. Push the whole folder to a GitHub repo.
 2. Go to **Settings → Pages**, set the source branch, save.
-3. Your tool is live at `https://<username>.github.io/<repo>/`.
+3. Your site is live at `https://<username>.github.io/<repo>/`.
 
-**Option 3 — Netlify / Vercel drag-and-drop**
+**Option 2 — Netlify / Vercel drag-and-drop**
 1. Go to [netlify.com/drop](https://app.netlify.com/drop) (or Vercel's dashboard).
-2. Drag the `index.html` file in.
+2. Drag the whole project folder in.
 3. You get an instant public URL.
 
-Any static host works — Cloudflare Pages, Firebase Hosting, S3 + CloudFront, etc. There's no build step.
+Any static host works — Cloudflare Pages, Firebase Hosting, S3 + CloudFront, etc.
+
+> Note: `index.html` alone can still be opened directly via `file://` for local testing of the split tool, but the nav links and other pages assume it's served over `http(s)` from the project root.
 
 ## Using the tool
 
-1. **Pick a video** — tap the drop zone or drag a file in.
+1. **Pick a video** — tap the drop zone or drag a file in. MP4/MOV/M4V work best.
 2. **Set cut settings**
    - *Min length / Max length (seconds)* — target range for each part (default 150–160s). The last part may be shorter if the video doesn't divide evenly.
-   - *Watermark position* — Top, Bottom, or Center.
-   - *Watermark text prefix* — defaults to "Part", so parts are labeled "Part 1", "Part 2", etc. Change it to whatever prefix you want.
-3. **Click "Split & watermark this video."**
-   - First run downloads the ffmpeg.wasm engine (~30MB), so it needs an internet connection the first time.
-   - Each part is trimmed, watermarked, and added to a zip as it finishes — you'll see a checklist update live.
-4. **Click "Download zip"** once processing completes. You'll get `video_parts.zip` containing `part_1.mp4`, `part_2.mp4`, etc.
+   - *Part label prefix* — defaults to "Part", so parts are labeled "Part 1", "Part 2", etc. in the output filename.
+   - *Include audio* — keep or drop the audio track.
+3. **Click "Split this video (fast, lossless)."**
+   - Each part is built and added to the zip as it finishes — you'll see a checklist update live.
+4. **Click "Download zip"** once processing completes. You'll get `video_parts.zip` containing `part_1_...mp4`, `part_2_...mp4`, etc.
 
 ## Known limitations
 
-- **Memory** — processing happens in-browser memory. Very long or high-resolution videos can crash the tab on phones, since mobile browsers cap how much memory a WASM tab can use (roughly 1–2GB). If it crashes, try a shorter or lower-resolution source video, or run it on a laptop instead.
-- **Speed** — encoding is CPU-bound and single-threaded in this build, so a 10-minute video can take a few minutes to process, longer on older devices. The encode preset is set to `ultrafast` to favor speed over file size; you can change `-preset ultrafast` to `medium` or `slow` in the script for smaller files at the cost of speed.
-- **First-load requires internet** — ffmpeg.wasm and JSZip load from a CDN. After the first load, some browsers cache them, but there's no offline mode built in.
-- **Output format** — parts are always re-encoded to H.264 MP4 with AAC audio for broad compatibility, regardless of the source format.
+- **Memory** — processing happens in-browser memory. Very long or high-resolution videos can crash the tab on phones, since mobile browsers cap how much memory a tab can use. If it crashes, try a shorter or lower-resolution source video, or run it on a laptop instead.
+- **Cut precision** — because nothing is re-encoded, cuts snap to the nearest keyframe rather than an exact timestamp. See `blog/mp4-keyframes-explained.html` for why.
+- **Container support** — standard, non-fragmented MP4/MOV files work best. Fragmented MP4s or unusual variants may fail to parse; re-exporting as a standard MP4 usually fixes it.
+- **Output format** — parts keep the source's existing video/audio codec (no transcoding), so output compatibility matches your source file.
 
 ## Customizing
 
-Everything is in `index.html`:
-- Watermark font size/color/box — edit the `drawtext` filter string inside the `runBtn` click handler.
-- Encoding quality/speed — change `-preset ultrafast` and add a `-crf` value in the `ffmpeg.exec([...])` call.
-- Colors/fonts/layout — all in the `<style>` block at the top of the file.
+- Colors/fonts/layout for the tool itself — the inline `<style>` block at the top of `index.html`.
+- Shared nav/footer/ad-slot styles for the whole site — `assets/site.css`.
+- MP4 parsing / zip packing logic — inside the `<script>` block in `index.html` (unchanged from the original implementation).
+- New tutorial articles — add a file under `blog/`, then link it from `blog/index.html` and `sitemap.xml`.
+
+## SEO & ads notes
+
+- Every page ships meta description, canonical URL, Open Graph/Twitter tags, and JSON-LD structured data (`WebApplication`, `Organization`, `Article`, and `BreadcrumbList` where relevant).
+- `sitemap.xml` and `robots.txt` are at the project root and reference the real (placeholder) domain — update after replacing the domain placeholder above.
+- Ad slots are placed away from the tool's Run/Download buttons to avoid accidental clicks near interactive controls, per AdSense policy.
+- The privacy policy and terms of service are general templates, not legal advice — have them reviewed for your jurisdiction before relying on them commercially.

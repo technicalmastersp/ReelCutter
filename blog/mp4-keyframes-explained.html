@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MP4 Keyframes Explained: Why Stream-Copy Cuts Aren't Exact</title>
+<meta name="description" content="What a keyframe is, why lossless video splitting has to cut near one, and how that explains the couple of seconds of variance in your split parts." />
+<link rel="canonical" href="https://reelcutter.app/blog/mp4-keyframes-explained.html" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#f6f3ee" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%9E%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Reel Cutter" />
+<meta property="og:title" content="MP4 Keyframes Explained" />
+<meta property="og:description" content="What a keyframe is, and why lossless video splitting has to cut near one." />
+<meta property="og:url" content="https://reelcutter.app/blog/mp4-keyframes-explained.html" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="MP4 Keyframes Explained" />
+
+<link rel="stylesheet" href="../assets/site.css" />
+
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX" />
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "MP4 Keyframes Explained: Why Stream-Copy Cuts Aren't Exact",
+  "description": "What a keyframe is, why lossless video splitting has to cut near one, and what that means for your split parts.",
+  "author": { "@type": "Organization", "name": "Reel Cutter" },
+  "publisher": { "@type": "Organization", "name": "Reel Cutter" },
+  "datePublished": "2026-09-05",
+  "dateModified": "2026-09-05",
+  "mainEntityOfPage": "https://reelcutter.app/blog/mp4-keyframes-explained.html"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://reelcutter.app/" },
+    { "@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://reelcutter.app/blog/index.html" },
+    { "@type": "ListItem", "position": 3, "name": "MP4 keyframes explained", "item": "https://reelcutter.app/blog/mp4-keyframes-explained.html" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div class="filmstrip">
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<nav class="site-nav" aria-label="Main">
+  <a class="brand" href="../index.html">🎞️ Reel <em>Cutter</em></a>
+  <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+  <div class="nav-links">
+    <a href="../index.html">Split Tool</a>
+    <a href="index.html">Tutorials</a>
+    <a href="../about.html">About</a>
+    <a href="../contact.html">Contact</a>
+    <a href="../privacy-policy.html">Privacy</a>
+    <a href="../terms-of-service.html">Terms</a>
+  </div>
+</nav>
+
+<p class="crumbs"><a href="../index.html">Home</a> / <a href="index.html">Tutorials</a> / MP4 keyframes explained</p>
+
+<header class="page-header">
+  <div class="eyebrow">Explainer</div>
+  <h1>MP4 keyframes, <em>explained simply</em></h1>
+  <p class="sub">Why a lossless, byte-copy split can't cut at an exact second — and why that's a reasonable trade for zero quality loss.</p>
+</header>
+
+<main class="page-wrap">
+
+  <h2>What a keyframe actually is</h2>
+  <p>Video compression formats like H.264 and H.265 don't store every frame as a complete image. Instead, most frames are stored as "what changed since the last frame" — a much smaller amount of data. Every so often, the encoder inserts a full, self-contained frame called a keyframe (technically an I-frame). Every other frame in that stretch depends on the keyframe before it to be decoded correctly.</p>
+  <p>Think of it like a flipbook where most pages are drawn as edits to the previous page, except every dozen or so pages redraws the whole scene from scratch. You can only start flipping cleanly from one of those "full redraw" pages.</p>
+
+  <h2>Why this matters for splitting</h2>
+  <p>A tool that re-encodes video can cut at literally any frame, because it decodes everything and re-compresses it from scratch — at the cost of time and, at lower settings, some visible quality loss. A tool that does a byte-copy split, like Reel Cutter, doesn't decode anything — it copies the existing compressed samples directly into a new file. That's fast and lossless, but it means a new file can only start at a keyframe, or the first few frames won't decode properly and playback will glitch or freeze.</p>
+  <p>So when you ask for a 150-second part, the tool looks for the nearest keyframe at or before that mark and starts the new part there. Depending on how often your source video places keyframes — often every 1 to 5 seconds, but it varies by camera, app, and export settings — your part might come out anywhere from a fraction of a second to a few seconds off your target.</p>
+
+  <h2>How to get tighter cuts</h2>
+  <ul>
+    <li><strong>Narrow the range.</strong> Setting min/max closer together (e.g. 155–160 instead of 120–160) gives the tool less room to drift before it has to cut.</li>
+    <li><strong>Check your source's keyframe interval.</strong> Footage exported with more frequent keyframes (common in phone camera recordings) will split more precisely than footage with sparse keyframes (common in some screen recordings and long single takes).</li>
+    <li><strong>Accept the trade-off.</strong> A few seconds of drift is generally invisible in a Reel or Short's total runtime, and it's the price of zero re-encoding — no blocky artifacts, no generation loss, no waiting for a render.</li>
+  </ul>
+
+  <h2>The short version</h2>
+  <p>Byte-copy splitting trades sub-second cut precision for speed and perfect quality. If you need frame-exact cuts at any arbitrary timestamp, you'd need a re-encoding tool instead — but for most Reels, TikTok, and Shorts workflows, landing within a couple of seconds of your target is a small price for a split that finishes almost instantly and looks identical to your source.</p>
+
+  <div class="related-links" style="margin-top:30px;">
+    <a href="split-video-for-instagram-reels.html">Step-by-step splitting tutorial</a>
+    <a href="best-clip-length-for-social-media.html">Best clip length by platform</a>
+    <a href="../index.html">Back to the split tool →</a>
+  </div>
+
+</main>
+
+<div class="ad-slot">
+  <div class="ad-label">Advertisement</div>
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+       data-ad-slot="0000000005"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<div class="site-footer">
+  <div class="foot-grid">
+    <div class="foot-col">
+      <h4>Reel Cutter</h4>
+      <p style="font-size:13px;color:#4a4640;max-width:34ch;margin:0;">A free, in-browser tool that splits long videos into timed parts for Reels, TikTok and Shorts.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Product</h4>
+      <a href="../index.html">Split tool</a>
+      <a href="index.html">Tutorials</a>
+      <a href="../about.html">About</a>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <a href="../contact.html">Contact</a>
+      <a href="../privacy-policy.html">Privacy policy</a>
+      <a href="../terms-of-service.html">Terms of service</a>
+    </div>
+  </div>
+  <div class="foot-note">© 2026 Reel Cutter. Built for creators who publish a lot.</div>
+</div>
+
+<script src="../assets/site.js"></script>
+</body>
+</html>

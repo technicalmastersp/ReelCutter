@@ -1,0 +1,179 @@
+/* ============================================================
+   Reel Cutter — shared site styles
+   Used by every page. index.html keeps its own inline styles
+   for the tool itself; this file adds the nav, footer, ad
+   slots and the content-page layout so every page matches.
+   ============================================================ */
+:root{
+  --ink:#12100e; --paper:#f6f3ee; --reel-red:#c1442d; --tape:#e8c468;
+  --line: rgba(18,16,14,0.12);
+  --mono: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+  --disp: 'Bebas Neue', 'Oswald', 'Arial Narrow', sans-serif;
+  --body: 'Inter', system-ui, -apple-system, sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper); color:var(--ink); font-family:var(--body); min-height:100vh;
+  background-image: radial-gradient(circle at 1px 1px, rgba(18,16,14,0.06) 1px, transparent 0);
+  background-size: 22px 22px; padding-bottom:60px;
+}
+a{ color:var(--reel-red); }
+img{ max-width:100%; }
+
+.filmstrip{ display:flex; width:100%; height:14px; background:var(--ink); }
+.filmstrip span{ flex:1; margin:3px 2px; background:var(--paper); }
+
+/* ---------------- Site nav ---------------- */
+.site-nav{
+  max-width:760px; margin:0 auto; padding:14px 20px 0;
+  display:flex; align-items:center; justify-content:space-between; gap:14px;
+}
+.site-nav .brand{
+  font-family:var(--disp); font-size:22px; letter-spacing:0.02em; color:var(--ink);
+  text-decoration:none; display:flex; align-items:center; gap:8px;
+}
+.site-nav .brand em{ font-style:normal; color:var(--reel-red); }
+.nav-toggle{
+  display:none; appearance:none; border:1px solid var(--ink); background:transparent;
+  color:var(--ink); border-radius:2px; width:38px; height:34px; font-size:16px; cursor:pointer;
+}
+.nav-links{ display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+.nav-links a{
+  font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.08em;
+  color:var(--ink); text-decoration:none; padding-bottom:3px; border-bottom:2px solid transparent;
+}
+.nav-links a:hover{ color:var(--reel-red); }
+.nav-links a.active{ color:var(--reel-red); border-bottom-color:var(--reel-red); }
+
+@media (max-width:640px){
+  .nav-toggle{ display:block; }
+  .nav-links{
+    display:none; width:100%; flex-direction:column; align-items:flex-start; gap:2px;
+    max-width:760px; margin:10px auto 0; padding:6px 20px 14px; border-top:1px solid var(--line);
+  }
+  .nav-links.open{ display:flex; }
+  .nav-links a{ padding:8px 0; width:100%; border-bottom:1px solid var(--line); }
+  .site-nav{ flex-wrap:wrap; }
+}
+
+/* ---------------- Breadcrumbs ---------------- */
+.crumbs{
+  max-width:760px; margin:14px auto 0; padding:0 20px; font-family:var(--mono);
+  font-size:11px; letter-spacing:0.04em; color:#8a847a;
+}
+.crumbs a{ color:#8a847a; text-decoration:none; }
+.crumbs a:hover{ color:var(--reel-red); }
+
+/* ---------------- Page header (content pages) ---------------- */
+.page-header{ padding:28px 20px 10px; max-width:760px; margin:0 auto; }
+.eyebrow{
+  font-family:var(--mono); font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--reel-red); display:flex; align-items:center; gap:8px;
+}
+.eyebrow::before{ content:""; width:8px;height:8px;border-radius:50%; background:var(--reel-red); display:inline-block; }
+.page-header h1{
+  font-family:var(--disp); font-weight:400; font-size:clamp(34px,8vw,54px);
+  letter-spacing:0.01em; line-height:0.95; margin:10px 0 6px;
+}
+.page-header h1 em{ font-style:normal; color:var(--reel-red); }
+.page-header .sub{ font-size:15px; line-height:1.6; color:#4a4640; max-width:60ch; }
+
+/* ---------------- Content layout ---------------- */
+.page-wrap{ max-width:760px; margin:0 auto; padding:10px 20px 40px; }
+.page-wrap h2{
+  font-family:var(--disp); font-weight:400; font-size:28px; letter-spacing:0.01em;
+  margin:34px 0 10px;
+}
+.page-wrap h3{ font-size:17px; margin:22px 0 8px; }
+.page-wrap p, .page-wrap li{ font-size:15px; line-height:1.7; color:#312d27; }
+.page-wrap ul, .page-wrap ol{ padding-left:20px; }
+.page-wrap code{
+  font-family:var(--mono); background:#eae5db; padding:1px 6px; border-radius:2px; font-size:13px;
+}
+.page-wrap .updated{
+  font-family:var(--mono); font-size:11px; color:#8a847a; text-transform:uppercase; letter-spacing:0.06em;
+}
+
+.card{
+  background:#fffdf9; border:1px solid var(--line); border-radius:2px;
+  padding:22px; margin-bottom:18px; position:relative;
+}
+.card::before{
+  content: attr(data-tag); position:absolute; top:-11px; left:18px; background:var(--tape);
+  color:var(--ink); font-family:var(--mono); font-size:11px; letter-spacing:0.08em;
+  padding:2px 10px; text-transform:uppercase; transform:rotate(-1deg);
+}
+.card h3{ margin-top:0; }
+
+.btn{
+  appearance:none; border:none; background:var(--ink); color:var(--paper); font-family:var(--mono);
+  font-size:13px; letter-spacing:0.06em; text-transform:uppercase; padding:14px 22px;
+  border-radius:2px; cursor:pointer; transition: background .15s ease, transform .1s ease;
+  display:inline-block; text-decoration:none;
+}
+.btn:hover{ background:var(--reel-red); color:var(--paper); }
+.btn-ghost{ background:transparent; color:var(--ink); border:1px solid var(--ink); }
+.btn-ghost:hover{ background:var(--ink); color:var(--paper); }
+
+/* ---------------- FAQ (native <details>) ---------------- */
+.faq-item{
+  border:1px solid var(--line); border-radius:2px; margin-bottom:8px; background:#fffdf9;
+}
+.faq-item summary{
+  cursor:pointer; padding:14px 16px; font-weight:600; list-style:none; position:relative; font-size:14px;
+}
+.faq-item summary::-webkit-details-marker{ display:none; }
+.faq-item summary::after{ content:"+"; position:absolute; right:16px; top:12px; font-family:var(--mono); color:var(--reel-red); font-size:18px; }
+.faq-item[open] summary::after{ content:"–"; }
+.faq-item .faq-body{ padding:0 16px 16px; font-size:14px; line-height:1.65; color:#4a4640; }
+
+/* ---------------- Tutorial / blog cards ---------------- */
+.tutorial-grid{ display:flex; flex-direction:column; gap:12px; margin-top:16px; }
+.tutorial-card{
+  display:block; background:#fffdf9; border:1px solid var(--line); border-radius:2px;
+  padding:18px 20px; text-decoration:none; color:var(--ink); position:relative;
+}
+.tutorial-card:hover{ border-color:var(--reel-red); }
+.tutorial-card .tkicker{
+  font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.08em; color:#8a847a;
+}
+.tutorial-card h3{ font-family:var(--disp); font-weight:400; font-size:22px; margin:6px 0 6px; letter-spacing:0.01em; }
+.tutorial-card p{ font-size:14px; color:#4a4640; margin:0; line-height:1.6; }
+
+.related-links{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+.related-links a{
+  font-family:var(--mono); font-size:12px; text-decoration:none; border:1px solid var(--ink);
+  padding:8px 12px; border-radius:2px; color:var(--ink);
+}
+.related-links a:hover{ background:var(--ink); color:var(--paper); }
+
+/* ---------------- Ad slots ---------------- */
+.ad-slot{
+  max-width:760px; margin:22px auto; padding:0 20px;
+}
+.ad-slot .ad-label{
+  font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:0.12em;
+  color:#a39d90; text-align:center; margin-bottom:4px;
+}
+.ad-slot ins.adsbygoogle{ display:block; }
+
+/* ---------------- Site footer ---------------- */
+.site-footer{
+  max-width:760px; margin:30px auto 0; padding:26px 20px 0; border-top:1px solid var(--line);
+}
+.site-footer .foot-grid{
+  display:flex; flex-wrap:wrap; gap:28px; justify-content:space-between; margin-bottom:20px;
+}
+.site-footer .foot-col h4{
+  font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:0.08em;
+  color:#8a847a; margin:0 0 10px;
+}
+.site-footer .foot-col a{
+  display:block; font-size:13px; color:var(--ink); text-decoration:none; margin-bottom:8px;
+}
+.site-footer .foot-col a:hover{ color:var(--reel-red); }
+.site-footer .foot-note{
+  font-family:var(--mono); font-size:11px; color:#8a847a; text-align:center;
+  border-top:1px solid var(--line); padding:16px 0 26px;
+}
