@@ -158,6 +158,31 @@ img{ max-width:100%; }
 }
 .ad-slot ins.adsbygoogle{ display:block; }
 
+/* ---------------- Side-rail ads (tablet-landscape / laptop+ only) ----------------
+   Content column is centered and capped at 760px, so on wider screens there's
+   unused margin on both sides. These sit in that margin as fixed skyscraper
+   units (160x600) and never overlap the 760px column or the footer text below
+   it, since they're capped in height and the breakpoint guarantees clearance. */
+.rail-ad{
+  position: fixed;
+  top: 120px;
+  width: 160px;
+  height: 600px;
+  display: none;
+  z-index: 5;
+}
+.rail-ad .ad-label{
+  font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:0.12em;
+  color:#a39d90; text-align:center; margin-bottom:4px;
+}
+.rail-ad.rail-left{ left: calc(50% - 380px - 184px); }
+.rail-ad.rail-right{ right: calc(50% - 380px - 184px); }
+
+/* Only turn rails on once there's guaranteed clearance beside the content column */
+@media (min-width: 1200px){
+  .rail-ad{ display:block; }
+}
+
 /* ---------------- Site footer ---------------- */
 .site-footer{
   max-width:760px; margin:30px auto 0; padding:26px 20px 0; border-top:1px solid var(--line);
