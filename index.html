@@ -357,7 +357,7 @@
   </details>
   <details class="faq-item">
     <summary>What file formats are supported?</summary>
-    <div class="faq-body">MP4 and MOV/M4V files with standard, non-fragmented container structure work best. If a file fails to parse, try re-exporting it as a standard MP4 first.</div>
+    <div class="faq-body">MP4 and MOV/M4V files work, including both standard and fragmented ("streaming-style") containers. If a file still fails to parse, try re-exporting it as a standard MP4 first.</div>
   </details>
   <details class="faq-item">
     <summary>Is Reel Cutter really free?</summary>
@@ -565,6 +565,121 @@
   }
   function findBox(boxes, type){ return boxes.find(b => b.type === type); }
 
+  // ================= Fragmented MP4 (moof/traf/trun) support =================
+  function isSyncFromSampleFlags(flags){
+    // ISO/IEC 14496-12 §8.8.3.1 — bit 16 (0x00010000) is sample_is_non_sync_sample.
+    return ((flags >>> 16) & 0x1) === 0;
+  }
+
+  function parseTrex(moovBoxes, moovBytes, dv){
+    const trexMap = new Map();
+    const mvexBox = findBox(moovBoxes, 'mvex');
+    if (!mvexBox) return trexMap;
+    const mvexInner = parseBoxList(moovBytes, mvexBox.bodyStart, mvexBox.end);
+    for (const trex of mvexInner.filter(b => b.type === 'trex')) {
+      let o = trex.bodyStart + 4; // skip version(1)+flags(3)
+      const trackID = dv.getUint32(o); o += 4;
+      const defaultSampleDescriptionIndex = dv.getUint32(o); o += 4;
+      const defaultSampleDuration = dv.getUint32(o); o += 4;
+      const defaultSampleSize = dv.getUint32(o); o += 4;
+      const defaultSampleFlags = dv.getUint32(o); o += 4;
+      trexMap.set(trackID, { defaultSampleDescriptionIndex, defaultSampleDuration, defaultSampleSize, defaultSampleFlags });
+    }
+    return trexMap;
+  }
+
+  // Reconstructs, per track, a flat sample list (offset/size/dts/duration/cts/isSync) by
+  // walking every moof+traf+trun in the file — the fragmented-MP4 equivalent of the
+  // stco/stsz/stsc/stts tables the classic path reads straight out of stbl.
+  async function parseFragmentedSamples(file, topBoxes, trexMap){
+    const byTrack = new Map(); // trackID -> { samples: [], dts: 0 }
+    const moofBoxes = topBoxes.filter(b => b.type === 'moof');
+
+    for (const moof of moofBoxes) {
+      const moofBytes = await readFileRange(file, moof.bodyStart, moof.end);
+      const mdv = new DataView(moofBytes.buffer, moofBytes.byteOffset, moofBytes.byteLength);
+      const moofInner = parseBoxList(moofBytes, 0, moofBytes.length);
+
+      for (const traf of moofInner.filter(b => b.type === 'traf')) {
+        const trafInner = parseBoxList(moofBytes, traf.bodyStart, traf.end);
+        const tfhdBox = findBox(trafInner, 'tfhd');
+        if (!tfhdBox) continue;
+
+        // ---- tfhd ----
+        let to = tfhdBox.bodyStart;
+        const tfhdFlags = ((moofBytes[to+1] << 16) | (moofBytes[to+2] << 8) | moofBytes[to+3]) >>> 0;
+        to += 4;
+        const trackID = mdv.getUint32(to); to += 4;
+        let baseDataOffset = null, tfDefDuration = null, tfDefSize = null, tfDefFlags = null;
+        if (tfhdFlags & 0x000001) { const hi = mdv.getUint32(to), lo = mdv.getUint32(to+4); to += 8; baseDataOffset = hi * 4294967296 + lo; }
+        if (tfhdFlags & 0x000002) { to += 4; } // sample-description-index-present (unused here)
+        if (tfhdFlags & 0x000008) { tfDefDuration = mdv.getUint32(to); to += 4; }
+        if (tfhdFlags & 0x000010) { tfDefSize = mdv.getUint32(to); to += 4; }
+        if (tfhdFlags & 0x000020) { tfDefFlags = mdv.getUint32(to); to += 4; }
+
+        const trex = trexMap.get(trackID) || {};
+        const fallbackDuration = tfDefDuration !== null ? tfDefDuration : trex.defaultSampleDuration;
+        const fallbackSize = tfDefSize !== null ? tfDefSize : trex.defaultSampleSize;
+        const fallbackFlags = tfDefFlags !== null ? tfDefFlags : trex.defaultSampleFlags;
+
+        // ---- tfdt (optional base decode time for this run) ----
+        const tfdtBox = findBox(trafInner, 'tfdt');
+        let baseMediaDecodeTime = null;
+        if (tfdtBox) {
+          const version = moofBytes[tfdtBox.bodyStart];
+          baseMediaDecodeTime = version === 1
+            ? mdv.getUint32(tfdtBox.bodyStart + 4) * 4294967296 + mdv.getUint32(tfdtBox.bodyStart + 8)
+            : mdv.getUint32(tfdtBox.bodyStart + 4);
+        }
+
+        if (!byTrack.has(trackID)) byTrack.set(trackID, { samples: [], dts: 0 });
+        const trackState = byTrack.get(trackID);
+        if (baseMediaDecodeTime !== null) trackState.dts = baseMediaDecodeTime;
+
+        // Most real-world muxers (browser MediaRecorder, ffmpeg frag output, mp4box.js,
+        // Shaka Packager) either set default-base-is-moof or rely on the legacy default,
+        // both of which resolve to "relative to the start of this moof box."
+        const trafBaseOffset = baseDataOffset !== null ? baseDataOffset : moof.start;
+        let runningDataOffset = trafBaseOffset;
+
+        for (const trun of trafInner.filter(b => b.type === 'trun')) {
+          let ro = trun.bodyStart;
+          const trunFlags = ((moofBytes[ro+1] << 16) | (moofBytes[ro+2] << 8) | moofBytes[ro+3]) >>> 0;
+          ro += 4;
+          const sampleCount = mdv.getUint32(ro); ro += 4;
+          let dataOffset = null;
+          if (trunFlags & 0x000001) { dataOffset = mdv.getInt32(ro); ro += 4; }
+          let firstSampleFlags = null;
+          if (trunFlags & 0x000004) { firstSampleFlags = mdv.getUint32(ro); ro += 4; }
+
+          let samplePos = dataOffset !== null ? trafBaseOffset + dataOffset : runningDataOffset;
+          const hasDur = !!(trunFlags & 0x000100);
+          const hasSize = !!(trunFlags & 0x000200);
+          const hasFlags = !!(trunFlags & 0x000400);
+          const hasCts = !!(trunFlags & 0x000800);
+
+          for (let i = 0; i < sampleCount; i++) {
+            const duration = hasDur ? mdv.getUint32(ro) : fallbackDuration; if (hasDur) ro += 4;
+            const size = hasSize ? mdv.getUint32(ro) : fallbackSize; if (hasSize) ro += 4;
+            let flags = hasFlags ? mdv.getUint32(ro) : (i === 0 && firstSampleFlags !== null ? firstSampleFlags : fallbackFlags); if (hasFlags) ro += 4;
+            const cts = hasCts ? mdv.getInt32(ro) : 0; if (hasCts) ro += 4;
+
+            if (size === undefined || size === null || duration === undefined || duration === null) {
+              throw new Error('This fragmented MP4 is missing sample size/duration defaults for track ' + trackID + ' — it may use an unsupported fragmentation style.');
+            }
+            const isSync = (flags !== undefined && flags !== null) ? isSyncFromSampleFlags(flags) : (trackState.samples.length === 0);
+
+            trackState.samples.push({ offset: samplePos, size, dts: trackState.dts, duration, cts, isSync });
+            trackState.dts += duration;
+            samplePos += size;
+          }
+          runningDataOffset = samplePos;
+        }
+      }
+    }
+    return byTrack;
+  }
+
   async function parseMp4(file){
     const top = await scanTopBoxes(file);
     const ftypBox = findBox(top, 'ftyp');
@@ -579,9 +694,9 @@
     const moovBoxes = parseBoxList(moovBytes, 0, moovBytes.length);
     const dv = new DataView(moovBytes.buffer, moovBytes.byteOffset, moovBytes.byteLength);
 
-    if (findBox(moovBoxes, 'mvex')) {
-      throw new Error('This is a fragmented MP4 (streaming-style) — fast lossless split needs a standard, non-fragmented MP4/MOV.');
-    }
+    const fragmented = !!findBox(moovBoxes, 'mvex');
+    const trexMap = fragmented ? parseTrex(moovBoxes, moovBytes, dv) : new Map();
+    const fragTracks = fragmented ? await parseFragmentedSamples(file, top, trexMap) : new Map();
 
     const mvhdBox = findBox(moovBoxes, 'mvhd');
     if (!mvhdBox) throw new Error('No "mvhd" box found.');
@@ -621,13 +736,25 @@
         const stblInner = parseBoxList(moovBytes, stblBox.bodyStart, stblBox.end);
 
         const stsdBox = findBox(stblInner, 'stsd');
-        const sttsBox = findBox(stblInner, 'stts');
-        const cttsBox = findBox(stblInner, 'ctts');
-        const stscBox = findBox(stblInner, 'stsc');
-        const stszBox = findBox(stblInner, 'stsz');
-        const stcoBox = findBox(stblInner, 'stco') || findBox(stblInner, 'co64');
-        const stssBox = findBox(stblInner, 'stss');
-        if (!stsdBox || !sttsBox || !stscBox || !stszBox || !stcoBox) continue;
+        if (!stsdBox) continue;
+
+        let samples;
+        let hasCttsForTrack = false;
+
+        if (fragmented) {
+          const trackID = dv.getUint32(tkhdBox.bodyStart + 12);
+          const frag = fragTracks.get(trackID);
+          samples = frag ? frag.samples : [];
+          hasCttsForTrack = samples.some(s => s.cts);
+        } else {
+          const sttsBox = findBox(stblInner, 'stts');
+          const cttsBox = findBox(stblInner, 'ctts');
+          const stscBox = findBox(stblInner, 'stsc');
+          const stszBox = findBox(stblInner, 'stsz');
+          const stcoBox = findBox(stblInner, 'stco') || findBox(stblInner, 'co64');
+          const stssBox = findBox(stblInner, 'stss');
+          if (!sttsBox || !stscBox || !stszBox || !stcoBox) continue;
+          hasCttsForTrack = !!cttsBox;
 
         // stts
         let off = sttsBox.bodyStart + 4;
@@ -705,7 +832,7 @@
           return result;
         }
 
-        const samples = new Array(sampleCount);
+        samples = new Array(sampleCount);
         let sIdx = 0;
         for (let c = 1; c <= chunkCount && sIdx < sampleCount; c++) {
           const spc = samplesPerChunkFor(c);
@@ -736,6 +863,7 @@
           for (let i = 0; i < sampleCount; i++) samples[i].cts = 0;
         }
         for (let i = 0; i < sampleCount; i++) samples[i].isSync = syncSet ? syncSet.has(i+1) : true;
+        }
 
         if (!samples.length || samples[0].duration === undefined) continue;
 
@@ -746,7 +874,7 @@
           type: handlerType,
           timescale,
           samples,
-          hasCtts: !!cttsBox,
+          hasCtts: hasCttsForTrack,
           stsdBytes: moovBytes.slice(stsdBox.start, stsdBox.end),
           tkhdBytes: moovBytes.slice(tkhdBox.start, tkhdBox.end),
           mdhdBytes: moovBytes.slice(mdhdBox.start, mdhdBox.end),
@@ -756,6 +884,13 @@
         });
       } catch (trakErr) {
         // skip this track, keep going
+      }
+    }
+
+    if (fragmented) {
+      const vt = tracks.find(t => t.type === 'vide');
+      if (vt && !vt.samples.some(s => s.isSync)) {
+        throw new Error('Could not reliably determine keyframes in this fragmented MP4 — try re-exporting it as a standard MP4 first.');
       }
     }
 
@@ -1066,7 +1201,7 @@
     } catch (err) {
       console.error(err);
       log('ERROR: ' + (err.message || err));
-      log('If this keeps happening, the file may be a fragmented MP4 or an unsupported variant — try re-saving/exporting it as a standard MP4 first.');
+      log('If this keeps happening, the file may use an unsupported or corrupted container variant — try re-saving/exporting it as a standard MP4 first.');
     } finally {
       stopTimer();
       runBtn.disabled = false;
