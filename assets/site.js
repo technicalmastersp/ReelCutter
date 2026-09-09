@@ -10,10 +10,23 @@
     });
   }
   // Highlight the current page in the nav
-  var here = location.pathname.replace(/index\.html$/, "");
+  function normalizePath(path) {
+    path = path.replace(/index\.html$/, "");
+    path = path.replace(/\/$/, "");
+    return path || "/";
+  }
+
+  var here = normalizePath(location.pathname);
+
   document.querySelectorAll(".nav-links a").forEach(function (a) {
-    var href = a.getAttribute("href").replace(/index\.html$/, "");
-    if (href === here || (href !== "/" && here.indexOf(href) === 0)) {
+    // Use a.pathname (browser-resolved absolute path), not
+    // a.getAttribute("href") (the raw relative string as written in the
+    // HTML, e.g. "../about.html") — comparing the raw string against
+    // location.pathname never matched except by accident.
+    var hrefPath = normalizePath(a.pathname);
+    var isExact = hrefPath === here;
+    var isParent = hrefPath !== "/" && here.indexOf(hrefPath + "/") === 0;
+    if (isExact || isParent) {
       a.classList.add("active");
     }
   });
