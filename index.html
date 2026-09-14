@@ -10,20 +10,29 @@
 <link rel="canonical" href="https://reel-cutter-swart.vercel.app/" />
 <meta name="robots" content="index, follow" />
 <meta name="theme-color" content="#f6f3ee" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%9E%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192.png" />
+<link rel="manifest" href="/site.webmanifest" />
 
 <!-- Open Graph / Twitter -->
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Reel Cutter" />
 <meta property="og:title" content="Reel Cutter — Split Long Videos Into Reels, Free & Private" />
 <meta property="og:description" content="Split a long video into perfectly timed parts for Instagram Reels, TikTok and YouTube Shorts. Free, byte-copy split with no quality loss — runs entirely in your browser." />
+<meta property="og:image" content="https://reel-cutter-swart.vercel.app/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Reel Cutter — split long videos into Reels, TikTok and Shorts" />
 <meta property="og:url" content="https://reel-cutter-swart.vercel.app/" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Reel Cutter — Split Long Videos Into Reels, Free & Private" />
 <meta name="twitter:description" content="Free in-browser tool that splits long videos into timed parts for Reels, TikTok and Shorts — no uploads, no quality loss." />
+<meta name="twitter:image" content="https://reel-cutter-swart.vercel.app/assets/og-image.png" />
 
 <!-- Shared site styles (nav, footer, ad slots, content pages) -->
-<link rel="stylesheet" href="assets/site.css" />
+<link rel="stylesheet" href="/assets/site.css" />
 
 <!-- Google AdSense — replace ca-pub-XXXXXXXXXXXXXXXX with your real publisher ID -->
 <!-- Google AdSense -->
@@ -59,6 +68,39 @@
   "@type": "Organization",
   "name": "Reel Cutter",
   "url": "https://reel-cutter-swart.vercel.app/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Does Reel Cutter upload my video anywhere?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. The entire split happens in your browser tab using JavaScript. Your video file is read from disk and processed in memory — it is never sent to a server." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why doesn't my part start exactly at 150 seconds?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Because nothing is re-encoded, each part has to start on an existing keyframe so it plays back correctly from frame one. Reel Cutter snaps each cut to the nearest keyframe at or before your target, so a part's length can be off by up to a couple of seconds." }
+    },
+    {
+      "@type": "Question",
+      "name": "What file formats are supported?",
+      "acceptedAnswer": { "@type": "Answer", "text": "MP4 and MOV/M4V files work, including both standard and fragmented (streaming-style) containers. If a file still fails to parse, try re-exporting it as a standard MP4 first." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Reel Cutter really free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes — there's no account, no watermark, and no limit on how many videos you split. The site is supported by ads rather than subscriptions." }
+    },
+    {
+      "@type": "Question",
+      "name": "What's the best clip length for Reels, TikTok and Shorts?",
+      "acceptedAnswer": { "@type": "Answer", "text": "It depends on your goal — short clips are easier to finish and get replayed, longer ones give you room for a full tutorial." }
+    }
+  ]
 }
 </script>
 
@@ -225,15 +267,15 @@
 </div>
 
 <nav class="site-nav" aria-label="Main">
-  <a class="brand" href="index.html">🎞️ Reel <em>Cutter</em></a>
+  <a class="brand" href="/">🎞️ Reel <em>Cutter</em></a>
   <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
   <div class="nav-links">
-    <a href="index.html">Split Tool</a>
-    <a href="blog/index.html">Tutorials</a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
-    <a href="privacy-policy.html">Privacy</a>
-    <a href="terms-of-service.html">Terms</a>
+    <a href="/">Split Tool</a>
+    <a href="/blog/">Tutorials</a>
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/privacy-policy.html">Privacy</a>
+    <a href="/terms-of-service.html">Terms</a>
   </div>
 </nav>
 
@@ -360,7 +402,7 @@
   </details>
   <details class="faq-item">
     <summary>Why doesn't my part start exactly at 150 seconds?</summary>
-    <div class="faq-body">Because nothing is re-encoded, each part has to start on an existing keyframe so it plays back correctly from frame one. Reel Cutter snaps each cut to the nearest keyframe at or before your target, so a part's length can be off by up to a couple of seconds. See our <a href="blog/mp4-keyframes-explained.html">guide to MP4 keyframes</a> for the full explanation.</div>
+    <div class="faq-body">Because nothing is re-encoded, each part has to start on an existing keyframe so it plays back correctly from frame one. Reel Cutter snaps each cut to the nearest keyframe at or before your target, so a part's length can be off by up to a couple of seconds. See our <a href="/blog/mp4-keyframes-explained.html">guide to MP4 keyframes</a> for the full explanation.</div>
   </details>
   <details class="faq-item">
     <summary>What file formats are supported?</summary>
@@ -372,15 +414,15 @@
   </details>
   <details class="faq-item">
     <summary>What's the best clip length for Reels, TikTok and Shorts?</summary>
-    <div class="faq-body">It depends on your goal — short clips are easier to finish and get replayed, longer ones give you room for a full tutorial. We break it down in <a href="blog/best-clip-length-for-social-media.html">Best clip length for Reels, TikTok and Shorts</a>.</div>
+    <div class="faq-body">It depends on your goal — short clips are easier to finish and get replayed, longer ones give you room for a full tutorial. We break it down in <a href="/blog/best-clip-length-for-social-media.html">Best clip length for Reels, TikTok and Shorts</a>.</div>
   </details>
 
   <h2>More tutorials</h2>
   <div class="related-links">
-    <a href="blog/split-video-for-instagram-reels.html">Splitting a long video into Reels</a>
-    <a href="blog/mp4-keyframes-explained.html">MP4 keyframes explained</a>
-    <a href="blog/best-clip-length-for-social-media.html">Best clip length by platform</a>
-    <a href="blog/index.html">All tutorials →</a>
+    <a href="/blog/split-video-for-instagram-reels.html">Splitting a long video into Reels</a>
+    <a href="/blog/mp4-keyframes-explained.html">MP4 keyframes explained</a>
+    <a href="/blog/best-clip-length-for-social-media.html">Best clip length by platform</a>
+    <a href="/blog/">All tutorials →</a>
   </div>
 
 </div>
@@ -398,21 +440,21 @@
     </div>
     <div class="foot-col">
       <h4>Product</h4>
-      <a href="index.html">Split tool</a>
-      <a href="blog/index.html">Tutorials</a>
-      <a href="about.html">About</a>
+      <a href="/">Split tool</a>
+      <a href="/blog/">Tutorials</a>
+      <a href="/about.html">About</a>
     </div>
     <div class="foot-col">
       <h4>Company</h4>
-      <a href="contact.html">Contact</a>
-      <a href="privacy-policy.html">Privacy policy</a>
-      <a href="terms-of-service.html">Terms of service</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/privacy-policy.html">Privacy policy</a>
+      <a href="/terms-of-service.html">Terms of service</a>
     </div>
   </div>
   <div class="foot-note">© 2026 Reel Cutter. Built for creators who publish a lot. · <a href="mailto:technicalmastersp@gmail.com" style="color:inherit;">technicalmastersp@gmail.com</a></div>
 </div>
 
-<script src="assets/site.js"></script>
+<script src="/assets/site.js"></script>
 
 <script>
 (function(){

@@ -22,13 +22,18 @@ about.html                                   ← what Reel Cutter does and why i
 contact.html                                 ← support / feedback / business contact
 privacy-policy.html                          ← privacy policy, incl. AdSense/cookie disclosure
 terms-of-service.html                        ← terms of service
-sitemap.xml                                  ← XML sitemap for search engines
+404.html                                     ← custom not-found page (noindex, follow)
+sitemap.xml                                  ← XML sitemap with lastmod dates
 robots.txt                                   ← crawl rules + sitemap reference
-ads.txt                                      ← AdSense publisher verification (needs your pub ID)
+ads.txt                                      ← AdSense publisher verification
+vercel.json                                  ← cache-control headers for assets/sitemap/robots
+site.webmanifest                             ← PWA manifest (name, icons, theme color)
 google43a8446c4c368aab.html                  ← existing Google Search Console verification file
 assets/
   site.css                                   ← shared nav, footer, ad slots, content-page styles
   site.js                                    ← mobile nav toggle + active-link highlighting
+  og-image.png                               ← 1200×630 Open Graph / Twitter share image
+  icons/                                     ← favicons + apple-touch-icon + PWA icons (192/512)
 blog/
   index.html                                 ← tutorials hub
   split-video-for-instagram-reels.html       ← step-by-step splitting tutorial
@@ -38,7 +43,22 @@ blog/
 
 `index.html` keeps its original inline `<style>` and `<script>` untouched — the split/zip logic hasn't changed. `assets/site.css` only adds new, non-conflicting styles for the nav, footer, ad slots, and the content pages.
 
-## Deployment
+## SEO pass (this update)
+
+Every internal link, asset path (`assets/site.css`, `assets/site.js`), and favicon reference is now **root-absolute** (`/about.html`, `/assets/...`) instead of relative — simpler to maintain and immune to path bugs regardless of which folder a page lives in.
+
+**Deliberately kept `.html` extensions.** Vercel's `cleanUrls` option can strip `.html` from every URL, but it does so for *all* HTML files with no per-file exclusion — including `google43a8446c4c368aab.html`, which must stay reachable at that exact literal path for Google Search Console verification. Stripping it site-wide risked breaking that verification for a cosmetic URL change, so this build keeps `.html` URLs (matching what's already live and indexed) and only cleaned up the *paths*, not the extensions. The one exception is the blog hub, which now resolves at `/blog/` (served as a directory index — standard static-hosting behavior, not a redirect).
+
+**Added:**
+- Real Open Graph / Twitter Card images (`assets/og-image.png`, 1200×630) on every page — previously every page was missing `og:image` entirely, which hurts link-preview click-through on social/chat shares.
+- Proper favicons and app icons (16/32/180/192/512px) replacing the inline emoji-SVG data URI — real icon files are what Google Search actually indexes for the site favicon shown in results.
+- `site.webmanifest` for installability signals.
+- `FAQPage` structured data on the homepage, mirroring the existing on-page FAQ — eligible for FAQ rich results in Search.
+- `lastmod` dates on every `sitemap.xml` entry.
+- `vercel.json` with long-cache immutable headers for `/assets/*` (faster repeat loads, a Core Web Vitals / page-speed factor) and short-cache headers for `sitemap.xml`/`robots.txt`.
+- A custom `404.html` (noindex, follow) with real navigation back into the site instead of a blank/default error page.
+
+
 
 This site is live at **https://reel-cutter-swart.vercel.app/**. All canonical URLs, Open Graph tags, JSON-LD, `sitemap.xml`, and `robots.txt` already point at this address.
 

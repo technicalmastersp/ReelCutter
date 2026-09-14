@@ -1,0 +1,14 @@
+{
+  "name": "Reel Cutter — Split Long Videos Into Reels, TikTok & Shorts",
+  "short_name": "Reel Cutter",
+  "description": "Free, in-browser tool that splits long videos into timed parts for Reels, TikTok and Shorts. No uploads, no re-encoding, no quality loss.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f3ee",
+  "theme_color": "#f6f3ee",
+  "icons": [
+    { "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
