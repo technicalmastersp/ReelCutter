@@ -39,9 +39,14 @@ blog/
   split-video-for-instagram-reels.html       ← step-by-step splitting tutorial
   mp4-keyframes-explained.html               ← why cuts snap to keyframes
   best-clip-length-for-social-media.html     ← 2026 length limits/sweet spots by platform
+  free-movie-cutter.html                     ← targets "movie cutter" + related long-tail terms
 ```
 
 `index.html` keeps its original inline `<style>` and `<script>` untouched — the split/zip logic hasn't changed. `assets/site.css` only adds new, non-conflicting styles for the nav, footer, ad slots, and the content pages.
+
+## Keyword targeting: "movie cutter"
+
+The homepage title/description and a new article (`blog/free-movie-cutter.html`) now target "movie cutter" and related terms (movie splitter, video cutter, free movie cutter online). This is deliberately framed around **cutting your own long-form footage** — home movies, personal recordings, lectures, podcasts — rather than splitting copyrighted films/shows, since that's a different (and legally risky) search intent that could jeopardize the AdSense account. The new article and homepage FAQ both include an explicit copyright note.
 
 ## SEO pass (this update)
 
