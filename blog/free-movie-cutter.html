@@ -75,6 +75,11 @@
       "@type": "Question",
       "name": "Can I cut a copyrighted movie or show with this tool?",
       "acceptedAnswer": { "@type": "Answer", "text": "Reel Cutter is built for splitting your own recordings — home movies, personal footage, lectures, podcasts, and other content you own or have the rights to use. Splitting or redistributing copyrighted films or shows you don't have rights to may violate copyright law." }
+    },
+    {
+      "@type": "Question",
+      "name": "My digitized tape is over 2 hours long — will that work?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Usually, yes, though very long files need more browser memory to process. If the tab crashes on a very long file, try splitting it into two rough halves first with a simple trim tool, then run each half through Reel Cutter separately." }
     }
   ]
 }
@@ -111,27 +116,80 @@
 
 <main class="page-wrap">
 
-  <p>Searching for a "movie cutter" usually means one of two things: software to trim footage you recorded yourself (home movies, event recordings, long personal videos), or a way to chop up a film or show you don't own the rights to. This guide covers the first — a free, browser-based way to split your own long-form video into parts, the same way you'd cut a podcast episode or lecture into pieces.</p>
+  <p>Searching for a "movie cutter" usually means one of two things: software to trim footage you recorded yourself (home movies, event recordings, long personal videos), or a way to chop up a film or show you don't own the rights to. This guide covers the first — a free, browser-based way to split your own long-form video into parts, whether that's decades-old family footage you've digitized, a long event recording, or hours of raw home video you want organized into watchable chunks.</p>
 
   <h2>What "movie cutter" tools actually do</h2>
   <p>Most tools people search for under "movie cutter," "video cutter," or "movie splitter" do one of two things: re-encode the file (decoding and recompressing it, which takes time and can visibly reduce quality at lower settings), or copy the existing compressed data directly into new files (much faster, and lossless). <a href="/">Reel Cutter</a> does the second — it reads the video's container format and copies frames straight across, so a cut part looks exactly as sharp as the source.</p>
 
+  <h2>Home movies and old family footage: what to know first</h2>
+  <p>Long personal footage often comes from sources that behave a bit differently than a modern phone recording:</p>
+  <ul>
+    <li><strong>Digitized camcorder tapes (VHS, MiniDV, Hi8).</strong> If a tape was digitized through a capture device, the resulting file is sometimes exported as a single very long MP4 or MOV — often 1–2 hours or more. These files split the same way as any other MP4, but expect the browser to need more memory for a longer file; see the note on large files below.</li>
+    <li><strong>Multi-camera event recordings.</strong> Weddings, recitals, and similar recordings are sometimes exported at high resolution (1080p or 4K) and can be very large. Reel Cutter processes the whole file in your browser's memory, so extremely large 4K files are more likely to run into device memory limits than a phone-shot 1080p clip.</li>
+    <li><strong>Older phone or point-and-shoot camera exports.</strong> Some older devices exported in formats or container variants that modern browsers still generally support (MP4, MOV, M4V), but very old or unusual formats (like legacy AVI or 3GP) may need converting to MP4 first in a free tool like HandBrake before splitting.</li>
+  </ul>
+
   <h2>Cutting a long personal video into parts</h2>
   <ol>
     <li><strong>Open the tool.</strong> Go to the <a href="/">split tool</a> and choose your video file (MP4 or MOV work best).</li>
-    <li><strong>Set a target length.</strong> Decide how long you want each part — a few minutes for a home-movie compilation, or shorter if you're aiming for social clips.</li>
-    <li><strong>Run the split.</strong> Because nothing is re-encoded, this finishes in a fraction of the time a full re-export would take.</li>
-    <li><strong>Download your parts.</strong> Everything comes back as a zip of individual MP4 files, ready to save, share with family, or edit further.</li>
+    <li><strong>Set a target length.</strong> For home-movie archiving, consider splitting by natural moments (5–15 minute chunks per event or scene) rather than short social-clip lengths — you'll browse the archive more easily later.</li>
+    <li><strong>Run the split.</strong> Because nothing is re-encoded, this finishes in a fraction of the time a full re-export would take, even on multi-hour files.</li>
+    <li><strong>Download your parts.</strong> Everything comes back as a zip of individual MP4 files, ready to save, back up, share with family, or edit further.</li>
   </ol>
+
+  <h2>Splitting very long or very large files</h2>
+  <p>Because Reel Cutter processes video entirely in your browser's memory rather than on a server, the practical limit on file size comes from your device, not from an upload cap. A few tips for long personal recordings:</p>
+  <ul>
+    <li>On a phone, split in a browser tab with nothing else running — background tabs and apps compete for the same memory.</li>
+    <li>For multi-hour 4K footage, a laptop or desktop will generally handle the split more reliably than a phone.</li>
+    <li>If a very large file causes the tab to crash, splitting the source into two rough halves first (in a simple trim tool) and running each half through Reel Cutter separately often works around the memory ceiling.</li>
+  </ul>
+
+  <h2>Organizing a family archive</h2>
+  <p>If your goal is preserving and organizing years of home movies rather than posting to social media, a few habits make the result much more usable later:</p>
+  <ul>
+    <li><strong>Split by event or year</strong> rather than a fixed time length, so each file corresponds to something a family member would actually search for.</li>
+    <li><strong>Use a label prefix that includes the date or event name</strong> (Reel Cutter's part-naming field supports this) so files sort sensibly once they're all downloaded.</li>
+    <li><strong>Keep a copy of the original long file</strong> somewhere before splitting, in case you want to re-split with different boundaries later — the split itself doesn't modify or delete your source file.</li>
+  </ul>
 
   <h2>A note on copyright</h2>
   <p>Reel Cutter is built for content you own or have the rights to use — your own recordings, footage you're licensed to edit, or personal home movies. Splitting or re-sharing a copyrighted film, show, or someone else's video without permission can violate copyright law, regardless of which tool is used to do it.</p>
+
+  <h2>Common questions</h2>
+  <div class="faq-item">
+    <details>
+      <summary>Is there a free movie cutter that doesn't need software installed?</summary>
+      <div class="faq-body">Yes — Reel Cutter runs entirely in your web browser. There's nothing to install, no account, and no upload; you pick a file and it's cut on your own device.</div>
+    </details>
+  </div>
+  <div class="faq-item">
+    <details>
+      <summary>Will cutting a movie file reduce its quality?</summary>
+      <div class="faq-body">Not with a byte-copy cutter like Reel Cutter. It copies the video's existing compressed frames directly into new files instead of re-encoding, so quality is identical to the source — important when the source is an irreplaceable digitized tape or old family recording.</div>
+    </details>
+  </div>
+  <div class="faq-item">
+    <details>
+      <summary>Can I cut a copyrighted movie or show with this tool?</summary>
+      <div class="faq-body">Reel Cutter is built for splitting your own recordings — home movies, personal footage, lectures, podcasts, and other content you own or have the rights to use. Splitting or redistributing copyrighted films or shows you don't have rights to may violate copyright law.</div>
+    </details>
+  </div>
+  <div class="faq-item">
+    <details>
+      <summary>My digitized tape is over 2 hours long — will that work?</summary>
+      <div class="faq-body">Usually, yes, though very long files need more browser memory to process. If the tab crashes on a very long file, try splitting it into two rough halves first with a simple trim tool, then run each half through Reel Cutter separately.</div>
+    </details>
+  </div>
 
   <h2>Related guides</h2>
   <div class="related-links">
     <a href="/blog/split-video-for-instagram-reels.html">Splitting a long video into Instagram Reels</a>
     <a href="/blog/mp4-keyframes-explained.html">MP4 keyframes explained</a>
     <a href="/blog/best-clip-length-for-social-media.html">Best clip length by platform</a>
+    <a href="/blog/troubleshooting-guide.html">Troubleshooting common errors</a>
+    <a href="/blog/video-format-glossary.html">Video format glossary</a>
+    <a href="/blog/who-uses-reel-cutter.html">Who uses Reel Cutter</a>
     <a href="/">Back to the split tool →</a>
   </div>
 

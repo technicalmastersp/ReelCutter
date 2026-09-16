@@ -96,24 +96,54 @@
   <div class="card" data-tag="01 — What it does">
     <h3>A splitter, not an editor</h3>
     <p>Reel Cutter takes a single long MP4 or MOV file and divides it into a series of shorter parts — 150–160 seconds each by default, though you can set any range you like. Each part is labeled by filename (Part 1, Part 2, and so on) so you can drop them straight into a posting schedule.</p>
-    <p>It does one job well: cutting a long recording — a podcast, a livestream, a class, a long-form YouTube video — into pieces sized for short-form platforms. It doesn't add captions, transitions, or effects; there are plenty of good tools for that already.</p>
+    <p>It does one job well: cutting a long recording — a podcast, a livestream, a class, a long-form YouTube video — into pieces sized for short-form platforms. It doesn't add captions, transitions, or effects; there are plenty of good tools for that already. Keeping the tool single-purpose is deliberate — it means the one thing it does, it does fast and without any quality loss.</p>
   </div>
 
   <div class="card" data-tag="02 — Why in-browser">
     <h3>No upload, by design</h3>
     <p>Rather than sending your file to a server, Reel Cutter reads the video's container format directly in JavaScript, using a hand-written MP4 box parser. It locates the existing keyframes and copies the compressed audio/video samples straight into new files, then packs them into a zip using a hand-written zip writer — also running locally.</p>
-    <p>Nothing is re-encoded, so there's no quality loss and no server-side processing queue. The trade-off is that very long or extremely high-resolution files can use a lot of browser memory, especially on phones — see the tips on our <a href="/blog/">tutorials page</a> if you run into that.</p>
+    <p>Nothing is re-encoded, so there's no quality loss and no server-side processing queue. The trade-off is that very long or extremely high-resolution files can use a lot of browser memory, especially on phones — see our <a href="/blog/troubleshooting-guide.html">troubleshooting guide</a> if you run into that.</p>
   </div>
 
-  <div class="card" data-tag="03 — Who it's for">
+  <div class="card" data-tag="03 — How the split actually works">
+    <h3>The technical short version</h3>
+    <p>MP4 and MOV files store video as a series of compressed samples, indexed by a table that records where each sample sits in the file and which ones are full "keyframes" that don't depend on any other frame. Reel Cutter's parser reads that index (or, for fragmented MP4s, reconstructs the equivalent from the file's moof/trun boxes), figures out which keyframe is closest to your requested split point, and copies the raw bytes from that point onward into a new file with its own valid index. No pixel is ever decoded or re-compressed — the bytes for a given frame in your output file are identical to the bytes for that frame in your source file.</p>
+    <p>That's also why a split can't land at an arbitrary exact second — it can only start at an existing keyframe. Our <a href="/blog/mp4-keyframes-explained.html">keyframes explainer</a> covers this in more depth, and the <a href="/blog/video-format-glossary.html">format glossary</a> defines the underlying terms if you want the full picture.</p>
+  </div>
+
+  <div class="card" data-tag="04 — Who it's for">
     <h3>Creators repurposing long-form content</h3>
-    <p>Podcasters clipping an episode into daily Reels, educators splitting a lecture into a course-style series, streamers turning a VOD into highlights — anyone who records long and needs to post short.</p>
+    <p>Podcasters clipping an episode into daily Reels, educators splitting a lecture into a course-style series, streamers turning a VOD into highlights, and anyone digitizing old home movies into browsable chunks — anyone who records long and needs shorter, organized files. See <a href="/blog/who-uses-reel-cutter.html">who uses Reel Cutter</a> for detailed workflows per use case.</p>
   </div>
 
-  <div class="card" data-tag="04 — What it costs">
+  <div class="card" data-tag="05 — Honest limitations">
+    <h3>What Reel Cutter doesn't do</h3>
+    <p>Because splitting is a byte-copy operation rather than an edit, there are things it intentionally can't do: it can't cut at an arbitrary exact frame (only at existing keyframes), it can't change resolution or codec, and it can't remove a section from the middle of a file — it only splits sequentially. If you need any of that, a full editor is the right tool for that step; Reel Cutter is meant to handle the "make it shorter, keep it lossless, do it fast" part of the workflow.</p>
+  </div>
+
+  <div class="card" data-tag="06 — What it costs">
     <h3>Free, ad-supported</h3>
     <p>Reel Cutter has no account, no watermark, and no per-file limit. The site is supported by the ads you see on this page rather than by subscriptions or fees.</p>
   </div>
+
+  <div class="card" data-tag="07 — What's next">
+    <h3>Roadmap</h3>
+    <p>Planned improvements include broader container format support, clearer in-tool guidance when a file can't be parsed, and expanded documentation based on the errors and formats people actually run into. Feedback from real usage — via the <a href="/contact.html">contact page</a> — directly shapes what gets prioritized next.</p>
+  </div>
+
+  <h2>Frequently asked questions</h2>
+  <details class="faq-item">
+    <summary>Is Reel Cutter affiliated with Instagram, TikTok, or YouTube?</summary>
+    <div class="faq-body">No. Reel Cutter is an independent tool. "Reels," "TikTok," and "Shorts" are used here only to describe the short-form video formats these platforms popularized, not to imply any partnership or endorsement.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Who built Reel Cutter?</summary>
+    <div class="faq-body">Reel Cutter is built and maintained independently, motivated by a simple frustration: existing "video splitter" tools online either required an upload (slow, and a privacy concern for unpublished footage) or a full desktop editor (overkill for a task that's really just "cut this file into pieces"). The MP4 parsing and zip packing were written from scratch specifically to avoid pulling in a heavy library just to do a straightforward byte-copy.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Will Reel Cutter always be free?</summary>
+    <div class="faq-body">That's the plan. The site is supported by advertising rather than a paid tier, which keeps the core tool free to use without an account or usage limits.</div>
+  </details>
 
   <p style="margin-top:28px;"><a class="btn" href="/">Try the split tool →</a></p>
 

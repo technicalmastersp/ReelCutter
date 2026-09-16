@@ -87,7 +87,7 @@
   <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
   <div class="nav-links">
     <a href="/">Split Tool</a>
-    <a href="/">Tutorials</a>
+    <a href="/blog/">Tutorials</a>
     <a href="/about.html">About</a>
     <a href="/contact.html">Contact</a>
     <a href="/privacy-policy.html">Privacy</a>
@@ -95,7 +95,7 @@
   </div>
 </nav>
 
-<p class="crumbs"><a href="/">Home</a> / <a href="/">Tutorials</a> / Split a video into Reels</p>
+<p class="crumbs"><a href="/">Home</a> / <a href="/blog/">Tutorials</a> / Split a video into Reels</p>
 
 <header class="page-header">
   <div class="eyebrow">Tutorial</div>
@@ -105,30 +105,43 @@
 
 <main class="page-wrap">
 
-  <p>If you've got a 20-minute recording and want to post it as a series of Reels, you have two basic options: re-encode it in a heavy desktop editor, or copy the existing compressed video straight into shorter files. This guide covers the second approach using <a href="/">Reel Cutter</a>, which does the whole job in your browser tab.</p>
+  <p>If you've got a 20-minute recording and want to post it as a series of Reels, you have two basic options: re-encode it in a heavy desktop editor, or copy the existing compressed video straight into shorter files. This guide covers the second approach using <a href="/">Reel Cutter</a>, which does the whole job in your browser tab — no install, no upload, no export queue.</p>
+
+  <h2>Why byte-copy splitting beats re-encoding for this job</h2>
+  <p>Traditional editors cut video by decoding every frame back into raw pixels, then recompressing the pieces you keep. That's necessary when you're trimming mid-scene or changing resolution, but it's overkill for a straight split — and it costs you two things: time (a 20-minute 1080p file can take several minutes to re-export) and quality (recompressing an already-compressed video at a lower bitrate than the original introduces generational loss, the same way re-saving a JPEG repeatedly degrades it). A byte-copy split skips all of that: it reads where each compressed frame already sits in the file and copies those bytes directly into new files. The output is bit-for-bit identical to the source, and building even a dozen parts typically takes a few seconds rather than minutes.</p>
 
   <h2>Before you start</h2>
   <ul>
-    <li>Export or save your source video as a standard MP4 or MOV file if it isn't already.</li>
+    <li>Export or save your source video as a standard MP4 or MOV file if it isn't already. Reel Cutter also supports fragmented ("streaming-style") MP4s, so exports from most phone cameras, screen recorders, and editors will work as-is.</li>
     <li>Decide roughly how long you want each part — 150–160 seconds works well for a lot of Reels workflows, but there's no single right answer (see our <a href="/blog/best-clip-length-for-social-media.html">clip length guide</a>).</li>
     <li>On a phone, make sure you have a bit of free storage — the finished zip needs to be written to disk before you can share it.</li>
+    <li>If your recording has a long musical intro, dead air, or a section you don't want in any part, trim that out in your camera app or editor first — Reel Cutter splits sequentially, it doesn't remove sections from the middle.</li>
   </ul>
 
   <h2>Step 1: Choose your video</h2>
-  <p>Open the <a href="/">split tool</a> and tap the drop zone, or drag a file in on desktop. The tool reads the file directly from your device — it doesn't upload it anywhere, so there's no waiting on a connection before processing starts.</p>
+  <p>Open the <a href="/">split tool</a> and tap the drop zone, or drag a file in on desktop. The tool reads the file directly from your device — it doesn't upload it anywhere, so there's no waiting on a connection before processing starts, and no file-size limit imposed by a server-side upload cap.</p>
 
   <h2>Step 2: Set your cut settings</h2>
   <p>Enter a minimum and maximum length in seconds. The tool will aim to land each part somewhere in that range, snapping to the nearest existing keyframe so playback starts cleanly. You can also:</p>
   <ul>
-    <li>Set a label prefix, so parts are named "Part 1," "Episode 1," or whatever fits your series.</li>
-    <li>Choose whether to keep the audio track — useful if you want a video-only cut for a specific edit later.</li>
+    <li>Set a label prefix, so parts are named "Part 1," "Episode 1," or whatever fits your series and matches your posting calendar naming convention.</li>
+    <li>Choose whether to keep the audio track — useful if you want a video-only cut for a specific edit later, or if you're planning to add a separate voiceover per part.</li>
   </ul>
 
   <h2>Step 3: Run the split</h2>
-  <p>Click "Split this video" and watch the checklist update as each part is built. Because there's no re-encoding involved, this is typically much faster than exporting the same number of clips from a timeline editor — the tool is copying existing compressed data, not recompressing it.</p>
+  <p>Click "Split this video" and watch the checklist update as each part is built. Because there's no re-encoding involved, this is typically much faster than exporting the same number of clips from a timeline editor — the tool is copying existing compressed data, not recompressing it. A 30-minute source file usually finishes in well under a minute on a modern phone or laptop.</p>
 
   <h2>Step 4: Download and post</h2>
-  <p>Once every part is built, download the zip. Inside you'll find one MP4 per part, ready to upload to Instagram, TikTok, or YouTube in whatever order you like. Because nothing was re-encoded, each part looks exactly as sharp as your original file.</p>
+  <p>Once every part is built, download the zip. Inside you'll find one MP4 per part, ready to upload to Instagram, TikTok, or YouTube in whatever order you like. Because nothing was re-encoded, each part looks exactly as sharp as your original file — there's no visible seam between "part 3" and what part 3 would have looked like if you'd exported it directly from a timeline editor.</p>
+
+  <h2>A simple posting workflow</h2>
+  <p>Once you have your zip of parts, a few habits make the multi-part posting process smoother:</p>
+  <ul>
+    <li><strong>Rename before you upload.</strong> If your platform's app doesn't show upload order clearly, prefix filenames with numbers (01_, 02_...) so you post them in sequence.</li>
+    <li><strong>Add a "part X of Y" caption or on-screen label</strong> in your platform's own caption/text tool so viewers who land on part 3 first know to look for part 1.</li>
+    <li><strong>Space posts out</strong> rather than uploading all parts back-to-back — most platforms favor content spaced over hours or days for a single source recording, rather than a flood of posts in one sitting.</li>
+    <li><strong>Pin the first part</strong> or link it in later parts' captions/comments so newcomers can find the start of the series.</li>
+  </ul>
 
   <h2>Troubleshooting</h2>
   <div class="faq-item" style="margin-top:10px;">
@@ -140,7 +153,7 @@
   <div class="faq-item">
     <details>
       <summary>The tool says the file failed to parse</summary>
-      <div class="faq-body">This usually means the file uses a fragmented or unusual MP4 structure. Re-exporting it as a standard MP4 from your camera app or editor first almost always fixes it.</div>
+      <div class="faq-body">This usually means the file uses an unsupported or corrupted container variant. Re-exporting it as a standard MP4 from your camera app or editor first almost always fixes it. See our <a href="/blog/troubleshooting-guide.html">full troubleshooting guide</a> for source-specific tips.</div>
     </details>
   </div>
   <div class="faq-item">
@@ -149,11 +162,26 @@
       <div class="faq-body">Very long or very high-resolution source files can use a lot of memory. Try a shorter source clip, lower the source resolution first, or run the split on a laptop instead.</div>
     </details>
   </div>
+  <div class="faq-item">
+    <details>
+      <summary>Can I split a video that already has captions or text overlays burned in?</summary>
+      <div class="faq-body">Yes — burned-in captions, watermarks, or overlays are part of the video's pixels, so they carry through into every part exactly as they appear in the source. Reel Cutter doesn't add, remove, or alter any visual elements.</div>
+    </details>
+  </div>
+  <div class="faq-item">
+    <details>
+      <summary>Do I need to convert my file before splitting it?</summary>
+      <div class="faq-body">Not usually. Standard and fragmented MP4/MOV/M4V files both work directly. If your file is a different container (like AVI, MKV, or WebM), convert it to MP4 in your editor or camera app's export settings first.</div>
+    </details>
+  </div>
 
   <div class="related-links" style="margin-top:30px;">
     <a href="/blog/mp4-keyframes-explained.html">MP4 keyframes explained</a>
     <a href="/blog/best-clip-length-for-social-media.html">Best clip length by platform</a>
+    <a href="/blog/troubleshooting-guide.html">Troubleshooting common errors</a>
     <a href="/blog/free-movie-cutter.html">Free movie cutter for your own videos</a>
+    <a href="/blog/video-format-glossary.html">Video format glossary</a>
+    <a href="/blog/who-uses-reel-cutter.html">Who uses Reel Cutter</a>
     <a href="/">Back to the split tool →</a>
   </div>
 
@@ -179,7 +207,7 @@
     <div class="foot-col">
       <h4>Product</h4>
       <a href="/">Split tool</a>
-      <a href="/">Tutorials</a>
+      <a href="/blog/">Tutorials</a>
       <a href="/about.html">About</a>
     </div>
     <div class="foot-col">

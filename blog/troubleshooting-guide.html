@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reel Cutter Troubleshooting: Common Errors and How to Fix Them</title>
+<meta name="description" content="Fixes for the most common Reel Cutter errors: file failed to parse, fragmented MP4, browser tab crashes, and more — with source-specific tips for phones, screen recorders, and editors." />
+<link rel="canonical" href="https://reel-cutter-swart.vercel.app/blog/troubleshooting-guide.html" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#f6f3ee" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192.png" />
+<link rel="manifest" href="/site.webmanifest" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Reel Cutter" />
+<meta property="og:title" content="Reel Cutter Troubleshooting: Common Errors and How to Fix Them" />
+<meta property="og:description" content="Fixes for the most common Reel Cutter errors, with source-specific tips for phones, screen recorders, and editors." />
+<meta property="og:url" content="https://reel-cutter-swart.vercel.app/blog/troubleshooting-guide.html" />
+<meta property="og:image" content="https://reel-cutter-swart.vercel.app/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Reel Cutter — split long videos into Reels, TikTok and Shorts" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Reel Cutter Troubleshooting Guide" />
+<meta name="twitter:image" content="https://reel-cutter-swart.vercel.app/assets/og-image.png" />
+
+<link rel="stylesheet" href="/assets/site.css" />
+
+<meta name="google-adsense-account" content="ca-pub-1806601681825275" />
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1806601681825275" crossorigin="anonymous"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Reel Cutter Troubleshooting: Common Errors and How to Fix Them",
+  "description": "Fixes for the most common Reel Cutter errors, with source-specific tips for phones, screen recorders, and editors.",
+  "author": { "@type": "Organization", "name": "Reel Cutter" },
+  "publisher": { "@type": "Organization", "name": "Reel Cutter" },
+  "datePublished": "2026-09-16",
+  "dateModified": "2026-09-16",
+  "mainEntityOfPage": "https://reel-cutter-swart.vercel.app/blog/troubleshooting-guide.html"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://reel-cutter-swart.vercel.app/" },
+    { "@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://reel-cutter-swart.vercel.app/blog/" },
+    { "@type": "ListItem", "position": 3, "name": "Troubleshooting guide", "item": "https://reel-cutter-swart.vercel.app/blog/troubleshooting-guide.html" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does \"file failed to parse\" mean?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Reel Cutter couldn't read the video's container structure — usually because the file uses an unusual or corrupted MP4/MOV variant. Re-exporting the file as a standard MP4 from your camera app or editor almost always fixes it." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why did my browser tab crash while splitting?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Reel Cutter processes video entirely in your browser's memory. Very long or very high-resolution files can exceed what a mobile browser tab allows. Try a shorter or lower-resolution source, close other tabs, or switch to a laptop." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Reel Cutter support fragmented MP4 files?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Reel Cutter supports both standard and fragmented (streaming-style) MP4 containers, which covers most exports from browsers, screen recorders, and modern editors." }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div class="filmstrip">
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<nav class="site-nav" aria-label="Main">
+  <a class="brand" href="/">🎞️ Reel <em>Cutter</em></a>
+  <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+  <div class="nav-links">
+    <a href="/">Split Tool</a>
+    <a href="/blog/">Tutorials</a>
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/privacy-policy.html">Privacy</a>
+    <a href="/terms-of-service.html">Terms</a>
+  </div>
+</nav>
+
+<p class="crumbs"><a href="/">Home</a> / <a href="/blog/">Tutorials</a> / Troubleshooting guide</p>
+
+<header class="page-header">
+  <div class="eyebrow">Reference</div>
+  <h1>Troubleshooting <em>common errors</em></h1>
+  <p class="sub">What each error message actually means, why it happens, and the fastest way to fix it — organized by symptom.</p>
+</header>
+
+<main class="page-wrap">
+
+  <p>Reel Cutter reads your video's container format directly and copies compressed samples into new files without re-encoding. That's what makes it fast and lossless, but it also means it depends on the source file being structured in a way it can understand. This page covers every error you're likely to see, what's actually happening under the hood, and how to fix it.</p>
+
+  <h2>"This is a fragmented MP4 (streaming-style)..." or parsing failures</h2>
+  <p>Standard MP4 files store one master index of every video and audio sample. Fragmented MP4s — common from browser-based recorders, some screen-capture tools, and streaming pipelines — instead split that index across many small chunks throughout the file. Reel Cutter supports both formats. If you still see a parsing error, the file most likely uses an unsupported or non-standard variant:</p>
+  <ul>
+    <li><strong>Re-export as a standard MP4.</strong> Opening the file in any free editor (like the built-in editor on your phone, or a tool like HandBrake) and re-saving as MP4 normalizes the container structure.</li>
+    <li><strong>Check for file corruption.</strong> If the file was interrupted mid-transfer or mid-recording (a crashed recording app, a phone that ran out of storage mid-capture), the container's index itself may be incomplete. A re-export can sometimes recover it; if the source app has an "repair" or "recover" option for interrupted recordings, try that first.</li>
+    <li><strong>Confirm the file extension matches the actual format.</strong> A file renamed from something else to .mp4 without actually being converted will fail to parse — check the file's real format with your OS's built-in file info/properties panel.</li>
+  </ul>
+
+  <h2>"Could not find a usable video track in this file"</h2>
+  <p>This means Reel Cutter read the container successfully but didn't find a video track it recognizes — usually because the file is audio-only, uses an unsupported video codec, or the video track's metadata is missing or malformed. Confirm the file actually contains video (play it back first), and if it does, try re-exporting it with a standard codec like H.264 or H.265, which cover the vast majority of source footage from phones, cameras, and screen recorders.</p>
+
+  <h2>Browser tab crashes or freezes partway through</h2>
+  <p>Because processing happens entirely in your browser's memory rather than on a server, very long or very high-resolution files can use more memory than a browser tab is allowed. This shows up differently depending on your device:</p>
+  <ul>
+    <li><strong>On phones,</strong> background apps and other open tabs compete for the same limited memory pool. Close everything else, then try again.</li>
+    <li><strong>On 4K or multi-hour source files,</strong> even a capable laptop can hit limits. Try lowering the source resolution first in your camera app or a free converter, or split the source into two rough halves and process each half separately.</li>
+    <li><strong>On older or low-memory devices,</strong> a desktop browser (Chrome, Firefox, Edge, Safari) on a laptop will generally handle larger files more reliably than a phone browser.</li>
+  </ul>
+
+  <h2>Output parts are a few seconds off my requested length</h2>
+  <p>This isn't a bug — it's an inherent trade-off of lossless, byte-copy splitting. See our full explainer on <a href="/blog/mp4-keyframes-explained.html">why cuts snap to keyframes</a> for the technical reason and how to tighten the drift.</p>
+
+  <h2>Split parts won't play, or play with a garbled first second</h2>
+  <p>If a part plays with a brief glitch or corrupted-looking frame right at the start, the most common cause is an unusual keyframe flag in the source file that made a cut point look valid when it wasn't quite. Try re-exporting the source file as a standard MP4 first (this normalizes keyframe flags) and re-run the split — if the issue persists on a specific file, it likely uses an edge-case encoder variant that isn't fully supported yet.</p>
+
+  <h2>Audio is missing or out of sync in a part</h2>
+  <ul>
+    <li><strong>Missing audio:</strong> Confirm "include audio" is checked in the split settings before running — Reel Cutter lets you strip audio intentionally for video-only exports.</li>
+    <li><strong>Out-of-sync audio:</strong> This is rare with byte-copy splitting since audio and video are aligned independently per part, but can happen if the source file itself already had drifting audio sync before you split it — check the original file's playback to confirm.</li>
+  </ul>
+
+  <h2>Source-specific notes</h2>
+  <div class="faq-item">
+    <details open>
+      <summary>iPhone / iOS camera recordings</summary>
+      <div class="faq-body">Generally split cleanly as standard or fragmented MP4/MOV. If you've applied Live Photo or Cinematic mode effects, export a standard video copy first (Share → Save as Video, or trim once in the Photos app) before splitting.</div>
+    </details>
+  </div>
+  <div class="faq-item">
+    <details>
+      <summary>Android camera recordings</summary>
+      <div class="faq-body">Most stock camera apps export standard MP4 with H.264/H.265 video, which splits reliably. Some manufacturer camera apps use non-standard containers for high-frame-rate or HDR modes — if a specific recording mode fails to parse, try a recording made in the default/standard mode as a comparison.</div>
+    </details>
+  </div>
+  <div class="faq-item">
+    <details>
+      <summary>Screen recordings (OBS, QuickTime, built-in phone screen recorder)</summary>
+      <div class="faq-body">OBS and most screen recorders export standard or fragmented MP4/MOV that Reel Cutter reads directly. Longer keyframe intervals are common in screen recordings (static content compresses well without frequent full-frame refreshes), which can mean more drift on split boundaries — see the keyframes explainer for why.</div>
+    </details>
+  </div>
+  <div class="faq-item">
+    <details>
+      <summary>Zoom, Google Meet, and other video-call recordings</summary>
+      <div class="faq-body">Cloud-recorded calls download as standard MP4 and generally split without issue. Locally recorded calls occasionally use a fragmented structure — Reel Cutter supports this, but if a specific file still fails, re-exporting once through a free converter usually resolves it.</div>
+    </details>
+  </div>
+  <div class="faq-item">
+    <details>
+      <summary>Older camcorder / digitized tape exports</summary>
+      <div class="faq-body">Capture devices vary widely in export quality. If a digitized file fails to parse, re-exporting it once through a free tool like HandBrake (which normalizes the container) before splitting resolves the vast majority of cases.</div>
+    </details>
+  </div>
+
+  <h2>Still stuck?</h2>
+  <p>If none of the above resolves it, reach out via the <a href="/contact.html">contact page</a> with the file's original format (camera/app/export source), roughly how long the video is, and the exact error text shown in the tool's log — that's usually enough to identify what's happening.</p>
+
+  <div class="related-links" style="margin-top:30px;">
+    <a href="/blog/mp4-keyframes-explained.html">MP4 keyframes explained</a>
+    <a href="/blog/split-video-for-instagram-reels.html">Step-by-step splitting tutorial</a>
+    <a href="/blog/free-movie-cutter.html">Free movie cutter for your own videos</a>
+    <a href="/">Back to the split tool →</a>
+  </div>
+
+</main>
+
+<div class="ad-slot">
+  <div class="ad-label">Advertisement</div>
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-1806601681825275"
+       data-ad-slot="PASTE_INCONTENT_AD_SLOT_ID"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<div class="site-footer">
+  <div class="foot-grid">
+    <div class="foot-col">
+      <h4>Reel Cutter</h4>
+      <p style="font-size:13px;color:#4a4640;max-width:34ch;margin:0;">A free, in-browser tool that splits long videos into timed parts for Reels, TikTok and Shorts.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Product</h4>
+      <a href="/">Split tool</a>
+      <a href="/blog/">Tutorials</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <a href="/contact.html">Contact</a>
+      <a href="/privacy-policy.html">Privacy policy</a>
+      <a href="/terms-of-service.html">Terms of service</a>
+    </div>
+  </div>
+  <div class="foot-note">© 2026 Reel Cutter. Built for creators who publish a lot. · <a href="mailto:technicalmastersp@gmail.com" style="color:inherit;">technicalmastersp@gmail.com</a></div>
+</div>
+
+<script src="/assets/site.js"></script>
+</body>
+</html>

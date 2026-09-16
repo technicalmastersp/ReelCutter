@@ -87,7 +87,7 @@
   <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
   <div class="nav-links">
     <a href="/">Split Tool</a>
-    <a href="/">Tutorials</a>
+    <a href="/blog/">Tutorials</a>
     <a href="/about.html">About</a>
     <a href="/contact.html">Contact</a>
     <a href="/privacy-policy.html">Privacy</a>
@@ -95,7 +95,7 @@
   </div>
 </nav>
 
-<p class="crumbs"><a href="/">Home</a> / <a href="/">Tutorials</a> / MP4 keyframes explained</p>
+<p class="crumbs"><a href="/">Home</a> / <a href="/blog/">Tutorials</a> / MP4 keyframes explained</p>
 
 <header class="page-header">
   <div class="eyebrow">Explainer</div>
@@ -109,24 +109,62 @@
   <p>Video compression formats like H.264 and H.265 don't store every frame as a complete image. Instead, most frames are stored as "what changed since the last frame" — a much smaller amount of data. Every so often, the encoder inserts a full, self-contained frame called a keyframe (technically an I-frame). Every other frame in that stretch depends on the keyframe before it to be decoded correctly.</p>
   <p>Think of it like a flipbook where most pages are drawn as edits to the previous page, except every dozen or so pages redraws the whole scene from scratch. You can only start flipping cleanly from one of those "full redraw" pages.</p>
 
+  <h2>The group of pictures (GOP), in plain terms</h2>
+  <p>The stretch of frames between one keyframe and the next is called a Group of Pictures, or GOP. A typical GOP looks like: one I-frame (full image), followed by a run of P-frames (frames that only store changes from the frame before them), sometimes interleaved with B-frames (frames that reference both a previous and a following frame for even better compression). The GOP length — how many frames sit between keyframes — is set by whatever recorded or exported the file, not by Reel Cutter:</p>
+  <ul>
+    <li><strong>Phone cameras</strong> (iPhone, most Android devices) typically place a keyframe every 1–3 seconds, which is why splitting phone footage usually lands close to your target time.</li>
+    <li><strong>Screen recorders and streaming software</strong> (OBS, game capture tools) sometimes use longer GOPs — a keyframe every 5–10 seconds isn't unusual — because static screen content compresses well without frequent full-frame refreshes.</li>
+    <li><strong>Re-exported or transcoded files</strong> inherit whatever GOP setting the export tool used, which can vary widely — some default to 1 keyframe every 2 seconds, others go as long as every 12.</li>
+  </ul>
+
   <h2>Why this matters for splitting</h2>
   <p>A tool that re-encodes video can cut at literally any frame, because it decodes everything and re-compresses it from scratch — at the cost of time and, at lower settings, some visible quality loss. A tool that does a byte-copy split, like Reel Cutter, doesn't decode anything — it copies the existing compressed samples directly into a new file. That's fast and lossless, but it means a new file can only start at a keyframe, or the first few frames won't decode properly and playback will glitch or freeze.</p>
   <p>So when you ask for a 150-second part, the tool looks for the nearest keyframe at or before that mark and starts the new part there. Depending on how often your source video places keyframes — often every 1 to 5 seconds, but it varies by camera, app, and export settings — your part might come out anywhere from a fraction of a second to a few seconds off your target.</p>
+
+  <h2>A worked example</h2>
+  <p>Say your source has a keyframe every 4 seconds, and you ask Reel Cutter for parts of 150–160 seconds. The tool looks for the nearest keyframe at or before the 150-second mark. If keyframes land at 148s and 152s, it'll cut at 148s — 2 seconds short of your target — because starting at 152s would already be within your range too, but the tool prioritizes the earliest valid cut point in the window. Widen the window (say, 145–160 instead of 150–160) and the tool has more keyframes to choose from, which can land you closer to whichever exact number matters most to you.</p>
+
+  <h2>How to check your own file's keyframe interval</h2>
+  <p>If you want to know in advance how tightly a specific file will split, free tools like <strong>MediaInfo</strong> (desktop, cross-platform) or <strong>ffprobe</strong> (part of the free ffmpeg command-line suite) can show you the GOP structure of a video before you split it. Look for a field like "frame rate mode" or run a command that lists frame types — a dense run of "I" frames means tight splits; long gaps between them mean more drift is possible.</p>
 
   <h2>How to get tighter cuts</h2>
   <ul>
     <li><strong>Narrow the range.</strong> Setting min/max closer together (e.g. 155–160 instead of 120–160) gives the tool less room to drift before it has to cut.</li>
     <li><strong>Check your source's keyframe interval.</strong> Footage exported with more frequent keyframes (common in phone camera recordings) will split more precisely than footage with sparse keyframes (common in some screen recordings and long single takes).</li>
+    <li><strong>Re-export with a shorter GOP first.</strong> If you control the original export settings (in an editor or OBS), setting a keyframe interval of 1–2 seconds before you ever bring the file into Reel Cutter will make every future split tighter.</li>
     <li><strong>Accept the trade-off.</strong> A few seconds of drift is generally invisible in a Reel or Short's total runtime, and it's the price of zero re-encoding — no blocky artifacts, no generation loss, no waiting for a render.</li>
   </ul>
 
   <h2>The short version</h2>
   <p>Byte-copy splitting trades sub-second cut precision for speed and perfect quality. If you need frame-exact cuts at any arbitrary timestamp, you'd need a re-encoding tool instead — but for most Reels, TikTok, and Shorts workflows, landing within a couple of seconds of your target is a small price for a split that finishes almost instantly and looks identical to your source.</p>
 
+  <h2>Common questions</h2>
+  <div class="faq-item">
+    <details>
+      <summary>Does a longer GOP mean worse video quality?</summary>
+      <div class="faq-body">Not directly — GOP length is a compression trade-off, not a quality setting. Longer GOPs compress more efficiently (smaller files at the same visual quality) but make random-access seeking and lossless splitting less precise. Shorter GOPs make files a bit larger but split and seek more tightly.</div>
+    </details>
+  </div>
+  <div class="faq-item">
+    <details>
+      <summary>Why don't all my parts drift by the same amount?</summary>
+      <div class="faq-body">Keyframe placement isn't always perfectly even — many encoders place keyframes at scene changes in addition to a regular interval, so a part following a sudden cut in your footage might land closer to your target than one following a static, unchanging scene.</div>
+    </details>
+  </div>
+  <div class="faq-item">
+    <details>
+      <summary>Does this affect audio the same way?</summary>
+      <div class="faq-body">No — audio codecs like AAC don't have the same keyframe dependency as video, so audio can be cut far more precisely. Reel Cutter aligns the audio track to match each video part's actual start and end time.</div>
+    </details>
+  </div>
+
   <div class="related-links" style="margin-top:30px;">
     <a href="/blog/split-video-for-instagram-reels.html">Step-by-step splitting tutorial</a>
     <a href="/blog/best-clip-length-for-social-media.html">Best clip length by platform</a>
+    <a href="/blog/troubleshooting-guide.html">Troubleshooting common errors</a>
     <a href="/blog/free-movie-cutter.html">Free movie cutter for your own videos</a>
+    <a href="/blog/video-format-glossary.html">Video format glossary</a>
+    <a href="/blog/who-uses-reel-cutter.html">Who uses Reel Cutter</a>
     <a href="/">Back to the split tool →</a>
   </div>
 
@@ -152,7 +190,7 @@
     <div class="foot-col">
       <h4>Product</h4>
       <a href="/">Split tool</a>
-      <a href="/">Tutorials</a>
+      <a href="/blog/">Tutorials</a>
       <a href="/about.html">About</a>
     </div>
     <div class="foot-col">

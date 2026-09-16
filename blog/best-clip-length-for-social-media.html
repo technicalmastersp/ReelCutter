@@ -87,7 +87,7 @@
   <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
   <div class="nav-links">
     <a href="/">Split Tool</a>
-    <a href="/">Tutorials</a>
+    <a href="/blog/">Tutorials</a>
     <a href="/about.html">About</a>
     <a href="/contact.html">Contact</a>
     <a href="/privacy-policy.html">Privacy</a>
@@ -95,7 +95,7 @@
   </div>
 </nav>
 
-<p class="crumbs"><a href="/">Home</a> / <a href="/">Tutorials</a> / Best clip length for social media</p>
+<p class="crumbs"><a href="/">Home</a> / <a href="/blog/">Tutorials</a> / Best clip length for social media</p>
 
 <header class="page-header">
   <div class="eyebrow">Guide · updated 2026</div>
@@ -107,14 +107,17 @@
 
   <p>Every major short-form platform now technically allows much longer uploads than when Reels, TikTok, and Shorts launched. That doesn't mean you should use the full ceiling — discovery algorithms still lean hard toward shorter, tightly-paced clips. Here's the practical picture as of 2026, and how to translate it into settings for the split tool.</p>
 
+  <h2>Why length affects reach, not just runtime</h2>
+  <p>Every platform's recommendation algorithm leans heavily on completion rate — the percentage of viewers who watch a clip all the way through — and rewatch rate, since a viewer who loops a clip signals strong engagement. A 3-minute clip that loses half its audience by the 20-second mark sends a weaker signal than a 20-second clip that most viewers finish. That's the core reason shorter clips tend to get pushed to more non-followers even when a platform's technical length cap is much higher: the algorithm isn't rewarding "short" for its own sake, it's rewarding a high finish rate, and shorter clips make that easier to achieve.</p>
+
   <h2>Instagram Reels</h2>
-  <p>Instagram now allows Reels up to around 20 minutes when uploading a pre-recorded file, up from a 90-second cap just a couple of years ago. In practice, though, Instagram's discovery algorithm favors much shorter runtimes for reach to non-followers — commonly cited sweet spots are roughly 7–30 seconds for broad discovery and up to about 60–90 seconds for tutorial-style content. Runtimes beyond a few minutes tend to reach mostly your existing followers rather than new viewers.</p>
+  <p>Instagram now allows Reels up to around 20 minutes when uploading a pre-recorded file, up from a 90-second cap just a couple of years ago. In practice, though, Instagram's discovery algorithm favors much shorter runtimes for reach to non-followers — commonly cited sweet spots are roughly 7–30 seconds for broad discovery and up to about 60–90 seconds for tutorial-style content. Runtimes beyond a few minutes tend to reach mostly your existing followers rather than new viewers, since Explore-page distribution weighs completion rate heavily.</p>
 
   <h2>TikTok</h2>
-  <p>TikTok supports much longer uploads than it started with — up to several minutes when recording in-app, and considerably longer for uploaded files. Even so, TikTok's own historical engagement data has repeatedly pointed to short clips (well under a minute) performing best for completion rate and replays, which are strong ranking signals on the platform.</p>
+  <p>TikTok supports much longer uploads than it started with — up to several minutes when recording in-app, and considerably longer for uploaded files. Even so, TikTok's own historical engagement data has repeatedly pointed to short clips (well under a minute) performing best for completion rate and replays, which are strong ranking signals on the platform. Longer TikToks can still perform well, but they generally need a stronger hook in the first 1–2 seconds to hold viewers into a longer runtime.</p>
 
   <h2>YouTube Shorts</h2>
-  <p>YouTube Shorts allows videos up to about 3 minutes, a significant jump from its original 60-second limit. Average watched Shorts still tend to run closer to 20–40 seconds, and anything under roughly 5 seconds is unlikely to gain traction.</p>
+  <p>YouTube Shorts allows videos up to about 3 minutes, a significant jump from its original 60-second limit. Average watched Shorts still tend to run closer to 20–40 seconds, and anything under roughly 5 seconds is unlikely to gain traction. YouTube's Shorts shelf also considers whether a Short drives viewers to a creator's longer-form content, so a Short that teases a longer video can justify a slightly longer runtime than one meant to stand alone.</p>
 
   <h2>A practical rule of thumb</h2>
   <table style="width:100%;border-collapse:collapse;margin:14px 0;">
@@ -133,13 +136,44 @@
   </table>
   <p>Note that platform limits and algorithm preferences change fairly often — treat the numbers above as a snapshot rather than gospel, and check each platform's current help pages before planning a long-running content strategy around them.</p>
 
+  <h2>A simple way to test what works for your audience</h2>
+  <p>Platform-wide averages are a starting point, not a guarantee for your specific channel. A lightweight way to find your own sweet spot:</p>
+  <ol>
+    <li>Split one long recording into two batches with different target lengths — say, 20–30 seconds and 60–90 seconds — using two separate runs of the split tool.</li>
+    <li>Post both batches over a similar time period and note completion rate / average watch time from each platform's built-in analytics (Instagram Insights, TikTok Analytics, YouTube Studio all report this per video).</li>
+    <li>After a few weeks, lean your default split length toward whichever range consistently retains more of your specific audience — your niche, pacing, and content type all shift where the real sweet spot lands.</li>
+  </ol>
+
   <h2>Setting this up in Reel Cutter</h2>
   <p>If you're chopping one long recording into a batch of clips rather than editing bespoke short-form content, pick a min/max range that matches your slowest platform's discovery sweet spot — for cross-posting, something like 60–90 seconds per part is a reasonable middle ground. For a tutorial-style series meant to be watched in order by existing followers, the default 150–160 seconds works well. See the <a href="/blog/split-video-for-instagram-reels.html">step-by-step tutorial</a> for the full walkthrough, and <a href="/blog/mp4-keyframes-explained.html">how cuts snap to keyframes</a> for why your parts may land a couple of seconds off your exact target.</p>
+
+  <h2>Common questions</h2>
+  <div class="faq-item">
+    <details>
+      <summary>Is there a real penalty for uploading a video that's too long?</summary>
+      <div class="faq-body">Not a direct one — platforms won't reject or de-prioritize a video purely for its length within the allowed maximum. The "penalty" is indirect: longer videos are statistically more likely to have lower completion rates, and completion rate is what actually affects distribution.</div>
+    </details>
+  </div>
+  <div class="faq-item">
+    <details>
+      <summary>Should every part from a split series be the same length?</summary>
+      <div class="faq-body">Not necessarily. It's fine for the last part of a series to be shorter — most audiences don't mind a shorter finale, and forcing an even length can mean awkward cuts mid-sentence or mid-scene.</div>
+    </details>
+  </div>
+  <div class="faq-item">
+    <details>
+      <summary>Does clip length affect ad revenue on any of these platforms?</summary>
+      <div class="faq-body">On platforms with in-stream or mid-roll ad monetization for longer videos, runtime can matter for ad eligibility — check each platform's current monetization requirements, since these change independently of the length limits covered here.</div>
+    </details>
+  </div>
 
   <div class="related-links" style="margin-top:30px;">
     <a href="/blog/split-video-for-instagram-reels.html">Step-by-step splitting tutorial</a>
     <a href="/blog/mp4-keyframes-explained.html">MP4 keyframes explained</a>
+    <a href="/blog/troubleshooting-guide.html">Troubleshooting common errors</a>
     <a href="/blog/free-movie-cutter.html">Free movie cutter for your own videos</a>
+    <a href="/blog/video-format-glossary.html">Video format glossary</a>
+    <a href="/blog/who-uses-reel-cutter.html">Who uses Reel Cutter</a>
     <a href="/">Back to the split tool →</a>
   </div>
 
@@ -165,7 +199,7 @@
     <div class="foot-col">
       <h4>Product</h4>
       <a href="/">Split tool</a>
-      <a href="/">Tutorials</a>
+      <a href="/blog/">Tutorials</a>
       <a href="/about.html">About</a>
     </div>
     <div class="foot-col">

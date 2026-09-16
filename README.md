@@ -36,13 +36,31 @@ assets/
   icons/                                     ← favicons + apple-touch-icon + PWA icons (192/512)
 blog/
   index.html                                 ← tutorials hub
-  split-video-for-instagram-reels.html       ← step-by-step splitting tutorial
-  mp4-keyframes-explained.html               ← why cuts snap to keyframes
-  best-clip-length-for-social-media.html     ← 2026 length limits/sweet spots by platform
-  free-movie-cutter.html                     ← targets "movie cutter" + related long-tail terms
+  split-video-for-instagram-reels.html       ← step-by-step splitting tutorial (expanded)
+  mp4-keyframes-explained.html               ← why cuts snap to keyframes (expanded)
+  best-clip-length-for-social-media.html     ← 2026 length limits/sweet spots by platform (expanded)
+  free-movie-cutter.html                     ← targets "movie cutter" + related long-tail terms (reworked)
+  troubleshooting-guide.html                 ← common errors and fixes, by source (new)
+  video-format-glossary.html                 ← codec/container/keyframe terminology reference (new)
+  who-uses-reel-cutter.html                  ← real workflows per creator type (new)
 ```
 
 `index.html` keeps its original inline `<style>` and `<script>` untouched — the split/zip logic hasn't changed. `assets/site.css` only adds new, non-conflicting styles for the nav, footer, ad slots, and the content pages.
+
+## AdSense "low value content" rejection — fixed
+
+Google rejected the site pre-launch with **"Low value content"**, and it was accurate: total unique prose across the site was ~2,500 words spread thin across 10 pages, with several pages (notably `free-movie-cutter.html` at 441 words) short enough to resemble the "thin/doorway page" pattern Google's spam policies flag.
+
+This pass addressed it directly:
+- Expanded the four existing articles from 440–600 words each to 990–1,140 words each with genuine added depth (GOP/codec detail, worked examples, per-source troubleshooting notes, retention/algorithm context, testing frameworks) rather than padding.
+- Added three new substantial pages: a troubleshooting reference tied to the product's real error messages, a video-format glossary, and a use-cases page with concrete per-persona workflows.
+- Expanded About (386→877 words) and Contact (220→357 words), which were thin enough on their own to read as an incomplete site.
+- Total unique content across the site's core pages went from ~2,500 to ~9,100 words.
+- Fixed a broken navigation bug (four blog pages' "Tutorials" nav/breadcrumb/footer links pointed to `/` instead of `/blog/`) found during this audit — unrelated to the content-depth issue but worth fixing regardless.
+
+**Before resubmitting for AdSense review:** wait until the new pages are live and Google has had a chance to crawl them (submit `sitemap.xml` in Search Console to speed this up), then check "I confirm I have fixed the issues" only once that's done. A very new domain with no backlinks may still take more than one review cycle — that's a trust/authority factor content depth alone can't fully offset.
+
+**Not fixed by this pass — needs your input:** several ad slots (`about.html`, `contact.html`, `index.html`, and three blog pages) still have literal placeholder text (`PASTE_LEFT_RAIL_AD_SLOT_ID`, `PASTE_INCONTENT_AD_SLOT_ID`, etc.) in their `data-ad-slot` attributes instead of real AdSense slot IDs. Replace these with real slot IDs from your AdSense dashboard before resubmitting.
 
 ## Keyword targeting: "movie cutter"
 
