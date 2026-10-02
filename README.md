@@ -19,6 +19,7 @@ No video data ever leaves the device — there's nothing to configure on a serve
 ```
 index.html                                   ← the split tool (HTML + CSS + JS in one file)
 split-planner.html                           ← interactive planner: part count, lengths, size, posting schedule
+faq.html                                     ← 25 grouped Q&As (formats, limits, privacy, troubleshooting) + FAQPage schema
 about.html                                   ← what Reel Cutter does and why it's in-browser
 contact.html                                 ← support / feedback / business contact
 privacy-policy.html                          ← privacy policy, incl. AdSense/cookie disclosure
@@ -44,6 +45,11 @@ blog/
   troubleshooting-guide.html                 ← common errors and fixes, by source (new)
   video-format-glossary.html                 ← codec/container/keyframe terminology reference (new)
   who-uses-reel-cutter.html                  ← real workflows per creator type (new)
+  how-to-split-video-online.html             ← pillar how-to: every setting, worked examples, QA checklist (Oct 3)
+  split-video-for-youtube-shorts.html        ← Shorts workflow, aspect-ratio caveat, length table (Oct 3)
+  video-cutter-vs-video-splitter.html        ← cutter vs splitter vs trimmer; what the tool does/doesn't do (Oct 3)
+  split-video-on-phone.html                  ← phone memory behaviour and crash avoidance (Oct 3)
+  is-my-video-uploaded.html                  ← how to verify nothing is uploaded (Network tab / offline test) (Oct 3)
 ```
 
 `index.html` keeps its original inline `<style>` and `<script>` untouched — the split/zip logic hasn't changed. `assets/site.css` only adds new, non-conflicting styles for the nav, footer, ad slots, and the content pages.
@@ -60,6 +66,27 @@ What this pass changed:
 - **vercel.json**: basic security headers.
 
 After approval, add ads by turning on **Auto ads** in the AdSense console (the loader script is already on every page) or by adding real units with real slot IDs one at a time. Do not re-add placeholder slots.
+
+## Content & AdSense-readiness pass (Oct 3, 2026)
+
+Goal: address "Low value content" by adding original, tool-specific information around the working tool, without thin or mass-produced pages. Everything written was checked against the actual code in `index.html` (the tool's `<script>` and `<style>` are byte-for-byte unchanged).
+
+**Homepage (`index.html`)**
+- H1 is now descriptive ("Free online video splitter"); title/OG/Twitter titles updated to match.
+- ~1,200 words of content below the tool: what it is, 5-step how-to, why use it, an at-a-glance does/doesn't box, supported formats & limits table, video privacy, common problems, and a 13-question FAQ. The FAQPage JSON-LD is generated from the same list, so visible text and schema match exactly.
+- **Fixed two inaccurate claims**: the "Zero external scripts" badge and the footer line "No CDN, no external libraries" were false because the AdSense loader is an external script. They now say "No upload — stays on your device" and "No video-processing libraries".
+- Honest framing: the tool *splits* a video into even parts. It does not trim a custom start/end, so the pages say so and link to the cutter-vs-splitter explainer.
+
+**New pages (6):** `faq.html` and five guides under `/blog/` (listed in the tree above). Each has its own search intent (no overlap with the existing Reels/keyframes/clip-length guides), Article + BreadcrumbList schema, and links into and out of the existing guides.
+
+**Wiring:** tutorials hub lists the new guides; `sitemap.xml` now has 20 URLs with fresh `lastmod`; "FAQ" added to every footer; existing guides cross-link to the new ones.
+
+**Facts the new content relies on (re-check if the tool code changes):**
+- Planning: target = (min+max)/2; parts = ceil(duration / target); even length = duration / parts; if that is below min, length = max and parts = ceil(duration / max).
+- Cuts start on the keyframe at or before the planned time; parts are contiguous.
+- Only the first audio track is copied; MKV/AVI/WebM unsupported; 64-bit `mvhd`/`tkhd` variants error out.
+- Parts and the zip are built in memory (peak is a few times the file size, an estimate from reading the code, not a benchmark). The zip writer is non-ZIP64 (32-bit sizes/offsets), so total output must stay under ~4 GB.
+- The tool code makes no network requests (verified: no `fetch`/`XMLHttpRequest`/`sendBeacon`/`WebSocket`; browser test showed only page assets, the AdSense loader and a local `blob:` preview URL).
 
 ## Keyword targeting: "movie cutter"
 

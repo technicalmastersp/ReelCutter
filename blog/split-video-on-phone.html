@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How to Split a Video on Your Phone — Reel Cutter</title>
+<meta name="description" content="Splitting video in a phone browser: how memory is used, how to avoid crashes, what to expect from the download, and when to switch to a computer." />
+<link rel="canonical" href="https://reel-cutter-swart.vercel.app/blog/split-video-on-phone.html" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#f6f3ee" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192.png" />
+<link rel="manifest" href="/site.webmanifest" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Reel Cutter" />
+<meta property="og:title" content="How to Split a Video on Your Phone" />
+<meta property="og:description" content="How Reel Cutter uses memory on a phone, how to avoid tab crashes, and what to do with the downloaded zip." />
+<meta property="og:image" content="https://reel-cutter-swart.vercel.app/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Reel Cutter — split long videos into Reels, TikTok and Shorts" />
+<meta property="og:url" content="https://reel-cutter-swart.vercel.app/blog/split-video-on-phone.html" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="How to Split a Video on Your Phone" />
+<meta name="twitter:description" content="How Reel Cutter uses memory on a phone, how to avoid tab crashes, and what to do with the downloaded zip." />
+<meta name="twitter:image" content="https://reel-cutter-swart.vercel.app/assets/og-image.png" />
+
+<link rel="stylesheet" href="/assets/site.css" />
+
+<meta name="google-adsense-account" content="ca-pub-1806601681825275" />
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1806601681825275" crossorigin="anonymous"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Split a Video on Your Phone (iPhone & Android)",
+  "description": "Splitting video in a phone browser: how memory is used, how to avoid crashes, what to expect from the download, and when to switch to a computer.",
+  "author": {
+    "@type": "Organization",
+    "name": "Reel Cutter"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Reel Cutter"
+  },
+  "datePublished": "2026-10-03",
+  "dateModified": "2026-10-03",
+  "mainEntityOfPage": "https://reel-cutter-swart.vercel.app/blog/split-video-on-phone.html"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://reel-cutter-swart.vercel.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Tutorials",
+      "item": "https://reel-cutter-swart.vercel.app/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Split a video on your phone",
+      "item": "https://reel-cutter-swart.vercel.app/blog/split-video-on-phone.html"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div class="filmstrip">
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<nav class="site-nav" aria-label="Main">
+  <a class="brand" href="/">🎞️ Reel <em>Cutter</em></a>
+  <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+  <div class="nav-links">
+    <a href="/">Split Tool</a>
+    <a href="/split-planner.html">Planner</a>
+    <a href="/blog/">Tutorials</a>
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/privacy-policy.html">Privacy</a>
+    <a href="/terms-of-service.html">Terms</a>
+  </div>
+</nav>
+
+<p class="crumbs"><a href="/">Home</a> / <a href="/blog/">Tutorials</a> / Split a video on your phone</p>
+
+<header class="page-header">
+  <div class="eyebrow">Tutorial</div>
+  <h1>Split a video <em>on your phone</em></h1>
+  <p class="sub">Why phone browsers behave differently from laptops, how to avoid the most common crash, and what to do with the zip afterwards.</p>
+</header>
+
+<main class="page-wrap">
+
+  <p class="updated">Last updated: 3 October 2026</p>
+
+  <p>Reel Cutter works in a phone browser, and for many people that is the whole point: record on the phone, split on the phone, post from the phone. But a phone browser has far less memory to work with than a laptop, so a little planning prevents the most common failure, a tab that crashes partway through. This guide explains why that happens, based on how the tool actually processes a file, and how to avoid it.</p>
+
+  <h2>What the tool does with your file's memory</h2>
+  <p>Reading the file is cheap: the tool only reads the small index at the start or end of the MP4 and then pulls out the chunks it needs. Building the output is where memory goes up:</p>
+  <ol>
+    <li>Each part is assembled and held in memory as a finished MP4.</li>
+    <li>When every part is ready, all of them are copied into a single zip, which is also assembled in memory.</li>
+    <li>Only then is the download offered.</li>
+  </ol>
+  <p>Our reading of this process is that, near the end, the browser can be holding the finished parts and the packed zip at the same time, so peak memory use can reach roughly two to three times the size of the source file. That is an estimate from how the steps are written, not a benchmark, and the real number varies by browser and device. It explains why a file that is comfortable on a laptop with plenty of RAM can crash a phone tab.</p>
+
+  <h2>Practical guidelines</h2>
+  <ul>
+    <li><strong>Test with a short clip first.</strong> Run a one- or two-minute clip through the tool to learn how your phone behaves before you try an hour-long recording.</li>
+    <li><strong>Treat large files with caution.</strong> We have no hard limit in the tool, because limits depend on your device. As a conservative starting point, files of a few hundred megabytes are far more likely to succeed on a phone than files of several gigabytes. If a big file fails, move it to a computer.</li>
+    <li><strong>Close other tabs and apps</strong> before you start. They compete for the same memory pool.</li>
+    <li><strong>Stay on the tab.</strong> Mobile browsers can pause or discard background tabs to save memory. If you switch away mid-split and the tab reloads, nothing is saved and you must start over.</li>
+    <li><strong>Plug in if the file is long.</strong> It is a sustained job for the processor.</li>
+    <li><strong>Check free storage.</strong> The zip needs about as much space as the original video.</li>
+  </ul>
+
+  <h2>Choosing the file</h2>
+  <p>Tap the drop zone and your phone opens its own picker, so you can select from your camera roll or from files. The tool accepts MP4, MOV and M4V. Many phones record video as MP4 or MOV by default, often with the HEVC (H.265) codec on newer devices. Because Reel Cutter copies the compressed data without changing it, each part keeps the same codec as the original and plays wherever the original plays. It also keeps the original track header, which is where rotation information lives, so portrait recordings stay portrait.</p>
+
+  <h2>After the split</h2>
+  <p>When you press “Download zip”, the phone's browser saves <code>video_parts.zip</code> to its normal downloads location. To use the parts you need to extract the zip. Most current phones can open zip files from their built-in file manager; if yours cannot, a free file-manager app can. Once extracted, the parts are ordinary MP4 files you can share or upload from your phone.</p>
+
+  <h2>If the tab crashes</h2>
+  <ol>
+    <li>Reload the page. Nothing is stored between sessions, so you start from the beginning.</li>
+    <li>Close everything else and try again on a shorter version of the file.</li>
+    <li>Or use a laptop. A desktop browser usually has far more memory available to a single tab.</li>
+  </ol>
+  <p>The <a href="/blog/troubleshooting-guide.html">troubleshooting guide</a> lists other messages you may see, including the one shown when a file uses an unsupported variant of the MP4 format.</p>
+
+  <h2>Is it safe to use on mobile data?</h2>
+  <p>Splitting does not upload or download your video, so it uses essentially no mobile data once the page itself has loaded. The only data you spend is on loading the website. You can read why in <a href="/blog/is-my-video-uploaded.html">Is my video uploaded? How to verify it yourself</a>.</p>
+
+  <div class="related-links" style="margin-top:30px;">
+    <a href="/">Open the split tool →</a>
+    <a href="/blog/how-to-split-video-online.html">How to split a video online</a>
+    <a href="/blog/troubleshooting-guide.html">Troubleshooting</a>
+    <a href="/blog/is-my-video-uploaded.html">Is my video uploaded?</a>
+    <a href="/faq.html">FAQ</a>
+  </div>
+
+</main>
+
+<div class="site-footer">
+  <div class="foot-grid">
+    <div class="foot-col">
+      <h4>Reel Cutter</h4>
+      <p style="font-size:13px;color:#4a4640;max-width:34ch;margin:0;">A free, in-browser tool that splits long videos into timed parts for Reels, TikTok and Shorts.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Product</h4>
+      <a href="/">Split tool</a>
+      <a href="/split-planner.html">Split planner</a>
+      <a href="/blog/">Tutorials</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <a href="/contact.html">Contact</a>
+      <a href="/privacy-policy.html">Privacy policy</a>
+      <a href="/terms-of-service.html">Terms of service</a>
+    </div>
+  </div>
+  <div class="foot-note">© 2026 Reel Cutter. Built for creators who publish a lot. · <a href="mailto:technicalmastersp@gmail.com" style="color:inherit;">technicalmastersp@gmail.com</a></div>
+</div>
+
+<script src="/assets/site.js"></script>
+</body>
+</html>

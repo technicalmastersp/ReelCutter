@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reel Cutter FAQ — Formats, Limits, Privacy and Troubleshooting</title>
+<meta name="description" content="Answers to common questions about Reel Cutter: supported formats, file size limits, why parts differ from your target, privacy, phones, and troubleshooting." />
+<link rel="canonical" href="https://reel-cutter-swart.vercel.app/faq.html" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#f6f3ee" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192.png" />
+<link rel="manifest" href="/site.webmanifest" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Reel Cutter" />
+<meta property="og:title" content="Reel Cutter FAQ" />
+<meta property="og:description" content="Supported formats, limits, privacy and troubleshooting: straight answers about how Reel Cutter splits video in your browser." />
+<meta property="og:image" content="https://reel-cutter-swart.vercel.app/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Reel Cutter — split long videos into Reels, TikTok and Shorts" />
+<meta property="og:url" content="https://reel-cutter-swart.vercel.app/faq.html" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Reel Cutter FAQ" />
+<meta name="twitter:description" content="Supported formats, limits, privacy and troubleshooting: straight answers about how Reel Cutter splits video in your browser." />
+<meta name="twitter:image" content="https://reel-cutter-swart.vercel.app/assets/og-image.png" />
+
+<link rel="stylesheet" href="/assets/site.css" />
+
+<meta name="google-adsense-account" content="ca-pub-1806601681825275" />
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1806601681825275" crossorigin="anonymous"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://reel-cutter-swart.vercel.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "FAQ",
+      "item": "https://reel-cutter-swart.vercel.app/faq.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is Reel Cutter?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Reel Cutter is a free tool that runs in your web browser and splits one long video into consecutive timed parts. It was built for turning long recordings into series of Reels, TikToks and Shorts, and it works equally well for lectures, podcasts, streams and home videos. You give it a video and a target part length; it gives you a zip of MP4 files."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Reel Cutter free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. There is no account, no watermark and no limit on how many videos you process. The site is intended to be supported by advertising rather than fees, as described in the About page and privacy policy."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to install anything?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Open the page in a current browser such as Chrome, Edge, Firefox or Safari. There is no app, extension or plug-in to install."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use it on my phone?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, but phone browsers have much less memory than computers, so very large files are better handled on a laptop. See how to split a video on your phone."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Reel Cutter a video trimmer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. It splits a whole video into consecutive parts. It cannot keep one clip chosen by start and end time, remove a section from the middle, crop, add captions or convert formats. Video cutter vs. video splitter explains the difference and the best order of work if you need both."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which video formats are supported?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MP4, MOV and M4V files, including both standard files and fragmented (“streaming-style”) MP4s. MKV, AVI, WebM, FLV and WMV are not supported; convert them to MP4 first. A rare 64-bit variant of the MP4 header is also not supported and produces an error message."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which video and audio codecs work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The tool does not decode or re-encode anything, so each part keeps exactly the codec of your original, for example H.264 or HEVC video with AAC audio. A part plays wherever the original would play."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the maximum file size?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The tool does not set a size limit; your browser's memory does. Parts and the final zip are assembled in memory, so peak usage can reach a few times the file size. The zip is also written in the standard format, which caps the combined size of all parts at about 4 GB. In practice, multi-gigabyte files are best split on a computer."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens to extra audio tracks or subtitles?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Only the first audio track is copied, and only if “Include audio” is set to Yes. Additional audio tracks and subtitle tracks are not included in the parts."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I split several files at once?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The tool works on one file per run. Process each video separately and keep the downloaded zips apart."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does splitting reduce video quality?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Nothing is re-encoded. The tool copies the existing compressed audio and video data into new files, so the picture is identical to your source."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why isn’t my part exactly the length I asked for?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each part has to begin on a keyframe, a frame stored in full, so it plays correctly from its first frame. The tool starts each part on the nearest keyframe at or before the planned point, which can make a part a few seconds longer or shorter than planned. Sources with widely spaced keyframes drift more. See MP4 keyframes, explained simply."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is my last part shorter?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The tool plans an even length for every part. When that length would be shorter than your minimum, it switches to your maximum instead, and whatever remains becomes the final part. Adjusting the min and max values changes how evenly the video divides. The split planner previews the result."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the output files called?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You download one zip named video_parts.zip. Inside are MP4 files named like part_1_Part-1.mp4, part_2_Part-2.mp4 and so on. The word “Part” comes from your label prefix, with any characters other than letters and numbers turned into hyphens."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does it take?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on your file size and your device, not on how complex the video is, because nothing is re-encoded. The tool shows an elapsed timer and an estimate of the time remaining. If it is slow, the usual cause is a device short of memory."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I choose exact start and end times?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Parts are planned evenly from the whole video and snap to keyframes. If you need exact in and out points, trim in an editor first, then split the exported file."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my video uploaded anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The file is read from your device and processed in your browser tab. The tool’s code makes no network requests. You can confirm this yourself; here is how."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if I close the tab or the browser?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Everything in progress is lost. Parts and the zip exist only in the tab’s memory until you press “Download zip”, and nothing is saved between visits. Reopen the page and start again."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the site keep a copy of my files or filenames?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. We do not receive your files, their names or their contents. See the privacy policy for the full details, including the cookies that advertising partners may use."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use it for Instagram Reels, TikTok and YouTube Shorts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Choose a part length that suits the platform, split, and upload the parts in order. Reel Cutter does not change the picture shape, so a landscape video stays landscape. Reframe to vertical in an editor first if the platform expects it. See Instagram Reels and YouTube Shorts."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What part length should I use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on your goal and on each platform’s current rules, which change. Our clip length guide gives starting points, and you should leave a few seconds of headroom under any platform limit because cuts can land slightly long."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "The tool says my file failed to parse. What now?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Re-export the video as a standard MP4 from your camera app or editor and try again. This fixes most cases, including files from interrupted recordings or unusual containers. The troubleshooting guide covers each message."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "My browser tab crashed or froze partway through.",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "That usually means the file is too large for the memory your browser allows. Close other tabs and apps, try a smaller or lower-resolution file, or use a computer instead of a phone."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I split movies or TV shows?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Only if you own the footage or have permission to use it. The tool does not check rights. Splitting a copyrighted film does not make it yours to post, and platforms can remove or penalize that content. See the note in free movie cutter for your own videos."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I report a bug or ask a question?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use the contact page. It helps to mention your device, browser, the file’s approximate size, and the exact message you saw."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div class="filmstrip">
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<nav class="site-nav" aria-label="Main">
+  <a class="brand" href="/">🎞️ Reel <em>Cutter</em></a>
+  <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+  <div class="nav-links">
+    <a href="/">Split Tool</a>
+    <a href="/split-planner.html">Planner</a>
+    <a href="/blog/">Tutorials</a>
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/privacy-policy.html">Privacy</a>
+    <a href="/terms-of-service.html">Terms</a>
+  </div>
+</nav>
+
+<p class="crumbs"><a href="/">Home</a> / FAQ</p>
+
+<header class="page-header">
+  <div class="eyebrow">Help</div>
+  <h1>Frequently asked <em>questions</em></h1>
+  <p class="sub">Straight answers about formats, limits, results, privacy and troubleshooting.</p>
+</header>
+
+<main class="page-wrap">
+
+  <p class="updated">Last updated: 3 October 2026</p>
+
+  <p>Short answers to the questions people ask most, grouped by topic. Every answer reflects how the tool actually behaves. If yours is missing, see the <a href="/contact.html">contact page</a>, or browse the <a href="/blog/">tutorials</a> for longer explanations.</p>
+
+  <h2>The basics</h2>
+
+  <details class="faq-item">
+    <summary>What is Reel Cutter?</summary>
+    <div class="faq-body">Reel Cutter is a free tool that runs in your web browser and splits one long video into consecutive timed parts. It was built for turning long recordings into series of Reels, TikToks and Shorts, and it works equally well for lectures, podcasts, streams and home videos. You give it a video and a target part length; it gives you a zip of MP4 files.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Is Reel Cutter free?</summary>
+    <div class="faq-body">Yes. There is no account, no watermark and no limit on how many videos you process. The site is intended to be supported by advertising rather than fees, as described in the <a href="/about.html">About page</a> and <a href="/privacy-policy.html">privacy policy</a>.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Do I need to install anything?</summary>
+    <div class="faq-body">No. Open the page in a current browser such as Chrome, Edge, Firefox or Safari. There is no app, extension or plug-in to install.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Can I use it on my phone?</summary>
+    <div class="faq-body">Yes, but phone browsers have much less memory than computers, so very large files are better handled on a laptop. See <a href="/blog/split-video-on-phone.html">how to split a video on your phone</a>.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Is Reel Cutter a video trimmer?</summary>
+    <div class="faq-body">No. It splits a whole video into consecutive parts. It cannot keep one clip chosen by start and end time, remove a section from the middle, crop, add captions or convert formats. <a href="/blog/video-cutter-vs-video-splitter.html">Video cutter vs. video splitter</a> explains the difference and the best order of work if you need both.</div>
+  </details>
+
+  <h2>Formats and limits</h2>
+
+  <details class="faq-item">
+    <summary>Which video formats are supported?</summary>
+    <div class="faq-body">MP4, MOV and M4V files, including both standard files and fragmented (“streaming-style”) MP4s. MKV, AVI, WebM, FLV and WMV are not supported; convert them to MP4 first. A rare 64-bit variant of the MP4 header is also not supported and produces an error message.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Which video and audio codecs work?</summary>
+    <div class="faq-body">The tool does not decode or re-encode anything, so each part keeps exactly the codec of your original, for example H.264 or HEVC video with AAC audio. A part plays wherever the original would play.</div>
+  </details>
+  <details class="faq-item">
+    <summary>What is the maximum file size?</summary>
+    <div class="faq-body">The tool does not set a size limit; your browser's memory does. Parts and the final zip are assembled in memory, so peak usage can reach a few times the file size. The zip is also written in the standard format, which caps the combined size of all parts at about 4 GB. In practice, multi-gigabyte files are best split on a computer.</div>
+  </details>
+  <details class="faq-item">
+    <summary>What happens to extra audio tracks or subtitles?</summary>
+    <div class="faq-body">Only the first audio track is copied, and only if “Include audio” is set to Yes. Additional audio tracks and subtitle tracks are not included in the parts.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Can I split several files at once?</summary>
+    <div class="faq-body">No. The tool works on one file per run. Process each video separately and keep the downloaded zips apart.</div>
+  </details>
+
+  <h2>Results and quality</h2>
+
+  <details class="faq-item">
+    <summary>Does splitting reduce video quality?</summary>
+    <div class="faq-body">No. Nothing is re-encoded. The tool copies the existing compressed audio and video data into new files, so the picture is identical to your source.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Why isn’t my part exactly the length I asked for?</summary>
+    <div class="faq-body">Each part has to begin on a keyframe, a frame stored in full, so it plays correctly from its first frame. The tool starts each part on the nearest keyframe at or before the planned point, which can make a part a few seconds longer or shorter than planned. Sources with widely spaced keyframes drift more. See <a href="/blog/mp4-keyframes-explained.html">MP4 keyframes, explained simply</a>.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Why is my last part shorter?</summary>
+    <div class="faq-body">The tool plans an even length for every part. When that length would be shorter than your minimum, it switches to your maximum instead, and whatever remains becomes the final part. Adjusting the min and max values changes how evenly the video divides. The <a href="/split-planner.html">split planner</a> previews the result.</div>
+  </details>
+  <details class="faq-item">
+    <summary>What are the output files called?</summary>
+    <div class="faq-body">You download one zip named <code>video_parts.zip</code>. Inside are MP4 files named like <code>part_1_Part-1.mp4</code>, <code>part_2_Part-2.mp4</code> and so on. The word “Part” comes from your label prefix, with any characters other than letters and numbers turned into hyphens.</div>
+  </details>
+  <details class="faq-item">
+    <summary>How long does it take?</summary>
+    <div class="faq-body">It depends on your file size and your device, not on how complex the video is, because nothing is re-encoded. The tool shows an elapsed timer and an estimate of the time remaining. If it is slow, the usual cause is a device short of memory.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Can I choose exact start and end times?</summary>
+    <div class="faq-body">No. Parts are planned evenly from the whole video and snap to keyframes. If you need exact in and out points, trim in an editor first, then split the exported file.</div>
+  </details>
+
+  <h2>Privacy</h2>
+
+  <details class="faq-item">
+    <summary>Is my video uploaded anywhere?</summary>
+    <div class="faq-body">No. The file is read from your device and processed in your browser tab. The tool’s code makes no network requests. You can confirm this yourself; <a href="/blog/is-my-video-uploaded.html">here is how</a>.</div>
+  </details>
+  <details class="faq-item">
+    <summary>What happens if I close the tab or the browser?</summary>
+    <div class="faq-body">Everything in progress is lost. Parts and the zip exist only in the tab’s memory until you press “Download zip”, and nothing is saved between visits. Reopen the page and start again.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Does the site keep a copy of my files or filenames?</summary>
+    <div class="faq-body">No. We do not receive your files, their names or their contents. See the <a href="/privacy-policy.html">privacy policy</a> for the full details, including the cookies that advertising partners may use.</div>
+  </details>
+
+  <h2>Social platforms</h2>
+
+  <details class="faq-item">
+    <summary>Can I use it for Instagram Reels, TikTok and YouTube Shorts?</summary>
+    <div class="faq-body">Yes. Choose a part length that suits the platform, split, and upload the parts in order. Reel Cutter does not change the picture shape, so a landscape video stays landscape. Reframe to vertical in an editor first if the platform expects it. See <a href="/blog/split-video-for-instagram-reels.html">Instagram Reels</a> and <a href="/blog/split-video-for-youtube-shorts.html">YouTube Shorts</a>.</div>
+  </details>
+  <details class="faq-item">
+    <summary>What part length should I use?</summary>
+    <div class="faq-body">It depends on your goal and on each platform’s current rules, which change. Our <a href="/blog/best-clip-length-for-social-media.html">clip length guide</a> gives starting points, and you should leave a few seconds of headroom under any platform limit because cuts can land slightly long.</div>
+  </details>
+
+  <h2>Troubleshooting and policy</h2>
+
+  <details class="faq-item">
+    <summary>The tool says my file failed to parse. What now?</summary>
+    <div class="faq-body">Re-export the video as a standard MP4 from your camera app or editor and try again. This fixes most cases, including files from interrupted recordings or unusual containers. The <a href="/blog/troubleshooting-guide.html">troubleshooting guide</a> covers each message.</div>
+  </details>
+  <details class="faq-item">
+    <summary>My browser tab crashed or froze partway through.</summary>
+    <div class="faq-body">That usually means the file is too large for the memory your browser allows. Close other tabs and apps, try a smaller or lower-resolution file, or use a computer instead of a phone.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Can I split movies or TV shows?</summary>
+    <div class="faq-body">Only if you own the footage or have permission to use it. The tool does not check rights. Splitting a copyrighted film does not make it yours to post, and platforms can remove or penalize that content. See the note in <a href="/blog/free-movie-cutter.html">free movie cutter for your own videos</a>.</div>
+  </details>
+  <details class="faq-item">
+    <summary>How do I report a bug or ask a question?</summary>
+    <div class="faq-body">Use the <a href="/contact.html">contact page</a>. It helps to mention your device, browser, the file’s approximate size, and the exact message you saw.</div>
+  </details>
+
+  <div class="related-links" style="margin-top:30px;">
+    <a href="/">Open the split tool →</a>
+    <a href="/blog/how-to-split-video-online.html">How to split a video online</a>
+    <a href="/blog/">All tutorials</a>
+    <a href="/contact.html">Contact</a>
+  </div>
+
+</main>
+
+<div class="site-footer">
+  <div class="foot-grid">
+    <div class="foot-col">
+      <h4>Reel Cutter</h4>
+      <p style="font-size:13px;color:#4a4640;max-width:34ch;margin:0;">A free, in-browser tool that splits long videos into timed parts for Reels, TikTok and Shorts.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Product</h4>
+      <a href="/">Split tool</a>
+      <a href="/split-planner.html">Split planner</a>
+      <a href="/blog/">Tutorials</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <a href="/contact.html">Contact</a>
+      <a href="/privacy-policy.html">Privacy policy</a>
+      <a href="/terms-of-service.html">Terms of service</a>
+    </div>
+  </div>
+  <div class="foot-note">© 2026 Reel Cutter. Built for creators who publish a lot. · <a href="mailto:technicalmastersp@gmail.com" style="color:inherit;">technicalmastersp@gmail.com</a></div>
+</div>
+
+<script src="/assets/site.js"></script>
+</body>
+</html>

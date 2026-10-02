@@ -2,86 +2,122 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://reel-cutter-swart.vercel.app/</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://reel-cutter-swart.vercel.app/split-planner.html</loc>
-    <lastmod>2026-10-02</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://reel-cutter-swart.vercel.app/about.html</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://reel-cutter-swart.vercel.app/contact.html</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://reel-cutter-swart.vercel.app/privacy-policy.html</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://reel-cutter-swart.vercel.app/terms-of-service.html</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://reel-cutter-swart.vercel.app/blog/</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://reel-cutter-swart.vercel.app/blog/split-video-for-instagram-reels.html</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://reel-cutter-swart.vercel.app/blog/mp4-keyframes-explained.html</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://reel-cutter-swart.vercel.app/blog/best-clip-length-for-social-media.html</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://reel-cutter-swart.vercel.app/blog/free-movie-cutter.html</loc>
-    <lastmod>2026-09-15</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://reel-cutter-swart.vercel.app/blog/troubleshooting-guide.html</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://reel-cutter-swart.vercel.app/blog/video-format-glossary.html</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://reel-cutter-swart.vercel.app/blog/who-uses-reel-cutter.html</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-10-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://reel-cutter-swart.vercel.app/blog/how-to-split-video-online.html</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://reel-cutter-swart.vercel.app/faq.html</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://reel-cutter-swart.vercel.app/blog/split-video-for-youtube-shorts.html</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://reel-cutter-swart.vercel.app/blog/video-cutter-vs-video-splitter.html</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://reel-cutter-swart.vercel.app/blog/split-video-on-phone.html</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://reel-cutter-swart.vercel.app/blog/is-my-video-uploaded.html</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>

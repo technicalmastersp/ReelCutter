@@ -33,7 +33,7 @@ Note: `ReelCutter-nav-fixed.zip` is an **older, smaller build** (4 articles, no 
 
 **A. Deploy this build** to the Vercel project (push to the tracked branch or redeploy).
 
-**B. Verify live (5 minutes).** Open each and confirm: `/ads.txt` shows your pub ID line; `/split-planner.html` works; view-source on `/` shows the AdSense `<script>` and no `<ins class="adsbygoogle">`; `/sitemap.xml` lists 14 URLs; nav links work on every page including `/blog/`.
+**B. Verify live (5 minutes).** Open each and confirm: `/ads.txt` shows your pub ID line; `/split-planner.html` works; view-source on `/` shows the AdSense `<script>` and no `<ins class="adsbygoogle">`; `/sitemap.xml` lists 20 URLs; nav links work on every page including `/blog/`.
 
 **C. Search Console.** Submit `https://reel-cutter-swart.vercel.app/sitemap.xml`. In URL Inspection, request indexing for `/`, `/split-planner.html` and the blog hub. Check the Pages report: if most URLs are "Discovered – not indexed" or "Crawled – not indexed", Google doesn't yet see the site as valuable and an AdSense re-review is likely to fail again (LIKELY). Fix that first.
 
@@ -72,3 +72,20 @@ Then add the new domain as a site in your *existing* AdSense account, verify it 
 - `about.html`: ad disclosure, editorial/corrections card
 - `vercel.json`: security headers
 - `README.md`: stale AdSense/placeholder notes replaced
+
+## 6. Update — Oct 3, 2026 content pass
+
+**Done in code (this package):**
+- Homepage now has substantial original, tool-specific content: how-to, limits, supported formats, privacy, 13-question FAQ.
+- 6 new pages: FAQ + how-to, YouTube Shorts, cutter-vs-splitter, phone, and "is my video uploaded?" guides. The site now has 20 indexable URLs (up from 14).
+- Two false technical claims removed ("Zero external scripts", "No CDN, no external libraries").
+- FAQ schema matches visible FAQ; sitemap, hub and footer updated.
+
+**Still needs you (code cannot do these):**
+1. **Name a real author/owner.** Add a short bio (name, what you do, why you built the tool) to About and, ideally, a byline on guides. Schema currently says the author is the "Reel Cutter" organization, because inventing a person would be dishonest.
+2. **Add first-hand material.** The strongest content is your own testing: keyframe intervals and drift from specific phones/apps, memory ceilings you actually hit on named devices, screenshots of your own error messages. The new pages deliberately avoid claiming tests that haven't been run.
+3. **Custom domain, genuine users, and a publishing rhythm** (§3 D–F above) remain the likeliest gating factors. More pages do not substitute for them.
+4. **Deploy, then Search Console:** resubmit `sitemap.xml` (20 URLs) and request indexing for `/`, `/blog/how-to-split-video-online.html` and `/faq.html`. Check the Pages report before requesting AdSense review.
+
+No one can guarantee approval; these changes remove content-quality and accuracy risks and add real information, but Google gives no page-level feedback, so the exact trigger remains unknown.
+

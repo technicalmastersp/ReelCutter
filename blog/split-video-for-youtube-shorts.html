@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How to Split a Long Video Into YouTube Shorts — Reel Cutter</title>
+<meta name="description" content="How to turn one long recording into YouTube Shorts: check the aspect ratio, pick part lengths with worked examples, leave headroom under the limit, and upload in order." />
+<link rel="canonical" href="https://reel-cutter-swart.vercel.app/blog/split-video-for-youtube-shorts.html" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#f6f3ee" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192.png" />
+<link rel="manifest" href="/site.webmanifest" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Reel Cutter" />
+<meta property="og:title" content="How to Split a Long Video Into YouTube Shorts" />
+<meta property="og:description" content="Pick part lengths, avoid the landscape trap, and split a long recording into Shorts-sized parts in your browser with no re-encoding." />
+<meta property="og:image" content="https://reel-cutter-swart.vercel.app/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Reel Cutter — split long videos into Reels, TikTok and Shorts" />
+<meta property="og:url" content="https://reel-cutter-swart.vercel.app/blog/split-video-for-youtube-shorts.html" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="How to Split a Long Video Into YouTube Shorts" />
+<meta name="twitter:description" content="Pick part lengths, avoid the landscape trap, and split a long recording into Shorts-sized parts in your browser with no re-encoding." />
+<meta name="twitter:image" content="https://reel-cutter-swart.vercel.app/assets/og-image.png" />
+
+<link rel="stylesheet" href="/assets/site.css" />
+
+<meta name="google-adsense-account" content="ca-pub-1806601681825275" />
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1806601681825275" crossorigin="anonymous"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Split a Long Video Into YouTube Shorts",
+  "description": "How to turn one long recording into YouTube Shorts: check the aspect ratio, pick part lengths with worked examples, leave headroom under the limit, and upload in order.",
+  "author": {
+    "@type": "Organization",
+    "name": "Reel Cutter"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Reel Cutter"
+  },
+  "datePublished": "2026-10-03",
+  "dateModified": "2026-10-03",
+  "mainEntityOfPage": "https://reel-cutter-swart.vercel.app/blog/split-video-for-youtube-shorts.html"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://reel-cutter-swart.vercel.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Tutorials",
+      "item": "https://reel-cutter-swart.vercel.app/blog/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Split a video for YouTube Shorts",
+      "item": "https://reel-cutter-swart.vercel.app/blog/split-video-for-youtube-shorts.html"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div class="filmstrip">
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<nav class="site-nav" aria-label="Main">
+  <a class="brand" href="/">🎞️ Reel <em>Cutter</em></a>
+  <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+  <div class="nav-links">
+    <a href="/">Split Tool</a>
+    <a href="/split-planner.html">Planner</a>
+    <a href="/blog/">Tutorials</a>
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/privacy-policy.html">Privacy</a>
+    <a href="/terms-of-service.html">Terms</a>
+  </div>
+</nav>
+
+<p class="crumbs"><a href="/">Home</a> / <a href="/blog/">Tutorials</a> / Split a video for YouTube Shorts</p>
+
+<header class="page-header">
+  <div class="eyebrow">Tutorial</div>
+  <h1>Split a long video into <em>YouTube Shorts</em></h1>
+  <p class="sub">Pick a part length, avoid the landscape trap, and turn one long recording into a numbered series of Shorts-sized parts.</p>
+</header>
+
+<main class="page-wrap">
+
+  <p class="updated">Last updated: 3 October 2026</p>
+
+  <p>Turning one long recording into a series of YouTube Shorts is mostly a sizing problem: pick a part length, split, check the parts, upload them in order. Reel Cutter handles the splitting. This guide covers the decisions that come before and after it, including one that catches many people out: the tool changes <em>when</em> a video is cut, not the <em>shape</em> of the picture.</p>
+
+  <h2>First, check the shape of your video</h2>
+  <p>YouTube's own help pages describe Shorts as vertical or square videos, and the Shorts feed is designed around a phone held upright. Reel Cutter does not crop, rotate or reframe anything. It copies the original picture data, so a landscape 16:9 recording comes out as landscape parts. Those parts will upload, but they will behave like ordinary videos rather than Shorts.</p>
+  <p>This gives you a simple rule for ordering your work:</p>
+  <ul>
+    <li><strong>Source already vertical</strong> (recorded on a phone held upright, or a vertical screen recording): split it directly with Reel Cutter.</li>
+    <li><strong>Source landscape:</strong> reframe it to vertical in a video editor <em>first</em>, export it, then split the exported file. Reframing has to re-encode the picture, so do it once on the whole file rather than on every part. Reel Cutter then adds no further quality loss.</li>
+  </ul>
+  <p>Platform rules change, so check YouTube's current Shorts help page for the exact aspect-ratio and length requirements before you plan a whole series.</p>
+
+  <h2>Choosing a part length</h2>
+  <p>YouTube currently allows Shorts of up to about three minutes, and our <a href="/blog/best-clip-length-for-social-media.html">clip length guide</a> covers how length affects reach. For splitting, what matters is how your min and max settings turn into parts. These examples use a 15-minute (900 s) vertical recording and the tool's real planning rules:</p>
+
+  <div style="overflow-x:auto;">
+  <table style="width:100%;border-collapse:collapse;margin:14px 0;">
+    <thead>
+      <tr style="text-align:left;border-bottom:1px solid var(--line);"><th style="padding:8px 6px;font-family:var(--mono);font-size:11px;text-transform:uppercase;">Goal</th><th style="padding:8px 6px;font-family:var(--mono);font-size:11px;text-transform:uppercase;">Min / max</th><th style="padding:8px 6px;font-family:var(--mono);font-size:11px;text-transform:uppercase;">Result for a 900 s source</th></tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid var(--line);"><td style="padding:8px 6px;">Short, punchy parts</td><td style="padding:8px 6px;">20 / 30</td><td style="padding:8px 6px;">36 parts of 25 s</td></tr>
+      <tr style="border-bottom:1px solid var(--line);"><td style="padding:8px 6px;">Typical Shorts length</td><td style="padding:8px 6px;">50 / 58</td><td style="padding:8px 6px;">17 parts of about 52.9 s</td></tr>
+      <tr style="border-bottom:1px solid var(--line);"><td style="padding:8px 6px;">Longer explainer parts</td><td style="padding:8px 6px;">90 / 100</td><td style="padding:8px 6px;">10 parts of 90 s</td></tr>
+      <tr style=""><td style="padding:8px 6px;">Close to the three-minute cap</td><td style="padding:8px 6px;">170 / 178</td><td style="padding:8px 6px;">6 parts of 178 s, then a final part of about 10 s</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>Notice what happens in the last row. Because an even split into six parts would be 150 seconds, below the 170-second minimum, the tool falls back to the maximum and leaves a short remainder. If you want a clean ending, adjust the numbers until the parts divide evenly, or try the <a href="/split-planner.html">split planner</a> to preview the result first.</p>
+
+  <h2>Leave headroom under the platform limit</h2>
+  <p>Cuts snap to the nearest keyframe at or before the planned point, so a part can end up a few seconds longer or shorter than planned, and longer still if the source has widely spaced keyframes. If you aim right at a platform's ceiling, a part can overshoot it. A safe habit is to set your maximum at least 5 to 10 seconds below the limit. The <a href="/blog/mp4-keyframes-explained.html">keyframes explainer</a> shows why this happens.</p>
+
+  <h2>Mid-sentence cuts</h2>
+  <p>Reel Cutter divides by time, not by content, so a boundary can fall in the middle of a sentence. Three ways to live with that:</p>
+  <ol>
+    <li>Choose lengths that roughly match your natural beats. If you usually speak in one-minute points, use something like 55 / 60 rather than 150 / 160.</li>
+    <li>Skip the problem in the edit: add a short on-screen “Part 2” caption or a spoken recap at the start of each part in your editor before splitting.</li>
+    <li>If you need cuts at exact moments, trim those sections out in an editor first (see <a href="/blog/video-cutter-vs-video-splitter.html">video cutter vs. video splitter</a>).</li>
+  </ol>
+
+  <h2>A simple workflow, start to finish</h2>
+  <ol>
+    <li>Prepare the source: trim dead air, reframe to vertical if needed, export as MP4.</li>
+    <li>Open the <a href="/">split tool</a>, choose the file, and set min/max (for example 50 / 58).</li>
+    <li>Run the split, download <code>video_parts.zip</code>, and unzip it.</li>
+    <li>Watch the start of each part and the boundary between neighbours.</li>
+    <li>Upload in order. Give each part a title that includes its number (for example “Topic name, Part 3 of 17”) and consider grouping them in a playlist so viewers can find the first part.</li>
+    <li>Space the uploads out over days rather than posting everything at once.</li>
+  </ol>
+
+  <h2>Only split what you have the right to post</h2>
+  <p>Splitting a video does not change who owns it. Use footage you recorded or that you are licensed to republish, because platforms can remove or demonetize content that reuses other people's work.</p>
+
+  <h2>Common questions</h2>
+  <details class="faq-item">
+    <summary>Can I make Shorts from a one-hour landscape podcast?</summary>
+    <div class="faq-body">Yes, but reframe it to vertical in an editor first, then split the exported file. Splitting the landscape original gives you landscape parts.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Will the parts keep my captions?</summary>
+    <div class="faq-body">Captions that are burned into the picture carry through unchanged, because the picture data is copied as it is. Separate subtitle tracks are not copied.</div>
+  </details>
+  <details class="faq-item">
+    <summary>Is there a limit on how many parts I can make?</summary>
+    <div class="faq-body">The tool sets no limit. Your browser's memory is the practical limit, which is why very long, high-resolution sources are better handled on a computer.</div>
+  </details>
+
+  <div class="related-links" style="margin-top:30px;">
+    <a href="/">Open the split tool →</a>
+    <a href="/blog/how-to-split-video-online.html">How to split a video online</a>
+    <a href="/blog/best-clip-length-for-social-media.html">Best clip length by platform</a>
+    <a href="/blog/split-video-for-instagram-reels.html">Splitting for Instagram Reels</a>
+    <a href="/split-planner.html">Split planner</a>
+    <a href="/faq.html">FAQ</a>
+  </div>
+
+</main>
+
+<div class="site-footer">
+  <div class="foot-grid">
+    <div class="foot-col">
+      <h4>Reel Cutter</h4>
+      <p style="font-size:13px;color:#4a4640;max-width:34ch;margin:0;">A free, in-browser tool that splits long videos into timed parts for Reels, TikTok and Shorts.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Product</h4>
+      <a href="/">Split tool</a>
+      <a href="/split-planner.html">Split planner</a>
+      <a href="/blog/">Tutorials</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <a href="/contact.html">Contact</a>
+      <a href="/privacy-policy.html">Privacy policy</a>
+      <a href="/terms-of-service.html">Terms of service</a>
+    </div>
+  </div>
+  <div class="foot-note">© 2026 Reel Cutter. Built for creators who publish a lot. · <a href="mailto:technicalmastersp@gmail.com" style="color:inherit;">technicalmastersp@gmail.com</a></div>
+</div>
+
+<script src="/assets/site.js"></script>
+</body>
+</html>
