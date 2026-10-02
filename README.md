@@ -18,6 +18,7 @@ No video data ever leaves the device — there's nothing to configure on a serve
 
 ```
 index.html                                   ← the split tool (HTML + CSS + JS in one file)
+split-planner.html                           ← interactive planner: part count, lengths, size, posting schedule
 about.html                                   ← what Reel Cutter does and why it's in-browser
 contact.html                                 ← support / feedback / business contact
 privacy-policy.html                          ← privacy policy, incl. AdSense/cookie disclosure
@@ -47,20 +48,18 @@ blog/
 
 `index.html` keeps its original inline `<style>` and `<script>` untouched — the split/zip logic hasn't changed. `assets/site.css` only adds new, non-conflicting styles for the nav, footer, ad slots, and the content pages.
 
-## AdSense "low value content" rejection — fixed
+## AdSense "low value content" — current state (Oct 2, 2026)
 
-Google rejected the site pre-launch with **"Low value content"**, and it was accurate: total unique prose across the site was ~2,500 words spread thin across 10 pages, with several pages (notably `free-movie-cutter.html` at 441 words) short enough to resemble the "thin/doorway page" pattern Google's spam policies flag.
+Status: rejected with "Low value content" (site ownership verified). See `ADSENSE-RESUBMISSION-PLAYBOOK.md` for the full audit, evidence levels, and the step-by-step plan before requesting review.
 
-This pass addressed it directly:
-- Expanded the four existing articles from 440–600 words each to 990–1,140 words each with genuine added depth (GOP/codec detail, worked examples, per-source troubleshooting notes, retention/algorithm context, testing frameworks) rather than padding.
-- Added three new substantial pages: a troubleshooting reference tied to the product's real error messages, a video-format glossary, and a use-cases page with concrete per-persona workflows.
-- Expanded About (386→877 words) and Contact (220→357 words), which were thin enough on their own to read as an incomplete site.
-- Total unique content across the site's core pages went from ~2,500 to ~9,100 words.
-- Fixed a broken navigation bug (four blog pages' "Tutorials" nav/breadcrumb/footer links pointed to `/` instead of `/blog/`) found during this audit — unrelated to the content-depth issue but worth fixing regardless.
+What this pass changed:
+- **Removed every placeholder ad unit** (24 blocks: two 160×600 rails + one in-content unit per page, all with `PASTE_..._SLOT_ID` values). Ad units cannot serve before approval, invalid slot IDs only produce errors, and three units on ~800-word pages is an ad-density risk. The AdSense loader `<script>`, `google-adsense-account` meta tag and `ads.txt` stay — those are what Google uses to verify the site.
+- **Added a second real tool**, `/split-planner.html` (calculator mirroring the splitter's own algorithm), linked from the nav and footer on every page and added to the sitemap.
+- **Privacy policy**: proper third-party-vendor/Google ad-cookie disclosure, EEA/UK/CH consent wording, accurate analytics/server-log section.
+- **About**: ad disclosure matches reality; new "Editorial approach / corrections" card.
+- **vercel.json**: basic security headers.
 
-**Before resubmitting for AdSense review:** wait until the new pages are live and Google has had a chance to crawl them (submit `sitemap.xml` in Search Console to speed this up), then check "I confirm I have fixed the issues" only once that's done. A very new domain with no backlinks may still take more than one review cycle — that's a trust/authority factor content depth alone can't fully offset.
-
-**Not fixed by this pass — needs your input:** several ad slots (`about.html`, `contact.html`, `index.html`, and three blog pages) still have literal placeholder text (`PASTE_LEFT_RAIL_AD_SLOT_ID`, `PASTE_INCONTENT_AD_SLOT_ID`, etc.) in their `data-ad-slot` attributes instead of real AdSense slot IDs. Replace these with real slot IDs from your AdSense dashboard before resubmitting.
+After approval, add ads by turning on **Auto ads** in the AdSense console (the loader script is already on every page) or by adding real units with real slot IDs one at a time. Do not re-add placeholder slots.
 
 ## Keyword targeting: "movie cutter"
 
@@ -91,16 +90,9 @@ If you ever move to a custom domain later, update every reference in one pass:
 grep -rl "reel-cutter-swart.vercel.app" . | xargs sed -i 's#reel-cutter-swart\.vercel\.app#yourdomain.com#g'
 ```
 
-**AdSense publisher ID** still needs to be set. Every page has `ca-pub-XXXXXXXXXXXXXXXX` (in the AdSense script tag, a meta tag, and each ad slot's `data-ad-client`), and `ads.txt` has `pub-0000000000000000`. Replace both with your real AdSense publisher ID:
+**AdSense publisher ID** (`ca-pub-1806601681825275`) is already set on every page and in `ads.txt`.
 
-```bash
-grep -rl "ca-pub-XXXXXXXXXXXXXXXX" . | xargs sed -i 's/ca-pub-XXXXXXXXXXXXXXXX/ca-pub-YOURREALID/g'
-sed -i 's/pub-0000000000000000/pub-YOURREALID/' ads.txt
-```
-
-Then set your real `data-ad-slot` values per placement in AdSense (currently `0000000001`–`0000000006` as placeholders across the pages).
-
-**Contact info.** The Contact, Privacy, and Terms pages currently have no working email address — Contact shows a "form coming soon" note, and Privacy/Terms link back to the Contact page instead of a mailto link. Add a real inbox (or a form service like Formspree/Google Forms) whenever you're ready, then update those three pages.
+**Contact:** `technicalmastersp@gmail.com` is linked from Contact, footer, Privacy and Terms.
 
 ## Re-deploying
 
