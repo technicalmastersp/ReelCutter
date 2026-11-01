@@ -89,3 +89,17 @@ Then add the new domain as a site in your *existing* AdSense account, verify it 
 
 No one can guarantee approval; these changes remove content-quality and accuracy risks and add real information, but Google gives no page-level feedback, so the exact trigger remains unknown.
 
+
+
+## 7. Update — Nov 2, 2026
+
+**Done in code:** added `/keyframe-inspector.html` (third working tool, output generated from the visitor's own file); removed an unverifiable support claim from Contact; verified the splitter end to end with ffmpeg/ffprobe on synthetic files; sitemap now 21 URLs; zero broken internal references.
+
+**Still not fixable by code (unchanged, and the likeliest gating factors):**
+1. *Indexing / presence (UNKNOWN).* A web search for the domain returned only unrelated `*-swart.vercel.app` projects. Check Search Console → Pages before requesting review. If URLs show "Discovered/Crawled – not indexed", wait and fix that first.
+2. *Custom domain (best practice, not a stated Google requirement).* A `*.vercel.app` subdomain has no history of its own. If you move, use the `grep|sed` command in section 3D, add the new domain to the same AdSense account, and verify it in Search Console.
+3. *A real owner identity.* Add a truthful name and short bio to About. Do not invent one.
+4. *First-hand material.* Publish only findings you have actually measured (keyframe intervals from your own phone/app exports using the inspector, memory limits you really hit). Do not publish claims about testing you have not done.
+5. *Genuine users, over time.* Never buy traffic or ask anyone to click ads.
+
+Request review once, after 1–4 are in place. Approval cannot be guaranteed and Google gives no page-level feedback.

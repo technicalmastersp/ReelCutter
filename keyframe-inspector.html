@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Video Keyframe Inspector — See Where Your MP4 Can Be Cut</title>
+<meta name="description" content="Free keyframe inspector: drop an MP4 or MOV to see its real keyframe timeline, codec, resolution, frame rate and exactly where a split would land. Runs in your browser — nothing is uploaded." />
+<link rel="canonical" href="https://reel-cutter-swart.vercel.app/keyframe-inspector.html" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#f6f3ee" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Reel Cutter" />
+<meta property="og:title" content="Video Keyframe Inspector — See Where Your MP4 Can Be Cut" />
+<meta property="og:description" content="Read your video's keyframe map locally and preview exactly where a lossless split would land." />
+<meta property="og:image" content="https://reel-cutter-swart.vercel.app/assets/og-image.png" />
+<meta property="og:url" content="https://reel-cutter-swart.vercel.app/keyframe-inspector.html" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="stylesheet" href="/assets/site.css" />
+<meta name="google-adsense-account" content="ca-pub-1806601681825275" />
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1806601681825275" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Reel Cutter Keyframe Inspector",
+  "url": "https://reel-cutter-swart.vercel.app/keyframe-inspector.html",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any (runs in a web browser)",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Reads the index of an MP4/MOV file in the browser and reports its keyframe timeline, codec, resolution, frame rate and the exact cut points a lossless split would use."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://reel-cutter-swart.vercel.app/" },
+    { "@type": "ListItem", "position": 2, "name": "Keyframe Inspector", "item": "https://reel-cutter-swart.vercel.app/keyframe-inspector.html" }
+  ]
+}
+</script>
+<style>
+  .ki-drop{ display:block; border:2px dashed var(--line); background:#fff; padding:26px 16px; text-align:center; cursor:pointer; font-size:15px; }
+  .ki-drop:hover, .ki-drop:focus-within{ border-color:var(--reel-red); }
+  .ki-drop input{ position:absolute; opacity:0; width:1px; height:1px; }
+  .ki-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px; }
+  .ki-grid label{ display:block; font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:#8a847a; margin-bottom:5px; }
+  .ki-grid input{ width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:2px; background:#fff; font:inherit; font-size:15px; color:var(--ink); }
+  .ki-stats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; margin:14px 0; }
+  .ki-stat{ background:#fff; border:1px solid var(--line); padding:12px; border-radius:2px; }
+  .ki-stat b{ display:block; font-family:var(--disp); font-weight:400; font-size:28px; line-height:1.1; color:var(--reel-red); overflow-wrap:anywhere; }
+  .ki-stat span{ font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:#8a847a; }
+  .ki-note{ font-size:14px; line-height:1.6; padding:10px 14px; border-left:3px solid var(--tape); background:#fffdf9; margin:10px 0; }
+  .ki-note.warn{ border-left-color:var(--reel-red); }
+  .ki-strip{ position:relative; height:34px; background:#fff; border:1px solid var(--line); margin:8px 0 4px; }
+  .ki-strip i{ position:absolute; top:4px; bottom:4px; width:1px; background:#8a847a; }
+  .ki-strip b{ position:absolute; top:0; bottom:0; width:2px; background:var(--reel-red); }
+  .ki-wrap{ overflow-x:auto; }
+  table.ki-table{ width:100%; border-collapse:collapse; font-size:13px; }
+  .ki-table th,.ki-table td{ text-align:left; padding:7px 10px; border-bottom:1px solid var(--line); font-family:var(--mono); }
+  .ki-table th{ font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:#8a847a; }
+  [hidden]{ display:none !important; }
+  @media (max-width:560px){ .ki-grid{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<div class="filmstrip">
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<nav class="site-nav" aria-label="Main">
+  <a class="brand" href="/">🎞️ Reel <em>Cutter</em></a>
+  <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+  <div class="nav-links">
+    <a href="/">Split Tool</a>
+    <a href="/split-planner.html">Planner</a>
+    <a href="/keyframe-inspector.html">Inspector</a>
+    <a href="/blog/">Tutorials</a>
+    <a href="/about.html">About</a>
+    <a href="/contact.html">Contact</a>
+    <a href="/privacy-policy.html">Privacy</a>
+    <a href="/terms-of-service.html">Terms</a>
+  </div>
+</nav>
+
+<p class="crumbs"><a href="/">Home</a> / Keyframe Inspector</p>
+
+<header class="page-header">
+  <div class="eyebrow">Free analysis tool</div>
+  <h1>Keyframe <em>Inspector</em></h1>
+  <p class="sub">Drop in an MP4 or MOV to see how it is built: the codec, resolution, frame rate and, most usefully, the real list of keyframes. Then preview where the splitter would cut and how far each cut lands from the time you asked for. The file is read in your browser and never uploaded.</p>
+</header>
+
+<main class="page-wrap">
+
+  <div class="card" data-tag="Inspector">
+    <label class="ki-drop" for="kiFile">
+      <input type="file" id="kiFile" accept="video/mp4,video/quicktime,.mp4,.mov,.m4v" />
+      <span id="kiName">Choose an MP4 / MOV / M4V file (or drag it here)</span>
+    </label>
+    <div class="ki-grid">
+      <div><label for="kiMin">Min part length (s)</label><input id="kiMin" type="number" min="5" value="150" /></div>
+      <div><label for="kiMax">Max part length (s)</label><input id="kiMax" type="number" min="5" value="160" /></div>
+    </div>
+    <p id="kiMsg" class="ki-note" hidden></p>
+
+    <div id="kiOut" hidden>
+      <div class="ki-stats" id="kiStats"></div>
+
+      <h3>Keyframe timeline</h3>
+      <div class="ki-strip" id="kiStrip" aria-label="Keyframe positions along the video; red lines are planned cut points"></div>
+      <p style="font-size:13px;margin:0 0 6px;">Grey ticks are keyframes. Red lines are where the splitter would actually start each new part.</p>
+
+      <h3>Where a split would land</h3>
+      <div class="ki-wrap">
+        <table class="ki-table">
+          <thead><tr><th>Part</th><th>Planned start</th><th>Actual start</th><th>Earlier by</th></tr></thead>
+          <tbody id="kiCuts"></tbody>
+        </table>
+      </div>
+      <p id="kiVerdict" class="ki-note"></p>
+    </div>
+  </div>
+
+  <h2>How to read the results</h2>
+  <p>A <strong>keyframe</strong> (also called a sync sample or I-frame) is a frame stored as a complete picture. Every other frame is stored as a change from nearby frames, so a player cannot start decoding from an arbitrary frame; it has to start at a keyframe. A lossless splitter copies compressed data without re-encoding, so each new part must begin on a keyframe. That is why the <em>Actual start</em> column is never later than <em>Planned start</em>: the splitter steps back to the nearest keyframe at or before the time it planned.</p>
+  <p>The <strong>keyframe interval</strong> is the gap between consecutive keyframes. Many phone and screen-recording apps produce an interval of about one to two seconds, so cuts land close to the plan. Some exports use ten seconds or more, and then a cut can land that much earlier than planned. If your longest interval is large, expect uneven part lengths; the inspector shows this before you split anything. Our <a href="/blog/mp4-keyframes-explained.html">keyframe explainer</a> covers the background, and the <a href="/blog/video-format-glossary.html">format glossary</a> defines the other terms on this page.</p>
+  <p>The <strong>frame rate</strong> shown is the average (frame count divided by duration), so variable-frame-rate recordings such as screen captures may show a non-round number. If a file reports <em>no keyframe table</em>, the container has no sync-sample list and the inspector treats every frame as a keyframe, which is what the MP4 specification says to assume.</p>
+
+  <h2>What this inspector does not do</h2>
+  <p>It reads standard (non-fragmented) MP4, MOV and M4V files only. Fragmented MP4 files store their index in many small pieces across the file; the <a href="/">splitter</a> can read those, but this page will tell you it cannot. It reports the first video track and the first audio track, and it does not decode any video, so it cannot judge visual quality. Planned cut points use the same rule as the splitter (target length is the midpoint of your min and max); the <a href="/split-planner.html">split planner</a> explains that rule and estimates file sizes.</p>
+
+  <div class="related-links">
+    <a href="/">Open the splitter</a>
+    <a href="/split-planner.html">Split planner</a>
+    <a href="/blog/mp4-keyframes-explained.html">Keyframes explained</a>
+    <a href="/blog/troubleshooting-guide.html">Troubleshooting</a>
+  </div>
+
+</main>
+
+<div class="site-footer">
+  <div class="foot-grid">
+    <div class="foot-col">
+      <h4>Reel Cutter</h4>
+      <p style="font-size:13px;color:#4a4640;max-width:34ch;margin:0;">A free, in-browser tool that splits long videos into timed parts for Reels, TikTok and Shorts.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Product</h4>
+      <a href="/">Split tool</a>
+      <a href="/split-planner.html">Split planner</a>
+      <a href="/keyframe-inspector.html">Keyframe inspector</a>
+      <a href="/blog/">Tutorials</a>
+      <a href="/faq.html">FAQ</a>
+      <a href="/about.html">About</a>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <a href="/contact.html">Contact</a>
+      <a href="/privacy-policy.html">Privacy policy</a>
+      <a href="/terms-of-service.html">Terms of service</a>
+    </div>
+  </div>
+  <div class="foot-note">© 2026 Reel Cutter. Built for creators who publish a lot. · <a href="mailto:technicalmastersp@gmail.com" style="color:inherit;">technicalmastersp@gmail.com</a></div>
+</div>
+
+<script src="/assets/site.js"></script>
+<script src="/assets/keyframe-inspector.js"></script>
+</body>
+</html>

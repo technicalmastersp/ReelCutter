@@ -94,6 +94,7 @@
   <div class="nav-links">
     <a href="/">Split Tool</a>
     <a href="/split-planner.html">Planner</a>
+    <a href="/keyframe-inspector.html">Inspector</a>
     <a href="/blog/">Tutorials</a>
     <a href="/about.html">About</a>
     <a href="/contact.html">Contact</a>
@@ -113,6 +114,7 @@
 <main class="page-wrap">
 
   <p>Reel Cutter reads your video's container format directly and copies compressed samples into new files without re-encoding. That's what makes it fast and lossless, but it also means it depends on the source file being structured in a way it can understand. This page covers every error you're likely to see, what's actually happening under the hood, and how to fix it.</p>
+  <p><strong>Try it on your own file:</strong> the <a href="/keyframe-inspector.html">keyframe inspector</a> reads your video's real keyframe list in the browser and shows how far each split would land from the planned time.</p>
 
   <h2>"This is a fragmented MP4 (streaming-style)..." or parsing failures</h2>
   <p>Standard MP4 files store one master index of every video and audio sample. Fragmented MP4s — common from browser-based recorders, some screen-capture tools, and streaming pipelines — instead split that index across many small chunks throughout the file. Reel Cutter supports both formats. If you still see a parsing error, the file most likely uses an unsupported or non-standard variant:</p>
@@ -201,6 +203,7 @@
       <h4>Product</h4>
       <a href="/">Split tool</a>
       <a href="/split-planner.html">Split planner</a>
+      <a href="/keyframe-inspector.html">Keyframe inspector</a>
       <a href="/blog/">Tutorials</a>
       <a href="/faq.html">FAQ</a>
       <a href="/about.html">About</a>

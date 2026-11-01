@@ -70,6 +70,7 @@
   <div class="nav-links">
     <a href="/">Split Tool</a>
     <a href="/split-planner.html">Planner</a>
+    <a href="/keyframe-inspector.html">Inspector</a>
     <a href="/blog/">Tutorials</a>
     <a href="/about.html">About</a>
     <a href="/contact.html">Contact</a>
@@ -90,6 +91,7 @@
 
   <h2>What a keyframe actually is</h2>
   <p>Video compression formats like H.264 and H.265 don't store every frame as a complete image. Instead, most frames are stored as "what changed since the last frame" — a much smaller amount of data. Every so often, the encoder inserts a full, self-contained frame called a keyframe (technically an I-frame). Every other frame in that stretch depends on the keyframe before it to be decoded correctly.</p>
+  <p><strong>Try it on your own file:</strong> the <a href="/keyframe-inspector.html">keyframe inspector</a> reads your video's real keyframe list in the browser and shows how far each split would land from the planned time.</p>
   <p>Think of it like a flipbook where most pages are drawn as edits to the previous page, except every dozen or so pages redraws the whole scene from scratch. You can only start flipping cleanly from one of those "full redraw" pages.</p>
 
   <h2>The group of pictures (GOP), in plain terms</h2>
@@ -165,6 +167,7 @@
       <h4>Product</h4>
       <a href="/">Split tool</a>
       <a href="/split-planner.html">Split planner</a>
+      <a href="/keyframe-inspector.html">Keyframe inspector</a>
       <a href="/blog/">Tutorials</a>
       <a href="/faq.html">FAQ</a>
       <a href="/about.html">About</a>

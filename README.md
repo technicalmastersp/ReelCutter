@@ -19,6 +19,7 @@ No video data ever leaves the device — there's nothing to configure on a serve
 ```
 index.html                                   ← the split tool (HTML + CSS + JS in one file)
 split-planner.html                           ← interactive planner: part count, lengths, size, posting schedule
+keyframe-inspector.html                      ← reads a file's real keyframe map locally; previews where a split would land (Nov 2)
 faq.html                                     ← 25 grouped Q&As (formats, limits, privacy, troubleshooting) + FAQPage schema
 about.html                                   ← what Reel Cutter does and why it's in-browser
 contact.html                                 ← support / feedback / business contact
@@ -34,6 +35,7 @@ google43a8446c4c368aab.html                  ← existing Google Search Console 
 assets/
   site.css                                   ← shared nav, footer, ad slots, content-page styles
   site.js                                    ← mobile nav toggle + active-link highlighting
+  keyframe-inspector.js                      ← inspector logic (reads only the moov index; no decoding, no upload)
   og-image.png                               ← 1200×630 Open Graph / Twitter share image
   icons/                                     ← favicons + apple-touch-icon + PWA icons (192/512)
 blog/
@@ -158,3 +160,10 @@ The site is already deployed on Vercel at https://reel-cutter-swart.vercel.app/.
 - `sitemap.xml` and `robots.txt` are at the project root and reference the real (placeholder) domain — update after replacing the domain placeholder above.
 - Ad slots are placed away from the tool's Run/Download buttons to avoid accidental clicks near interactive controls, per AdSense policy.
 - The privacy policy and terms of service are general templates, not legal advice — have them reviewed for your jurisdiction before relying on them commercially.
+
+## Nov 2, 2026 pass — second AdSense review prep
+
+- **New tool: `/keyframe-inspector.html`.** Reads only the `moov` index of a standard MP4/MOV (fast and low-memory even for multi-GB files) and reports codec, resolution, average fps, keyframe count/intervals, a keyframe timeline, and a cut-by-cut preview using the splitter's own planning rule. Fragmented MP4 is refused with an explanation. Output is generated from the visitor's own file, so it is not something an article can substitute for.
+- **Verified, not assumed.** The splitter's unmodified script was run headlessly on a generated standard MP4 and a fragmented MP4 (H.264 + AAC, 70 s, keyframe every 2 s): 3/3 parts built, all decode with no ffmpeg errors, codecs preserved. The inspector's keyframe times, resolution, fps and codec matched `ffprobe` on an MP4 and a 29.97 fps MOV, and its predicted cut starts (0, 22, 46 s) matched where the splitter actually cut. These were synthetic files; real-world phone/app files have not been tested here.
+- **Removed an unverifiable claim** on `contact.html` ("several past changes came directly from user reports", "every message is read"). Only state things on the site that you can stand behind.
+- Wired into nav (21 pages), footers, sitemap (now 21 URLs), planner and two guides.
